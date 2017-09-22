@@ -62,6 +62,7 @@ router.get('/event', EventController.find_event)
     .delete('/event/:id',EventController.delete_event);
 
 //用户路由
-router.post('/user',UserController.create_user);
+router.post('/user',UserController.create_user)
+    .post('/login', UserController.signIn);
 
 module.exports = router;

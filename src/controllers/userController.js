@@ -27,7 +27,17 @@ class UserController {
 
     // 用户登录
     static async signIn(ctx) {
-
+        const { name, password } = ctx.request.body;
+        try {
+            let user = await UserModel.findOne({username:name,password:md5(password)});
+            logger.info(user);
+            if(user){
+                return ctx.body={status:"success",data:user}
+            }
+        } catch (err){
+            logger.error("登录失败")
+            return ctx.body={status:"failed",err:err}
+        }
     }
 
     // 用户退出

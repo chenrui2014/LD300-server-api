@@ -9,19 +9,22 @@ class CameraController {
         const data = ctx.request.body;
         logger.info(data);
         if(!data) return ctx.body={ msg: '发送数据失败!' };
-        const isExit = await CameraModel.findOne({ip:data.fields.ip});
-        logger.info(isExit);
-        if(isExit) return ctx.body={ msg: '该摄像头ip已存在!' };
+        let oneCamera=null;
+        await CameraModel.findOne({ip:data.ip},function (error,doc) {
+            oneCamera = doc;
+        });
+        logger.info(oneCamera);
+        if(oneCamera) return ctx.body={ msg: '该摄像头ip已存在!' };
         //const result = await CameraModel.create(data);
 
-        let camera = new CameraModel(data.fields);
+        let camera = new CameraModel(data);
         logger.info(camera);
         let msg = '';
-        camera.save(function (err,camera) {
+        await camera.save(function (err,camera) {
             if(!err) {
                 msg = '添加摄像头'+ camera.name +'成功';
             }else{
-                msg = err;
+                msg = err.errmsg;
             }
         });
 
@@ -34,7 +37,7 @@ class CameraController {
     static async delete_camera(ctx) {
         const { id } = ctx.params;
         logger.info(id);
-        const result = await CameraModel.findByIdAndRemove(id).exec();
+        const result = await CameraModel.remove({id:id});
         if(!result) return ctx.error={msg: '删除摄像头失败!'};
         return ctx.body = {msg:'删除摄像头成功',data:result};
     }
@@ -42,7 +45,9 @@ class CameraController {
     static async edit_camera(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        const result = await CameraModel.update(data,{id:data.id}).exec();
+        let _id = data._id;
+        delete data._id;
+        const result = await CameraModel.update({_id:_id},data).exec();
         if(!result) return ctx.error={msg: '修改摄像头失败!'};
         return ctx.body = {msg:'修改摄像头成功',data:result};
     }
