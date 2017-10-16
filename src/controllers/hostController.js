@@ -9,11 +9,11 @@ class HostsController {
         const data = ctx.request.body;
         logger.info(data);
         if(!data) return ctx.body={ msg: '发送数据失败!' };
-        const isExit = await HostModel.findOne({ip:data.fields.ip});
+        const isExit = await HostModel.findOne({hostName:data.hostName});
         logger.info(isExit);
         if(isExit) return ctx.body={ msg: '主机已存在!' };
 
-        let host = new HostModel(data.fields);
+        let host = new HostModel(data);
         logger.info(host);
         let msg = '';
         host.save(function (err,host) {

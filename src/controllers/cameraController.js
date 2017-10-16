@@ -8,13 +8,13 @@ class CameraController {
     static async add_camera(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        if(!data) return ctx.body={ msg: '发送数据失败!' };
+        if(!data) return ctx.error={ msg: '发送数据失败!' };
         let oneCamera=null;
         await CameraModel.findOne({ip:data.ip},function (error,doc) {
             oneCamera = doc;
         });
         logger.info(oneCamera);
-        if(oneCamera) return ctx.body={ msg: '该摄像头ip已存在!' };
+        if(oneCamera) return ctx.error={ msg: 'ip为[' + oneCamera.ip + ']的摄像头ip已存在!' };
         //const result = await CameraModel.create(data);
 
         let camera = new CameraModel(data);
@@ -24,7 +24,7 @@ class CameraController {
             if(!err) {
                 msg = '添加摄像头'+ camera.name +'成功';
             }else{
-                msg = err.errmsg;
+                msg = err.message;
             }
         });
 
@@ -76,13 +76,13 @@ class CameraController {
 
         let result = await CameraModel.find(filterObj).skip(pageStart).limit(pageEnd-pageStart+1).sort(sortP);
         //const result = await CameraModel.find().exec();
-        if(!result) return ctx.body={msg: '没有找到摄像头!'};
+        if(!result) return ctx.error={msg: '没有找到摄像头!'};
         return ctx.body = {msg:'查询摄像头',data:result,total:total};
     }
     static async find_one(ctx){
         const { id } = ctx.params;
         const result = await CameraModel.findOne({id:id});
-        if(!result) return ctx.body = {msg: '没有找到摄像头!'};
+        if(!result) return ctx.error = {msg: '没有找到摄像头!'};
         return ctx.body = {msg:'查询摄像头',data:result};
     }
 
