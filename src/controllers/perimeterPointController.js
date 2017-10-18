@@ -9,11 +9,11 @@ class PerimeterPointController {
         const data = ctx.request.body;
         logger.info(data);
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExit = await PerimeterPointModel.findOne({id:data.fields.id});
+        const isExit = await PerimeterPointModel.findOne({id:data.id});
         logger.info(isExit);
         if(isExit) return ctx.error={ msg: '该摄像头ip已存在!' };
 
-        let perimeterPoint = new PerimeterPointModel(data.fields);
+        let perimeterPoint = new PerimeterPointModel(data);
         logger.info(perimeterPoint);
         let msg = '';
         perimeterPoint.save(function (err,perimeterPoint) {

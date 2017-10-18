@@ -79,6 +79,15 @@ class CameraController {
         if(!result) return ctx.error={msg: '没有找到摄像头!'};
         return ctx.body = {msg:'查询摄像头',data:result,total:total};
     }
+
+    static async find_camera_noPage(ctx){
+
+        let result = await CameraModel.find();
+        //const result = await CameraModel.find().exec();
+        if(!result) return ctx.error={msg: '没有找到摄像头!'};
+        return ctx.body = {msg:'查询摄像头',data:result};
+    }
+
     static async find_one(ctx){
         const { id } = ctx.params;
         const result = await CameraModel.findOne({id:id});
