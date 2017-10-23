@@ -44,6 +44,22 @@ class HostsController {
         return ctx.body = {msg:'修改主机成功',data:result};
     }
 
+    static async find_host_noPage(ctx){
+        const { sort} = ctx.query;
+        let sortObj = JSON.parse(sort);
+        let sortP = {};
+        if(sortObj && sortObj.length >=2){
+            if('ASC' ===sortObj[1]){
+                sortP[sortObj[0]] = 1
+            }else{
+                sortP[sortObj[0]] = -1
+            }
+        }
+        let result = await HostModel.find().sort(sortP);
+        if(!result) return ctx.body={msg: '没有找到主机!'};
+        return ctx.body = {msg:'查询主机',data:result};
+    }
+
     static async find_host(ctx){
         const { sort,range,filter } = ctx.query;
         let sortObj = JSON.parse(sort);

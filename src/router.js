@@ -21,6 +21,7 @@ router.prefix('/api');
 // };
 
 router.get('/cameras',CaremaController.find_camera)
+    .get('/cameras_noPage',CaremaController.find_camera_noPage)
     .get('/cameras/:id',CaremaController.find_one)
     .post('/cameras',CaremaController.add_camera)
     .put('/cameras/:id',CaremaController.edit_camera)
@@ -28,8 +29,9 @@ router.get('/cameras',CaremaController.find_camera)
 
 //主机路由
 router.get('/hosts', HostController.find_host)
+    .get('/hosts_noPage',HostController.find_host_noPage)
     .get('/hosts/:id/show',HostController.find_one)
-    .post('/hosts/create',HostController.add_host)
+    .post('/hosts',HostController.add_host)
     .put('./hosts/:id',HostController.edit_host)
     .delete('/hosts/:id/delete',HostController.delete_host);
 

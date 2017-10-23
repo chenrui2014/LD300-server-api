@@ -81,8 +81,17 @@ class CameraController {
     }
 
     static async find_camera_noPage(ctx){
-
-        let result = await CameraModel.find();
+        const { sort} = ctx.query;
+        let sortObj = JSON.parse(sort);
+        let sortP = {};
+        if(sortObj && sortObj.length >=2){
+            if('ASC' ===sortObj[1]){
+                sortP[sortObj[0]] = 1
+            }else{
+                sortP[sortObj[0]] = -1
+            }
+        }
+        let result = await CameraModel.find().sort(sortP);
         //const result = await CameraModel.find().exec();
         if(!result) return ctx.error={msg: '没有找到摄像头!'};
         return ctx.body = {msg:'查询摄像头',data:result};
