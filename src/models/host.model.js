@@ -8,7 +8,7 @@ import validator from 'validator';
 const HostSchema = new mongoose.Schema({
 
     id:{
-        type:String,
+        type:Number,
         unique:true,
         isRequired:true,
         index:{unique:true}
@@ -23,7 +23,7 @@ const HostSchema = new mongoose.Schema({
     alias:{
         type:String
     },
-    port:{
+    port:{//串口连接串，window和linux下好像不相同
         type:String,
         isRequired:true
     }

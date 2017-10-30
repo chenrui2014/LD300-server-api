@@ -2,46 +2,51 @@
  * Created by chen on 17-8-23.
  */
 import logger from '../logger';
-import HostModel from '../models/host.model';
+import HostService from '../services/hostService';
 
 class HostsController {
     static async add_host(ctx){
         const data = ctx.request.body;
         logger.info(data);
         if(!data) return ctx.body={ msg: '发送数据失败!' };
-        const isExit = await HostModel.findOne({hostName:data.hostName});
+        const isExit = await HostService.isExist({port:data.port});
         logger.info(isExit);
         if(isExit) return ctx.body={ msg: '主机已存在!' };
 
-        let host = new HostModel(data);
-        logger.info(host);
-        let msg = '';
-        host.save(function (err,host) {
-            if(!err) {
-                msg = '添加主机'+ host.name +'成功';
-            }else{
-                msg = err;
-            }
-        });
+        const result = await HostService.add_host(data)
 
-        return ctx.body = {msg:msg,data:host};
+        let msg = '';
+        if(result) {
+            msg = '添加主机'+ data.port +'成功';
+        }else{
+            msg = '添加失败';
+        }
+
+        return ctx.body = {msg:msg,data:data};
 
     }
 
     static async delete_host(ctx) {
         const { id } = ctx.params;
         logger.info(id);
-        const result = await HostModel.findByIdAndRemove(id).exec();
-        if(!result) return ctx.error={msg: '删除主机失败!'};
-        return ctx.body = {msg:'删除主机成功',data:result};
+        const result = await HostService.delete_host({id:id});
+        let msg = '';
+        if(result) {
+            msg = '删除主机成功';
+        }else{
+            msg = '删除主机失败';
+        }
+        return ctx.body = {msg:msg,data:result};
     }
 
     static async edit_host(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        const result = await HostModel.update(data,{id:data.id}).exec();
-        if(!result) return ctx.error={msg: '修改主机失败!'};
-        return ctx.body = {msg:'修改主机成功',data:result};
+        let _id = data._id;
+        delete data._id;
+        const result = await HostService.edit_host({_id:_id},data);
+        if(result) return ctx.body = {msg:'修改主机成功',data:result};
+        return ctx.error={msg: '修改主机失败!'};
     }
 
     static async find_host_noPage(ctx){
@@ -55,9 +60,9 @@ class HostsController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await HostModel.find().sort(sortP);
-        if(!result) return ctx.body={msg: '没有找到主机!'};
-        return ctx.body = {msg:'查询主机',data:result};
+        let result = await HostService.findAll(sortP);
+        if(result) return ctx.body = {msg:'查询主机',data:result};
+        return ctx.body={msg: '没有找到主机!'};
     }
 
     static async find_host(ctx){
@@ -81,10 +86,15 @@ class HostsController {
         }
 
         try{
-            const total = await HostModel.find(filterObj).count();
-            let result = await HostModel.find(filterObj).skip(pageStart).limit(pageEnd-pageStart+1).sort(sortP);
-            if(!result) return ctx.body={msg: '没有找到主机!'};
-            return ctx.body = {msg:'查询主机',data:result,total:total};
+            const total = await HostService.getTotal();
+
+            const pagination = {};
+            pagination.pageStart = pageStart;
+            pagination.pageSize = pageEnd-pageStart+1;
+
+            let result = await HostService.find_host(filterObj,sortP,pagination);
+            if(result) return ctx.body = {msg:'查询主机',data:result,total:total};
+            return ctx.body={msg: '没有找到主机!'};
         }catch(error){
             logger.error(error);
         }
@@ -93,9 +103,9 @@ class HostsController {
     static async find_one(ctx){
         const { id } = ctx.params;
         try{
-            const result = await HostModel.findOne({id:id}).exec();
-            if(!result) return ctx.body = {msg: '没有找到主机!'};
-            return ctx.body = {msg:'查询主机',data:result};
+            const result = await HostService.find_one(id);
+            if(result) return ctx.body = {msg:'查询主机',data:result};
+            return ctx.body = {msg: '没有找到主机!'};
         }catch(error){
             logger.error(error);
         }

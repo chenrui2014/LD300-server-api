@@ -2,44 +2,42 @@
  * Created by chen on 17-8-23.
  */
 import logger from '../logger';
-import CameraModel from '../models/camera.model';
+
+import CameraService from '../services/cameraService';
 
 class CameraController {
     static async add_camera(ctx){
         const data = ctx.request.body;
         logger.info(data);
+
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        let oneCamera=null;
-        await CameraModel.findOne({ip:data.ip},function (error,doc) {
-            oneCamera = doc;
-        });
-        logger.info(oneCamera);
-        if(oneCamera) return ctx.error={ msg: 'ip为[' + oneCamera.ip + ']的摄像头ip已存在!' };
-        //const result = await CameraModel.create(data);
+        const isExist = await CameraService.isExist({ip:data.ip})
+        //const isExist = await CameraModel.findOne({ip:data.ip});
 
-        let camera = new CameraModel(data);
-        logger.info(camera);
+        if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的摄像头ip已存在!' };
+
+        const result = await CameraService.add_camera(data)
+
         let msg = '';
-        await camera.save(function (err,camera) {
-            if(!err) {
-                msg = '添加摄像头'+ camera.name +'成功';
-            }else{
-                msg = err.message;
-            }
-        });
+        if(result) {
+            msg = '添加摄像头'+ data.ip +'成功';
+        }else{
+            msg = '添加失败';
+        }
 
-        return ctx.body = {msg:msg,data:camera};
-        //if(!result) return ctx.error({msg:'添加摄像头失败'})
-
-        //return ctx.body = {msg:'添加摄像头成功',data:result};
+        return ctx.body = {msg:msg,data:data};
     }
 
     static async delete_camera(ctx) {
         const { id } = ctx.params;
-        logger.info(id);
-        const result = await CameraModel.remove({id:id});
-        if(!result) return ctx.error={msg: '删除摄像头失败!'};
-        return ctx.body = {msg:'删除摄像头成功',data:result};
+        const result = await CameraService.delete_camera({id:id})
+        let msg = '';
+        if(result) {
+            msg = '删除摄像头成功';
+        }else{
+            msg = '删除摄像头失败';
+        }
+        return ctx.body = {msg:msg,data:result};
     }
 
     static async edit_camera(ctx){
@@ -47,9 +45,9 @@ class CameraController {
         logger.info(data);
         let _id = data._id;
         delete data._id;
-        const result = await CameraModel.update({_id:_id},data).exec();
-        if(!result) return ctx.error={msg: '修改摄像头失败!'};
-        return ctx.body = {msg:'修改摄像头成功',data:result};
+        const result = await CameraService.edit_camera({_id:_id},data);
+        if(result) return ctx.body = {msg:'修改摄像头成功',data:result};
+        return ctx.error={msg: '修改摄像头失败!'};
     }
 
     static async find_camera(ctx){
@@ -72,12 +70,15 @@ class CameraController {
             pageEnd = rangeObj[1];
         }
 
-        const total = await CameraModel.find(filterObj).count();
+        const total = await CameraService.getTotal();
 
-        let result = await CameraModel.find(filterObj).skip(pageStart).limit(pageEnd-pageStart+1).sort(sortP);
-        //const result = await CameraModel.find().exec();
-        if(!result) return ctx.error={msg: '没有找到摄像头!'};
-        return ctx.body = {msg:'查询摄像头',data:result,total:total};
+        const pagination = {};
+        pagination.pageStart = pageStart;
+        pagination.pageSize = pageEnd-pageStart+1;
+
+        let result = await CameraService.find_camera(filterObj,sortP,pagination);
+        if(result) return ctx.body = {msg:'查询摄像头',data:result,total:total};
+        return ctx.error={msg: '没有找到摄像头!'};
     }
 
     static async find_camera_noPage(ctx){
@@ -91,17 +92,16 @@ class CameraController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await CameraModel.find().sort(sortP);
-        //const result = await CameraModel.find().exec();
-        if(!result) return ctx.error={msg: '没有找到摄像头!'};
-        return ctx.body = {msg:'查询摄像头',data:result};
+        let result = await CameraService.findAll(sortP);
+        if(!result) return ctx.body = {msg:'查询摄像头',data:result};
+        return ctx.error={msg: '没有找到摄像头!'};
     }
 
     static async find_one(ctx){
         const { id } = ctx.params;
-        const result = await CameraModel.findOne({id:id});
-        if(!result) return ctx.error = {msg: '没有找到摄像头!'};
-        return ctx.body = {msg:'查询摄像头',data:result};
+        const result = await CameraService.find_one(id);
+        if(result) ctx.body = {msg:'查询摄像头',data:result};
+        return ctx.error = {msg: '没有找到摄像头!'};
     }
 
 }

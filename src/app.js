@@ -15,7 +15,7 @@ import cors from 'koa2-cors';
 
 const app = new Koa();
 
-// app.use(cors())
+ app.use(cors())
 
 app.use((ctx, next) => {
     // if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
@@ -64,6 +64,9 @@ app.use(router.routes())
 
     io.on('connection', function(socket){
         //HostService.startHostServer();
+        // setInterval(function () {
+        //     socket.emit('news', { hello: 'world' });
+        // },10000)
         socket.emit('news', { hello: 'world' });
         socket.on('my other event', function (data) {
             console.log(data);

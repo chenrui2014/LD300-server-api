@@ -19,7 +19,7 @@ router.prefix('/api');
 //         await ctx.render('index.pug');
 //     });
 // };
-
+//摄像头路由
 router.get('/cameras',CaremaController.find_camera)
     .get('/cameras_noPage',CaremaController.find_camera_noPage)
     .get('/cameras/:id',CaremaController.find_one)
@@ -30,10 +30,10 @@ router.get('/cameras',CaremaController.find_camera)
 //主机路由
 router.get('/hosts', HostController.find_host)
     .get('/hosts_noPage',HostController.find_host_noPage)
-    .get('/hosts/:id/show',HostController.find_one)
+    .get('/hosts/:id',HostController.find_one)
     .post('/hosts',HostController.add_host)
     .put('./hosts/:id',HostController.edit_host)
-    .delete('/hosts/:id/delete',HostController.delete_host);
+    .delete('/hosts/:id',HostController.delete_host);
 
 //监控区域路由
 router.get('/monitoringArea', MonitoringAreaController.find_monitoringArea)
