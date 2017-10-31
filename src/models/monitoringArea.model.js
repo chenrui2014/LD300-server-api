@@ -14,10 +14,11 @@ const MonitoringAreaSchema = new mongoose.Schema({
         index:{unique:true}
     },
     hostId:{//关联主机ID
-        type:mongoose.Schema.Types.ObjectId
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'host'
     },
     mointors:[{//监控区域
-        id:mongoose.Schema.Types.ObjectId,//摄像头编号
+        cameraId:{type:mongoose.Schema.Types.ObjectId,ref:'camera'},//摄像头编号
         min:Number,//监控距离始(实际单位米）
         max:Number,//监控距离末（实际单位米）
         presets:[{//预置点，即云台的位置和监控距离的关系，用于监控位置报警时根据预置点(x,y,zoom)移动云台到指定位置，枪机无效

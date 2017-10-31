@@ -33,11 +33,12 @@ const PerimeterPointSchema = new mongoose.Schema({
     //图上位置
     mapPosition:{
         type:Number,
-        isRequired:true
     },
     //实际距离
     realPosition:{
-        type:Number
+        type:Number,
+        unique:true,
+        isRequired:true
     },
     hostId:{
         type:String,

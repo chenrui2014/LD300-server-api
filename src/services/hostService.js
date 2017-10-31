@@ -74,7 +74,7 @@ class HostService {
      */
     static async findAll(sort){
         if(sort){
-            return await HostModel.find(sort);
+            return await HostModel.find().sort(sort);
         }else{
             return await HostModel.find();
         }

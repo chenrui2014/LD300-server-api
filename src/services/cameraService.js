@@ -76,7 +76,7 @@ class CameraService {
      */
     static async findAll(sort){
         if(sort){
-            return await CameraModel.find(sort);
+            return await CameraModel.find().sort(sort);
         }else{
             return await CameraModel.find();
         }

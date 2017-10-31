@@ -26,6 +26,9 @@ const HostSchema = new mongoose.Schema({
     port:{//串口连接串，window和linux下好像不相同
         type:String,
         isRequired:true
+    },
+    status:{//主机状态，0=正常；1=主机预警；2=未启用；3=主机故障
+        type:Number
     }
 });
 
