@@ -9,6 +9,7 @@ import PerimeterController from './controllers/perimeterController';
 import PerimeterPointController from './controllers/perimeterPointController';
 import EventController from './controllers/eventController';
 import UserController from './controllers/userController';
+import PresetController from './controllers/PresetController';
 
 import Router from 'koa-router';
 
@@ -55,6 +56,13 @@ router.get('/perimeterPoint', PerimeterPointController.find_perimeterPoint)
     .post('/perimeterPoint',PerimeterPointController.add_perimeterPoint)
     .put('./perimeterPoint/:id',PerimeterPointController.edit_perimeterPoint)
     .delete('/perimeterPoint/:id',PerimeterPointController.delete_perimeterPoint);
+
+//预置点路由
+router.get('/preset', PresetController.find_preset)
+    .get('/preset/:id',PresetController.find_one)
+    .post('/preset',PresetController.add_preset)
+    .put('./preset/:id',PresetController.edit_preset)
+    .delete('/preset/:id',PresetController.delete_preset);
 
 //事件路由
 router.get('/event', EventController.find_event)
