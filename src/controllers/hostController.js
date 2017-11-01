@@ -18,11 +18,13 @@ class HostsController {
         let msg = '';
         if(result) {
             msg = '添加主机'+ data.port +'成功';
+            return ctx.body = {msg:msg,data:data};
         }else{
             msg = '添加失败';
+            return ctx.error={msg: msg};
         }
 
-        return ctx.body = {msg:msg,data:data};
+
 
     }
 
@@ -33,10 +35,12 @@ class HostsController {
         let msg = '';
         if(result) {
             msg = '删除主机成功';
+            return ctx.body = {msg:msg,data:result};
         }else{
             msg = '删除主机失败';
+            return ctx.error={msg: msg};
         }
-        return ctx.body = {msg:msg,data:result};
+
     }
 
     static async edit_host(ctx){

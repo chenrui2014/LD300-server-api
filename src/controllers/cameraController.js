@@ -21,11 +21,12 @@ class CameraController {
         let msg = '';
         if(result) {
             msg = '添加摄像头'+ data.ip +'成功';
+            return ctx.body = {msg:msg,data:data};
         }else{
             msg = '添加失败';
+            return ctx.error={msg: msg};
         }
 
-        return ctx.body = {msg:msg,data:data};
     }
 
     static async delete_camera(ctx) {
@@ -34,10 +35,12 @@ class CameraController {
         let msg = '';
         if(result) {
             msg = '删除摄像头成功';
+            return ctx.body = {msg:msg,data:result};
         }else{
             msg = '删除摄像头失败';
+            return ctx.error={msg: msg};
         }
-        return ctx.body = {msg:msg,data:result};
+
     }
 
     static async edit_camera(ctx){
@@ -93,7 +96,7 @@ class CameraController {
             }
         }
         let result = await CameraService.findAll(sortP);
-        if(!result) return ctx.body = {msg:'查询摄像头',data:result};
+        if(result) return ctx.body = {msg:'查询摄像头',data:result};
         return ctx.error={msg: '没有找到摄像头!'};
     }
 
