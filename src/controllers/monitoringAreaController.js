@@ -3,6 +3,8 @@
  */
 import logger from '../logger';
 import MonitoringService from '../services/monitoringService';
+import HostService from '../services/hostService';
+import CameraService from '../services/cameraService';
 
 class MonitoringAreaController {
     static async add_monitoringArea(ctx){
@@ -51,6 +53,8 @@ class MonitoringAreaController {
     static async find_monitoringArea(ctx){
         const { sort,range,filter } = ctx.query;
         let sortObj = JSON.parse(sort);
+        let rangeObj = JSON.parse(range);
+        let filterObj = JSON.parse(filter);
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
@@ -59,14 +63,92 @@ class MonitoringAreaController {
                 sortP[sortObj[0]] = -1
             }
         }
-        const result = await MonitoringService.findAll(sortP);
-        if(result) return ctx.body = {msg:'查询监控区域',data:result};
+
+        let pageStart = 0,pageEnd = 0
+        if(rangeObj && rangeObj.length >=2){
+            pageStart = rangeObj[0];
+            pageEnd = rangeObj[1];
+        }
+
+
+        const total = await MonitoringService.getTotal();
+
+        const pagination = {};
+        pagination.pageStart = pageStart;
+        pagination.pageSize = pageEnd-pageStart+1;
+
+        let result = await MonitoringService.find_monitoringArea(filterObj,sortP,pagination);
+        const hosts = await HostService.findAll();
+
+        result.forEach(function (e) {
+            hosts.forEach(function (host) {
+                if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                return;
+            });
+        });
+        const cameras = await CameraService.findAll();
+
+        result.forEach(function (e) {
+            cameras.forEach(function (camera) {
+                if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+                return;
+            });
+        });
+        if(result) return ctx.body = {msg:'查询监控区域',data:result,total:total};
         return ctx.body={msg: '没有找到监控区域!'};
+    }
+
+    static async find_monitoringArea_noPage(ctx){
+        const { sort} = ctx.query;
+        let sortObj = JSON.parse(sort);
+        let sortP = {};
+        if(sortObj && sortObj.length >=2){
+            if('ASC' ===sortObj[1]){
+                sortP[sortObj[0]] = 1
+            }else{
+                sortP[sortObj[0]] = -1
+            }
+        }
+        let result = await MonitoringService.findAll(sortP);
+        const hosts = await HostService.findAll();
+
+        result.forEach(function (e) {
+            hosts.forEach(function (host) {
+                if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                return;
+            });
+        });
+        const cameras = await CameraService.findAll();
+
+        result.forEach(function (e) {
+            cameras.forEach(function (camera) {
+                if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+                return;
+            });
+        });
+        if(result) return ctx.body = {msg:'查询监控区域',data:result};
+        return ctx.error={msg: '没有找到监控区域!'};
     }
     static async find_one(ctx){
         const { id } = ctx.params;
         const result = await MonitoringService.find_one(id);
-        if(!result) return ctx.body = {msg:'查询监控区域',data:result};
+        const hosts = await HostService.findAll();
+
+        result.forEach(function (e) {
+            hosts.forEach(function (host) {
+                if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                return;
+            });
+        });
+        const cameras = await CameraService.findAll();
+
+        result.forEach(function (e) {
+            cameras.forEach(function (camera) {
+                if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+                return;
+            });
+        });
+        if(result) return ctx.body = {msg:'查询监控区域',data:result};
         return ctx.body = {msg: '没有找到监控区域!'};
     }
 

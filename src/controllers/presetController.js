@@ -11,10 +11,10 @@ class PresetController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await PresetService.isExist({ip:data.ip})
-        //const isExist = await CameraModel.findOne({ip:data.ip});
-
-        if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的预置点ip已存在!' };
+        // const isExist = await PresetService.isExist({ip:data.ip})
+        // //const isExist = await CameraModel.findOne({ip:data.ip});
+        //
+        // if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的预置点ip已存在!' };
 
         const result = await PresetService.add_preset(data)
 
@@ -80,6 +80,14 @@ class PresetController {
         pagination.pageSize = pageEnd-pageStart+1;
 
         let result = await PresetService.find_preset(filterObj,sortP,pagination);
+        const hosts = await HostService.findAll();
+
+        result.forEach(function (e) {
+            hosts.forEach(function (host) {
+                if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                return;
+            });
+        });
         if(result) return ctx.body = {msg:'查询预置点',data:result,total:total};
         return ctx.error={msg: '没有找到预置点!'};
     }

@@ -73,7 +73,7 @@ class PerimeterPointController {
 
         result.forEach(function (e) {
             hosts.forEach(function (host) {
-                if(e._doc.hostId == host._doc.id) e._doc.camera = host._doc;
+                if(e._doc.hostId === host._doc.id) e._doc.host = host._doc;
                 return;
             });
         });
@@ -84,6 +84,14 @@ class PerimeterPointController {
     static async find_one(ctx){
         const { id } = ctx.params;
         const result = await PerimeterPointService.find_one(id);
+        const hosts = await HostService.findAll();
+
+        result.forEach(function (e) {
+            hosts.forEach(function (host) {
+                if(e._doc.hostId === host._doc.id) e._doc.host = host._doc;
+                return;
+            });
+        });
         if(result) ctx.body = {msg:'查询周界点',data:result};
         return ctx.error = {msg: '没有找到周界点!'};
     }

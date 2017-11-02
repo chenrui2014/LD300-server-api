@@ -23,18 +23,15 @@ const PresetSchema = new mongoose.Schema({
 const MonitoringAreaSchema = new mongoose.Schema({
 
     id:{//监控区域ID
-        type:String,
+        type:Number,
         unique:true,
         isRequired:true,
         index:{unique:true}
     },
-    hostId:{//关联主机ID
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'host'
-    },
+    hostId:Number,//关联主机ID
     cameraId:Number,//摄像头编号
-    min:Number,//监控距离始(实际单位米）
-    Max:Number,//监控距离末（实际单位米）
+    min_dis:Number,//监控距离始(实际单位米）
+    max_dis:Number,//监控距离末（实际单位米）
 });
-export const Preset = mongoose.model('Preset', MonitoringAreaSchema);
+export const Preset = mongoose.model('Preset', PresetSchema);
 export const Monitoring = mongoose.model('Monitoring', MonitoringAreaSchema);
