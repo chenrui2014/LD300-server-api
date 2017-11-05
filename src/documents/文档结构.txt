@@ -1,0 +1,59 @@
+_**.js 所有以_开始的文件或文件夹全部为暂时不适用或设计过时的类，app/ipcs/_508/_508_ptz.js除外
+app/flv
+     flv_encoder.js flv编码文件，静态类
+app/h264
+     golomb.js 哥伦布编码解码文件，实体类
+     h264_*.js h264包解码文件，静态类
+app/host
+    host.js 报警主机状态监听，单例类，一个实例管理n台主机，可以放在主线程中
+app/ipcs 摄像头包
+    ipc_addin.js 摄像头协议注册类，注册到ipc_factory.js中
+    ipcx/_508
+        _508_ptz.js 508长转台的实体类
+    ipcs/base 抽象操作类
+        ipc ip摄像头抽象类
+        ipc_Integration.js 集成摄像头实例类，实例化由servers/ipc_factory处理
+        ptz.js ip摄像头云台控制抽象类
+    ipcs/dahua 大华摄像头类包
+        dh_init.js 大华摄像头sdk初始化
+        dh_ipc.js 大华摄像头实体类
+        _dh_h264_unpack.js 大化摄像头h264格式数据解包
+    ipcs/onvif onvif协议包
+        onvif_ipc.js onvif协议连接摄像头的操作实体类
+app/rtsp rtsp协议包
+    rtsp_heartbeat.js rtsp 心跳类，实体类
+app/servers 服务包
+    data_server.js 提供服务启动必须的数据
+    host_server.js 报警主机服务类
+    ipc_factory.js 摄像头实例管理类-单例
+    ipc_server_child.js http服务,提供摄像头直播和ptz以及前台声音信息的接口类
+    ipe_server_master.js http服务,proxy 启动多个摄像头服务进程及接口的代理转发，提供摄像头的心跳状态
+    live_server.js 摄像头直播类websocket服务，以及路线另存为路劲
+    persistence.js 持久化配置的功能类
+    startup.js 总的服务启动类
+    state_server.js 设备状态类，websocket服务，包括主机、摄像头、主机事件的管理类
+config
+    congif.js 项目配置文件
+    _508_config.js 508转台配置文件
+    dh_config.js 大华设备配置文件
+    onvif_config.js onvif协议配置文件
+clib dll-ffi映射目录
+    DHNetSDK 大华网络sdk包映射目录
+test 测试包
+    _3part 第3放类库的测试类
+    _508 508长摄像头ptz测试类
+    dahua 大华sdk测试类
+    data 测试文件型数据
+    dll 测试用的c++ dll
+    flv flv打包，解包相关测试
+    host 主机测试类及虚拟主机
+    ipc 网络摄像头测试类
+    live 直播测试类
+    startup 服务测试类
+    client 浏览器摄像头画面测出
+    xxx.test.js 对应文件的测试类
+    test.js 小知识测试类
+
+总体运行示例
+test/startup/client/index.html
+test/startup/server/startup.test.js 前台服务

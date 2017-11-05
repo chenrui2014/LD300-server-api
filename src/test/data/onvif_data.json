@@ -1,0 +1,1381 @@
+{
+  "hostname": "192.168.1.98",
+  "username": "admin",
+  "password": "admin",
+  "port": 80,
+  "path": "/onvif/device_service",
+  "timeout": 120000,
+  "preserveAddress": false,
+  "events": {},
+  "timeShift": -13403,
+  "capabilities": {
+    "analytics": {
+      "XAddr": "http://192.168.1.98/onvif/analytics_service",
+      "ruleSupport": true,
+      "analyticsModuleSupport": true
+    },
+    "device": {
+      "XAddr": "http://192.168.1.98/onvif/device_service",
+      "network": {
+        "IPFilter": false,
+        "zeroConfiguration": false,
+        "IPVersion6": false,
+        "dynDNS": false,
+        "extension": {
+          "dot11Configuration": false
+        }
+      },
+      "system": {
+        "discoveryResolve": false,
+        "discoveryBye": true,
+        "remoteDiscovery": false,
+        "systemBackup": false,
+        "systemLogging": true,
+        "firmwareUpgrade": true,
+        "supportedVersions": [
+          {
+            "major": 2,
+            "minor": 0
+          },
+          {
+            "major": 2,
+            "minor": 10
+          },
+          {
+            "major": 2,
+            "minor": 20
+          },
+          {
+            "major": 2,
+            "minor": 30
+          },
+          {
+            "major": 2,
+            "minor": 40
+          }
+        ],
+        "extension": {
+          "httpFirmwareUpgrade": true,
+          "httpSystemBackup": false,
+          "httpSystemLogging": false,
+          "httpSupportInformation": false
+        }
+      },
+      "IO": {
+        "inputConnectors": 0,
+        "relayOutputs": 0,
+        "extension": {
+          "auxiliary": false,
+          "extension": ""
+        }
+      },
+      "security": {
+        "TLS1.1": false,
+        "TLS1.2": false,
+        "onboardKeyGeneration": false,
+        "accessPolicyConfig": false,
+        "X.509Token": false,
+        "SAMLToken": false,
+        "kerberosToken": false,
+        "RELToken": false,
+        "extension": {
+          "TLS1.0": false,
+          "extension": {
+            "dot1X": false,
+            "supportedEAPMethod": 0,
+            "remoteUserHandling": false
+          }
+        }
+      }
+    },
+    "events": {
+      "XAddr": "http://192.168.1.98/onvif/event_service",
+      "WSSubscriptionPolicySupport": false,
+      "WSPullPointSupport": false,
+      "WSPausableSubscriptionManagerInterfaceSupport": false
+    },
+    "imaging": {
+      "XAddr": "http://192.168.1.98/onvif/imaging_service"
+    },
+    "media": {
+      "XAddr": "http://192.168.1.98/onvif/media_service",
+      "streamingCapabilities": {
+        "RTPMulticast": true,
+        "RTP_TCP": true,
+        "RTP_RTSP_TCP": true
+      },
+      "extension": {
+        "profileCapabilities": {
+          "maximumNumberOfProfiles": 6
+        }
+      }
+    },
+    "extension": {
+      "deviceIO": {
+        "XAddr": "http://192.168.1.98/onvif/deviceIO_service",
+        "videoSources": 1,
+        "videoOutputs": 0,
+        "audioSources": 0,
+        "audioOutputs": 0,
+        "relayOutputs": 0
+      },
+      "extensions": {
+        "telexCapabilities": {
+          "XAddr": "http://192.168.1.98/onvif/telecom_service",
+          "timeOSDSupport": true,
+          "titleOSDSupport": true,
+          "PTZ3DZoomSupport": true,
+          "PTZAuxSwitchSupport": true,
+          "motionDetectorSupport": true,
+          "tamperDetectorSupport": true
+        }
+      }
+    }
+  },
+  "uri": {
+    "media": {
+      "protocol": "http:",
+      "slashes": true,
+      "auth": null,
+      "host": "192.168.1.98",
+      "port": null,
+      "hostname": "192.168.1.98",
+      "hash": null,
+      "search": null,
+      "query": null,
+      "pathname": "/onvif/media_service",
+      "path": "/onvif/media_service",
+      "href": "http://192.168.1.98/onvif/media_service"
+    },
+    "imaging": {
+      "protocol": "http:",
+      "slashes": true,
+      "auth": null,
+      "host": "192.168.1.98",
+      "port": null,
+      "hostname": "192.168.1.98",
+      "hash": null,
+      "search": null,
+      "query": null,
+      "pathname": "/onvif/imaging_service",
+      "path": "/onvif/imaging_service",
+      "href": "http://192.168.1.98/onvif/imaging_service"
+    },
+    "events": {
+      "protocol": "http:",
+      "slashes": true,
+      "auth": null,
+      "host": "192.168.1.98",
+      "port": null,
+      "hostname": "192.168.1.98",
+      "hash": null,
+      "search": null,
+      "query": null,
+      "pathname": "/onvif/event_service",
+      "path": "/onvif/event_service",
+      "href": "http://192.168.1.98/onvif/event_service"
+    },
+    "device": {
+      "protocol": "http:",
+      "slashes": true,
+      "auth": null,
+      "host": "192.168.1.98",
+      "port": null,
+      "hostname": "192.168.1.98",
+      "hash": null,
+      "search": null,
+      "query": null,
+      "pathname": "/onvif/device_service",
+      "path": "/onvif/device_service",
+      "href": "http://192.168.1.98/onvif/device_service"
+    },
+    "deviceIO": {
+      "protocol": "http:",
+      "slashes": true,
+      "auth": null,
+      "host": "192.168.1.98",
+      "port": null,
+      "hostname": "192.168.1.98",
+      "hash": null,
+      "search": null,
+      "query": null,
+      "pathname": "/onvif/deviceIO_service",
+      "path": "/onvif/deviceIO_service",
+      "href": "http://192.168.1.98/onvif/deviceIO_service"
+    }
+  },
+  "videoSources": [
+    {
+      "$": {
+        "token": "000"
+      },
+      "framerate": 25,
+      "resolution": {
+        "width": 1280,
+        "height": 720
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "$": {
+        "token": "MediaProfile000",
+        "fixed": true
+      },
+      "name": "MediaProfile_Channel1_MainStream",
+      "videoSourceConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoSourceConfig_Channel1",
+        "useCount": 2,
+        "sourceToken": "000",
+        "bounds": {
+          "$": {
+            "x": 0,
+            "y": 0,
+            "width": 2048,
+            "height": 1536
+          }
+        }
+      },
+      "videoEncoderConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoEncoderConfig_Channel1_MainStream",
+        "useCount": 1,
+        "encoding": "JPEG",
+        "resolution": {
+          "width": 1280,
+          "height": 720
+        },
+        "quality": 4,
+        "rateControl": {
+          "frameRateLimit": 25,
+          "encodingInterval": 1,
+          "bitrateLimit": 8192
+        },
+        "multicast": {
+          "address": {
+            "type": "IPv4",
+            "IPv4Address": "224.1.0.0"
+          },
+          "port": 40000,
+          "TTL": 64,
+          "autoStart": false
+        },
+        "sessionTimeout": "PT60S"
+      },
+      "videoAnalyticsConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoAnalyticsConfig_Channel1",
+        "useCount": 2,
+        "analyticsEngineConfiguration": {
+          "analyticsModule": [
+            {
+              "$": {
+                "Name": "MyCellMotion",
+                "Type": "tt:CellMotionEngine"
+              },
+              "parameters": {
+                "simpleItem": {
+                  "$": {
+                    "Name": "Sensitivity",
+                    "Value": 60
+                  }
+                },
+                "elementItem": {
+                  "$": {
+                    "Name": "Layout"
+                  },
+                  "cellLayout": {
+                    "$": {
+                      "Columns": 22,
+                      "Rows": 18
+                    },
+                    "transformation": {
+                      "translate": {
+                        "$": {
+                          "x": -1,
+                          "y": -1
+                        }
+                      },
+                      "scale": {
+                        "$": {
+                          "x": 0.00625,
+                          "y": 0.00834
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "$": {
+                "Name": "MyTamper",
+                "Type": "tt:TamperEngine"
+              },
+              "parameters": {
+                "simpleItem": {
+                  "$": {
+                    "Name": "Sensitivity",
+                    "Value": 48
+                  }
+                },
+                "elementItem": [
+                  {
+                    "$": {
+                      "Name": "Field"
+                    },
+                    "polygonConfiguration": {
+                      "polygon": {
+                        "point": [
+                          {
+                            "$": {
+                              "x": 0,
+                              "y": 240
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 0,
+                              "y": 0
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 320,
+                              "y": 0
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 320,
+                              "y": 240
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "Transformation"
+                    },
+                    "transformation": {
+                      "translate": {
+                        "$": {
+                          "x": -1,
+                          "y": -1
+                        }
+                      },
+                      "scale": {
+                        "$": {
+                          "x": 0.00625,
+                          "y": 0.00834
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "ruleEngineConfiguration": {
+          "rule": [
+            {
+              "$": {
+                "Name": "Region1",
+                "Type": "tt:CellMotionDetector"
+              },
+              "parameters": {
+                "simpleItem": [
+                  {
+                    "$": {
+                      "Name": "MinCount",
+                      "Value": 4
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "AlarmOnDelay",
+                      "Value": 1000
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "AlarmOffDelay",
+                      "Value": 1000
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "ActiveCells",
+                      "Value": "9AAAAf//CIf//h//+H//4f//CIf//h//+H//4f//CIf//h//+H//4f//AIA="
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$": {
+                "Name": "MyTamperDetector",
+                "Type": "tt:TamperDetector"
+              },
+              "parameters": {
+                "elementItem": {
+                  "$": {
+                    "Name": "Field"
+                  },
+                  "polygonConfiguration": {
+                    "polygon": {
+                      "point": [
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 240
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 240
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "metadataConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "MetadataConfig_Channel1",
+        "useCount": 2,
+        "PTZStatus": {
+          "status": false,
+          "position": false
+        },
+        "events": {
+          "filter": {
+            "topicExpression": {
+              "_": "tns1:RuleEngine/CellMotionDetector/Motion",
+              "$": {
+                "Dialect": "http://www.onvif.org/ver10/tev/topicExpression/ConcreteSet"
+              }
+            }
+          }
+        },
+        "analytics": true,
+        "multicast": {
+          "address": {
+            "type": "IPv4",
+            "IPv4Address": "224.2.0.0"
+          },
+          "port": 40020,
+          "TTL": 64,
+          "autoStart": true
+        },
+        "sessionTimeout": "PT60S"
+      }
+    },
+    {
+      "$": {
+        "token": "MediaProfile001",
+        "fixed": true
+      },
+      "name": "MediaProfile_Channel1_SubStream1",
+      "videoSourceConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoSourceConfig_Channel1",
+        "useCount": 2,
+        "sourceToken": "000",
+        "bounds": {
+          "$": {
+            "x": 0,
+            "y": 0,
+            "width": 2048,
+            "height": 1536
+          }
+        }
+      },
+      "videoEncoderConfiguration": {
+        "$": {
+          "token": "001"
+        },
+        "name": "VideoEncoderConfig_Channel1_SubStream1",
+        "useCount": 1,
+        "encoding": "H264",
+        "resolution": {
+          "width": 352,
+          "height": 288
+        },
+        "quality": 4,
+        "rateControl": {
+          "frameRateLimit": 25,
+          "encodingInterval": 1,
+          "bitrateLimit": 1024
+        },
+        "H264": {
+          "govLength": 50,
+          "H264Profile": "Main"
+        },
+        "multicast": {
+          "address": {
+            "type": "IPv4",
+            "IPv4Address": "224.1.0.1"
+          },
+          "port": 40008,
+          "TTL": 64,
+          "autoStart": false
+        },
+        "sessionTimeout": "PT60S"
+      },
+      "videoAnalyticsConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoAnalyticsConfig_Channel1",
+        "useCount": 2,
+        "analyticsEngineConfiguration": {
+          "analyticsModule": [
+            {
+              "$": {
+                "Name": "MyCellMotion",
+                "Type": "tt:CellMotionEngine"
+              },
+              "parameters": {
+                "simpleItem": {
+                  "$": {
+                    "Name": "Sensitivity",
+                    "Value": 60
+                  }
+                },
+                "elementItem": {
+                  "$": {
+                    "Name": "Layout"
+                  },
+                  "cellLayout": {
+                    "$": {
+                      "Columns": 22,
+                      "Rows": 18
+                    },
+                    "transformation": {
+                      "translate": {
+                        "$": {
+                          "x": -1,
+                          "y": -1
+                        }
+                      },
+                      "scale": {
+                        "$": {
+                          "x": 0.00625,
+                          "y": 0.00834
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "$": {
+                "Name": "MyTamper",
+                "Type": "tt:TamperEngine"
+              },
+              "parameters": {
+                "simpleItem": {
+                  "$": {
+                    "Name": "Sensitivity",
+                    "Value": 48
+                  }
+                },
+                "elementItem": [
+                  {
+                    "$": {
+                      "Name": "Field"
+                    },
+                    "polygonConfiguration": {
+                      "polygon": {
+                        "point": [
+                          {
+                            "$": {
+                              "x": 0,
+                              "y": 240
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 0,
+                              "y": 0
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 320,
+                              "y": 0
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 320,
+                              "y": 240
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "Transformation"
+                    },
+                    "transformation": {
+                      "translate": {
+                        "$": {
+                          "x": -1,
+                          "y": -1
+                        }
+                      },
+                      "scale": {
+                        "$": {
+                          "x": 0.00625,
+                          "y": 0.00834
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "ruleEngineConfiguration": {
+          "rule": [
+            {
+              "$": {
+                "Name": "Region1",
+                "Type": "tt:CellMotionDetector"
+              },
+              "parameters": {
+                "simpleItem": [
+                  {
+                    "$": {
+                      "Name": "MinCount",
+                      "Value": 4
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "AlarmOnDelay",
+                      "Value": 1000
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "AlarmOffDelay",
+                      "Value": 1000
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "ActiveCells",
+                      "Value": "9AAAAf//CIf//h//+H//4f//CIf//h//+H//4f//CIf//h//+H//4f//AIA="
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$": {
+                "Name": "MyTamperDetector",
+                "Type": "tt:TamperDetector"
+              },
+              "parameters": {
+                "elementItem": {
+                  "$": {
+                    "Name": "Field"
+                  },
+                  "polygonConfiguration": {
+                    "polygon": {
+                      "point": [
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 240
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 240
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "metadataConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "MetadataConfig_Channel1",
+        "useCount": 2,
+        "PTZStatus": {
+          "status": false,
+          "position": false
+        },
+        "events": {
+          "filter": {
+            "topicExpression": {
+              "_": "tns1:RuleEngine/CellMotionDetector/Motion",
+              "$": {
+                "Dialect": "http://www.onvif.org/ver10/tev/topicExpression/ConcreteSet"
+              }
+            }
+          }
+        },
+        "analytics": true,
+        "multicast": {
+          "address": {
+            "type": "IPv4",
+            "IPv4Address": "224.2.0.0"
+          },
+          "port": 40020,
+          "TTL": 64,
+          "autoStart": true
+        },
+        "sessionTimeout": "PT60S"
+      }
+    }
+  ],
+  "defaultProfiles": [
+    {
+      "$": {
+        "token": "MediaProfile000",
+        "fixed": true
+      },
+      "name": "MediaProfile_Channel1_MainStream",
+      "videoSourceConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoSourceConfig_Channel1",
+        "useCount": 2,
+        "sourceToken": "000",
+        "bounds": {
+          "$": {
+            "x": 0,
+            "y": 0,
+            "width": 2048,
+            "height": 1536
+          }
+        }
+      },
+      "videoEncoderConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoEncoderConfig_Channel1_MainStream",
+        "useCount": 1,
+        "encoding": "JPEG",
+        "resolution": {
+          "width": 1280,
+          "height": 720
+        },
+        "quality": 4,
+        "rateControl": {
+          "frameRateLimit": 25,
+          "encodingInterval": 1,
+          "bitrateLimit": 8192
+        },
+        "multicast": {
+          "address": {
+            "type": "IPv4",
+            "IPv4Address": "224.1.0.0"
+          },
+          "port": 40000,
+          "TTL": 64,
+          "autoStart": false
+        },
+        "sessionTimeout": "PT60S"
+      },
+      "videoAnalyticsConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "VideoAnalyticsConfig_Channel1",
+        "useCount": 2,
+        "analyticsEngineConfiguration": {
+          "analyticsModule": [
+            {
+              "$": {
+                "Name": "MyCellMotion",
+                "Type": "tt:CellMotionEngine"
+              },
+              "parameters": {
+                "simpleItem": {
+                  "$": {
+                    "Name": "Sensitivity",
+                    "Value": 60
+                  }
+                },
+                "elementItem": {
+                  "$": {
+                    "Name": "Layout"
+                  },
+                  "cellLayout": {
+                    "$": {
+                      "Columns": 22,
+                      "Rows": 18
+                    },
+                    "transformation": {
+                      "translate": {
+                        "$": {
+                          "x": -1,
+                          "y": -1
+                        }
+                      },
+                      "scale": {
+                        "$": {
+                          "x": 0.00625,
+                          "y": 0.00834
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "$": {
+                "Name": "MyTamper",
+                "Type": "tt:TamperEngine"
+              },
+              "parameters": {
+                "simpleItem": {
+                  "$": {
+                    "Name": "Sensitivity",
+                    "Value": 48
+                  }
+                },
+                "elementItem": [
+                  {
+                    "$": {
+                      "Name": "Field"
+                    },
+                    "polygonConfiguration": {
+                      "polygon": {
+                        "point": [
+                          {
+                            "$": {
+                              "x": 0,
+                              "y": 240
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 0,
+                              "y": 0
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 320,
+                              "y": 0
+                            }
+                          },
+                          {
+                            "$": {
+                              "x": 320,
+                              "y": 240
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "Transformation"
+                    },
+                    "transformation": {
+                      "translate": {
+                        "$": {
+                          "x": -1,
+                          "y": -1
+                        }
+                      },
+                      "scale": {
+                        "$": {
+                          "x": 0.00625,
+                          "y": 0.00834
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "ruleEngineConfiguration": {
+          "rule": [
+            {
+              "$": {
+                "Name": "Region1",
+                "Type": "tt:CellMotionDetector"
+              },
+              "parameters": {
+                "simpleItem": [
+                  {
+                    "$": {
+                      "Name": "MinCount",
+                      "Value": 4
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "AlarmOnDelay",
+                      "Value": 1000
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "AlarmOffDelay",
+                      "Value": 1000
+                    }
+                  },
+                  {
+                    "$": {
+                      "Name": "ActiveCells",
+                      "Value": "9AAAAf//CIf//h//+H//4f//CIf//h//+H//4f//CIf//h//+H//4f//AIA="
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$": {
+                "Name": "MyTamperDetector",
+                "Type": "tt:TamperDetector"
+              },
+              "parameters": {
+                "elementItem": {
+                  "$": {
+                    "Name": "Field"
+                  },
+                  "polygonConfiguration": {
+                    "polygon": {
+                      "point": [
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 240
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 240
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "metadataConfiguration": {
+        "$": {
+          "token": "000"
+        },
+        "name": "MetadataConfig_Channel1",
+        "useCount": 2,
+        "PTZStatus": {
+          "status": false,
+          "position": false
+        },
+        "events": {
+          "filter": {
+            "topicExpression": {
+              "_": "tns1:RuleEngine/CellMotionDetector/Motion",
+              "$": {
+                "Dialect": "http://www.onvif.org/ver10/tev/topicExpression/ConcreteSet"
+              }
+            }
+          }
+        },
+        "analytics": true,
+        "multicast": {
+          "address": {
+            "type": "IPv4",
+            "IPv4Address": "224.2.0.0"
+          },
+          "port": 40020,
+          "TTL": 64,
+          "autoStart": true
+        },
+        "sessionTimeout": "PT60S"
+      }
+    }
+  ],
+  "activeSources": [
+    {
+      "sourceToken": "000",
+      "profileToken": "MediaProfile000",
+      "encoding": "JPEG",
+      "width": 1280,
+      "height": 720,
+      "bitrate": 8192
+    }
+  ],
+  "defaultProfile": {
+    "$": {
+      "token": "MediaProfile000",
+      "fixed": true
+    },
+    "name": "MediaProfile_Channel1_MainStream",
+    "videoSourceConfiguration": {
+      "$": {
+        "token": "000"
+      },
+      "name": "VideoSourceConfig_Channel1",
+      "useCount": 2,
+      "sourceToken": "000",
+      "bounds": {
+        "$": {
+          "x": 0,
+          "y": 0,
+          "width": 2048,
+          "height": 1536
+        }
+      }
+    },
+    "videoEncoderConfiguration": {
+      "$": {
+        "token": "000"
+      },
+      "name": "VideoEncoderConfig_Channel1_MainStream",
+      "useCount": 1,
+      "encoding": "JPEG",
+      "resolution": {
+        "width": 1280,
+        "height": 720
+      },
+      "quality": 4,
+      "rateControl": {
+        "frameRateLimit": 25,
+        "encodingInterval": 1,
+        "bitrateLimit": 8192
+      },
+      "multicast": {
+        "address": {
+          "type": "IPv4",
+          "IPv4Address": "224.1.0.0"
+        },
+        "port": 40000,
+        "TTL": 64,
+        "autoStart": false
+      },
+      "sessionTimeout": "PT60S"
+    },
+    "videoAnalyticsConfiguration": {
+      "$": {
+        "token": "000"
+      },
+      "name": "VideoAnalyticsConfig_Channel1",
+      "useCount": 2,
+      "analyticsEngineConfiguration": {
+        "analyticsModule": [
+          {
+            "$": {
+              "Name": "MyCellMotion",
+              "Type": "tt:CellMotionEngine"
+            },
+            "parameters": {
+              "simpleItem": {
+                "$": {
+                  "Name": "Sensitivity",
+                  "Value": 60
+                }
+              },
+              "elementItem": {
+                "$": {
+                  "Name": "Layout"
+                },
+                "cellLayout": {
+                  "$": {
+                    "Columns": 22,
+                    "Rows": 18
+                  },
+                  "transformation": {
+                    "translate": {
+                      "$": {
+                        "x": -1,
+                        "y": -1
+                      }
+                    },
+                    "scale": {
+                      "$": {
+                        "x": 0.00625,
+                        "y": 0.00834
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$": {
+              "Name": "MyTamper",
+              "Type": "tt:TamperEngine"
+            },
+            "parameters": {
+              "simpleItem": {
+                "$": {
+                  "Name": "Sensitivity",
+                  "Value": 48
+                }
+              },
+              "elementItem": [
+                {
+                  "$": {
+                    "Name": "Field"
+                  },
+                  "polygonConfiguration": {
+                    "polygon": {
+                      "point": [
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 240
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 0,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 0
+                          }
+                        },
+                        {
+                          "$": {
+                            "x": 320,
+                            "y": 240
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "$": {
+                    "Name": "Transformation"
+                  },
+                  "transformation": {
+                    "translate": {
+                      "$": {
+                        "x": -1,
+                        "y": -1
+                      }
+                    },
+                    "scale": {
+                      "$": {
+                        "x": 0.00625,
+                        "y": 0.00834
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "ruleEngineConfiguration": {
+        "rule": [
+          {
+            "$": {
+              "Name": "Region1",
+              "Type": "tt:CellMotionDetector"
+            },
+            "parameters": {
+              "simpleItem": [
+                {
+                  "$": {
+                    "Name": "MinCount",
+                    "Value": 4
+                  }
+                },
+                {
+                  "$": {
+                    "Name": "AlarmOnDelay",
+                    "Value": 1000
+                  }
+                },
+                {
+                  "$": {
+                    "Name": "AlarmOffDelay",
+                    "Value": 1000
+                  }
+                },
+                {
+                  "$": {
+                    "Name": "ActiveCells",
+                    "Value": "9AAAAf//CIf//h//+H//4f//CIf//h//+H//4f//CIf//h//+H//4f//AIA="
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "$": {
+              "Name": "MyTamperDetector",
+              "Type": "tt:TamperDetector"
+            },
+            "parameters": {
+              "elementItem": {
+                "$": {
+                  "Name": "Field"
+                },
+                "polygonConfiguration": {
+                  "polygon": {
+                    "point": [
+                      {
+                        "$": {
+                          "x": 0,
+                          "y": 240
+                        }
+                      },
+                      {
+                        "$": {
+                          "x": 0,
+                          "y": 0
+                        }
+                      },
+                      {
+                        "$": {
+                          "x": 320,
+                          "y": 0
+                        }
+                      },
+                      {
+                        "$": {
+                          "x": 320,
+                          "y": 240
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "metadataConfiguration": {
+      "$": {
+        "token": "000"
+      },
+      "name": "MetadataConfig_Channel1",
+      "useCount": 2,
+      "PTZStatus": {
+        "status": false,
+        "position": false
+      },
+      "events": {
+        "filter": {
+          "topicExpression": {
+            "_": "tns1:RuleEngine/CellMotionDetector/Motion",
+            "$": {
+              "Dialect": "http://www.onvif.org/ver10/tev/topicExpression/ConcreteSet"
+            }
+          }
+        }
+      },
+      "analytics": true,
+      "multicast": {
+        "address": {
+          "type": "IPv4",
+          "IPv4Address": "224.2.0.0"
+        },
+        "port": 40020,
+        "TTL": 64,
+        "autoStart": true
+      },
+      "sessionTimeout": "PT60S"
+    }
+  },
+  "activeSource": {
+    "sourceToken": "000",
+    "profileToken": "MediaProfile000",
+    "encoding": "JPEG",
+    "width": 1280,
+    "height": 720,
+    "bitrate": 8192
+  }
+}

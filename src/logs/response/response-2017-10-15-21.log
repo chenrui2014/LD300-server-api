@@ -1,0 +1,48 @@
+[2017-10-15 21:07:00.895] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /stateServer/?EIO=3&transport=polling&t=LyW9H24
+request client ip:  ::1
+request query:  {"EIO":"3","transport":"polling","t":"LyW9H24"}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-10-15 21:07:02.006] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /stateServer/?EIO=3&transport=polling&t=LyW9HJZ
+request client ip:  ::1
+request query:  {"EIO":"3","transport":"polling","t":"LyW9HJZ"}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-10-15 21:07:03.151] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /stateServer/?EIO=3&transport=polling&t=LyW9HbZ
+request client ip:  ::1
+request query:  {"EIO":"3","transport":"polling","t":"LyW9HbZ"}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-10-15 21:07:07.503] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /stateServer/?EIO=3&transport=polling&t=LyW9IfT
+request client ip:  ::1
+request query:  {"EIO":"3","transport":"polling","t":"LyW9IfT"}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+

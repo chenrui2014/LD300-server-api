@@ -1,0 +1,15 @@
+{
+  "id":1,
+  "ip":"192.168.1.200",
+  "port":37777,
+  "user":"admin",
+  "pwd":"888888",
+  "functions":0,
+  "nvr_id":1,
+  "nvr_channel":2,
+  "model":"dh",
+  "video_protocol":"ONVIF",
+  "ptz_protocol":"ONVIF",
+  "audio_protocol":"ONVIF",
+  "is_demo":false
+}

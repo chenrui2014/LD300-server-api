@@ -20,7 +20,7 @@ const PresetSchema = new mongoose.Schema({
     distance:Number//监控距离（实际单位米），注意监控距离应该包含在外部的[min,max]之间,请保证数据的有效性
 });
 
-const MonitoringAreaSchema = new mongoose.Schema({
+const MonitoringAreaSchema = new mongoose.Schema({//一个主机对应多个监控区域，一个监控区域对应一个摄像头，摄像头对应多个预置点。
 
     id:{//监控区域ID
         type:Number,

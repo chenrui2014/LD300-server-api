@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>start</title>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="socket.io.js"></script>
+    <script type="text/javascript" src="flv.js"></script>
+    <script type="text/javascript" src="client.js"></script>
+</head>
+<style type="text/css">
+    input[type="button"]{
+        width:50px;
+        height:20px;
+    }
+</style>
+<body>
+    <div id="time"></div>
+    <div style="width: 1000px;height: 400px;" id="c"></div>
+    <label for="ipcid">编号:</label><input id="ipcid" value="1" type="text">
+    <label for="port">编号:</label><input id="port" value="3000" type="text">
+    <input type="button" id="open" value="open" /></br>
+    <input class="ptz" type="button" id="lt" value="lt" code="5" /><input class="ptz" type="button" id="t" value="t" code="1"  /><input class="ptz" type="button" id="rt" value="rt" code="9"  /></br>
+    <input class="ptz" type="button" id=" l" value="l" code="4"  /><input type="button" value=" " /><input type="button" id="r" value="r" code="8" class="ptz" /></br>
+    <input class="ptz" type="button" id="lb" value="lb" code="6" /><input class="ptz" type="button" id="b" value="b" code="2"  /><input type="button" id="rb" value="rb" code="10" class="ptz" /></br>
+    <label >zoom:</label><input fn="zoomAdd" value="+" type="button"  class="zoom" /><input fn="-" class="zoom" type="button"  value="-"/></br>
+    <label >focus:</label><input fn="focusAdd" value="+" class="focus" type="button" /><input fn="focusDec" class="focus" type="button"  value="-"/></br>
+    <label >aperture:</label><input fn="apertureAdd" value="+" class="aperture" type="button" /><input fn="apertureDec" class="aperture" value="-" type="button" /></br>
+    <label >stop:</label><input fn="ptzStop" class="ptzStop" type="button"  value="stop"/></br>
+    <label for="stop">stop</label><input id="stop" type="checkbox"/>
+    <div id="msg" style="height:200px;width:400px;"></div>
+    <script type="text/javascript">
+        $('#open').click(()=>{
+            var id=$('#ipcid').val()-0;
+            var port=$('#port').val()-0;
+            $.ajax({
+                url:'http://localhost:'+port+'/ipc/'+id+'/live'+'?t='+new Date().getTime(),
+                dataType:'json',
+                success:function (data) {
+                    play($('<video></video>').prop('class','v'+id).appendTo('#c')[0],data.path,data.port);
+                    console.log(JSON.stringify(data));
+                }
+            });
+        });
+        var handle='';
+        $('.ptz').click((e)=>{
+            var id=$('#ipcid').val();
+            var $this=$(e.target);
+            var code=$this.attr('code');
+            var port=$('#port').val()-0;
+            var stop=$('#stop').is(':checked')-0;
+            $.ajax({
+                url:'http://localhost:'+port+'/ipc/'+id+'/ptz/move?position='+code+'&stop='+stop+'&handle='+handle+'&t='+new Date().getTime(),
+                dataType:'json',
+                success:function (data) {
+                    handle=data.handle;
+                    console.log(JSON.stringify(data));
+                }
+            });
+        });
+        $('.zoom,.focus,.aperture,.ptzStop').click((e)=>{
+            var $this=$(e.target);
+            var id=$('#ipcid').val();
+            var code=$this.attr('fn');
+            var port=$('#port').val()-0;
+            var stop=$('#stop').is(':checked')-0;
+            $.ajax({
+                url:'http://localhost:'+port+'/ipc/'+id+'/ptz/'+code+'?handle='+handle+'&stop='+stop+'&t='+new Date().getTime(),
+                dataType:'json',
+                success:function(data) {
+                    console.log(JSON.stringify(data));
+                }
+            });
+        });
+
+        setInterval(function(){
+            $('#time').html(new Date().toLocaleTimeString());
+        },500);
+        function play(v,path,port) {
+            var flvPlayer = flvjs.createPlayer({
+                type: 'flv',
+                isLive: true,
+                enableWorker:true,
+                enableStashBuffer: false,
+                stashInitialSize: 128,
+                autoCleanupSourceBuffer:true,
+                url:'ws://localhost:'+port+path
+            },{
+                enableStashBuffer:false
+            });
+            flvPlayer.attachMediaElement(v);
+            flvPlayer.load();
+            flvPlayer.play();
+        }
+    </script>
+</body>
+</html>

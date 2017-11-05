@@ -1,0 +1,8 @@
+{
+  "id":1,
+  "ip":"192.168.1.112",
+  "port":37777,
+  "user":"admin",
+  "pwd":"admin",
+  "brand":"dahua"
+}

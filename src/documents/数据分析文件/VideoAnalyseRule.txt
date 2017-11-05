@@ -1,0 +1,152 @@
+{
+    "VideoAnalyseRule": [
+        {
+            "Config": {
+                "DetectLine": [
+                    [
+                        692,
+                        7243
+                    ],
+                    [
+                        5169,
+                        6514
+                    ]
+                ],
+                "Direction": "Both",
+                "LaneNumber": null,
+                "SizeFilter": {
+                    "MaxSize": [
+                        7991,
+                        7991
+                    ],
+                    "MinSize": [
+                        200,
+                        200
+                    ],
+                    "Type": "ByLength"
+                },
+                "TriggerPosition": [
+                    "Center"
+                ]
+            },
+            "Enable": true,
+            "Name": "line1",
+            "ObjectTypes": [
+                "Unknown"
+            ],
+            "PtzPresetId": 0,
+            "Type": "CrossLineDetection"
+        },
+        {
+            "Config": {
+                "DetectLine": [
+                    [
+                        546,
+                        5056
+                    ],
+                    [
+                        5242,
+                        4594
+                    ]
+                ],
+                "Direction": "Both",
+                "LaneNumber": null,
+                "SizeFilter": {
+                    "MaxSize": [
+                        7991,
+                        7991
+                    ],
+                    "MinSize": [
+                        200,
+                        200
+                    ],
+                    "Type": "ByLength"
+                },
+                "TriggerPosition": [
+                    "Center"
+                ]
+            },
+            "Enable": true,
+            "Name": "line2",
+            "ObjectTypes": [
+                "Unknown"
+            ],
+            "PtzPresetId": 0,
+            "Type": "CrossLineDetection"
+        },
+        {
+            "Config": {
+                "DetectLine": [
+                    [
+                        491,
+                        3378
+                    ],
+                    [
+                        5224,
+                        2990
+                    ]
+                ],
+                "Direction": "Both",
+                "LaneNumber": null,
+                "SizeFilter": {
+                    "MaxSize": [
+                        7991,
+                        7991
+                    ],
+                    "MinSize": [
+                        200,
+                        200
+                    ],
+                    "Type": "ByLength"
+                },
+                "TriggerPosition": [
+                    "Center"
+                ]
+            },
+            "Enable": true,
+            "Name": "line3",
+            "ObjectTypes": [
+                "Unknown"
+            ],
+            "PtzPresetId": 0,
+            "Type": "CrossLineDetection"
+        },
+        {
+            "Config": {
+                "DetectLine": [
+                    [
+                        455,
+                        2212
+                    ],
+                    [
+                        5297,
+                        2017
+                    ]
+                ],
+                "Direction": "Both",
+                "LaneNumber": null,
+                "SizeFilter": {
+                    "MaxSize": [
+                        7991,
+                        7991
+                    ],
+                    "MinSize": [
+                        200,
+                        200
+                    ],
+                    "Type": "ByLength"
+                },
+                "TriggerPosition": [
+                    "Center"
+                ]
+            },
+            "Enable": true,
+            "Name": "line4",
+            "ObjectTypes": [
+                "Unknown"
+            ],
+            "PtzPresetId": 0,
+            "Type": "CrossLineDetection"
+        }
+    ]
+}

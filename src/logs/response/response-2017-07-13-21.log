@@ -1,0 +1,108 @@
+[2017-07-13 21:01:18.350] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /
+request client ip:  ::1
+request query:  {}
+response time: 2820
+response status: 200
+response body: 
+"<!DOCTYPE html><html><head><title>koa2 title</title><link rel=\"stylesheet\" href=\"/stylesheets/style.css\"></head><body><h1>koa2 title</h1><p>Welcome to koa2 title</p></body></html>"
+*************** response log end ***************
+
+[2017-07-13 21:01:18.893] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /favicon.ico
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-07-13 21:01:34.783] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /map.html
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-07-13 21:01:46.209] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /layout
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-07-13 21:01:51.321] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /layout.jade
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-07-13 21:01:55.407] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /
+request client ip:  ::1
+request query:  {}
+response time: 31
+response status: 200
+response body: 
+"<!DOCTYPE html><html><head><title>koa2 title</title><link rel=\"stylesheet\" href=\"/stylesheets/style.css\"></head><body><h1>koa2 title</h1><p>Welcome to koa2 title</p></body></html>"
+*************** response log end ***************
+
+[2017-07-13 21:03:31.654] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /map
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-07-13 21:03:50.959] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /views/map.html
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+
+[2017-07-13 21:04:18.784] [INFO] resLogger - 
+*************** response log start ***************
+request method: GET
+request originalUrl:  /test/data/user_config_old.json
+request client ip:  ::1
+request query:  {}
+response time: 0
+response status: 404
+response body: 
+undefined
+*************** response log end ***************
+

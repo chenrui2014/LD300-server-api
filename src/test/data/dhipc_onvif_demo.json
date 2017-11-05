@@ -1,0 +1,26 @@
+{
+  "id":5,
+  "ip":"192.168.1.106",
+  "port":37777,
+  "user":"admin",
+  "pwd":"888888",
+  "brand":"dahua",
+  "onvif":{
+    "port":80,
+    "user":"admin",
+    "pwd":"admin",
+    "path":""
+  },
+  "ptz":{
+
+  },
+  "audio":{
+
+  },
+  "functions":{
+    "ptz":true,
+    "alarm":true,
+    "audio":true
+  },
+  "quality":0
+}

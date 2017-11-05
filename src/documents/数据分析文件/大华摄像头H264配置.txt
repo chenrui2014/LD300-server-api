@@ -1,0 +1,4 @@
+版本  profile_idc 版本号
+H264B 66  基线
+H264  77  Main
+H264H 100 高

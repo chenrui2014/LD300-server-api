@@ -1,0 +1,14 @@
+{
+  "id":3,
+  "ip":"192.168.1.107",
+  "port":80,
+  "path":"",
+  "user":"admin",
+  "pwd":"admin",
+  "nvr_id":1,
+  "nvr_channel":2,
+  "protocol_video":"onvif",
+  "protocol_ptz":"",
+  "protocol_audio":"",
+  "quality":0
+}

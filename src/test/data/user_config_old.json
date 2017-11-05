@@ -1,0 +1,1905 @@
+{
+	"default_camera" : 
+	{
+		"cid" : 0,
+		"ip" : "192.168.1.98",
+		"port" : 37777,
+		"pwd" : "admin",
+		"user" : "admin"
+	},
+	"lines" : 
+	[
+		{
+			"cali_points" : 
+			[
+				{
+					"addSeq" : 0,
+					"distance" : 12,
+					"line_idx" : 1,
+					"point" : 
+					[
+						117,
+						212
+					],
+					"segTolDistance" : 936
+				},
+				{
+					"addSeq" : 1,
+					"distance" : 15,
+					"line_idx" : 3,
+					"point" : 
+					[
+						440,
+						27
+					],
+					"segTolDistance" : 1461.4480313035062
+				},
+				{
+					"addSeq" : 2,
+					"distance" : 33,
+					"line_idx" : 3,
+					"point" : 
+					[
+						951,
+						27
+					],
+					"segTolDistance" : 2180.3497023973187
+				},
+				{
+					"addSeq" : 3,
+					"distance" : 48,
+					"line_idx" : 5,
+					"point" : 
+					[
+						840,
+						364
+					],
+					"segTolDistance" : 2811.3497023973187
+				},
+				{
+					"addSeq" : 4,
+					"distance" : 59,
+					"line_idx" : 6,
+					"point" : 
+					[
+						839,
+						127
+					],
+					"segTolDistance" : 3148.3528669225902
+				},
+				{
+					"addSeq" : 5,
+					"distance" : 78,
+					"line_idx" : 8,
+					"point" : 
+					[
+						470,
+						126
+					],
+					"segTolDistance" : 3670.58893490009
+				},
+				{
+					"addSeq" : 6,
+					"distance" : 93,
+					"line_idx" : 9,
+					"point" : 
+					[
+						230,
+						265
+					],
+					"segTolDistance" : 4057.8383505216534
+				},
+				{
+					"addSeq" : 7,
+					"distance" : 102,
+					"line_idx" : 11,
+					"point" : 
+					[
+						218,
+						431
+					],
+					"segTolDistance" : 4308.8677368875797
+				},
+				{
+					"addSeq" : 28,
+					"distance" : 111,
+					"line_idx" : 11,
+					"point" : 
+					[
+						218,
+						263
+					],
+					"segTolDistance" : 4544.8677368875797
+				},
+				{
+					"addSeq" : 8,
+					"distance" : 125,
+					"line_idx" : 12,
+					"point" : 
+					[
+						468,
+						115
+					],
+					"segTolDistance" : 4956.3427669449184
+				},
+				{
+					"addSeq" : 9,
+					"distance" : 143,
+					"line_idx" : 14,
+					"point" : 
+					[
+						852,
+						118
+					],
+					"segTolDistance" : 5499.9766331024493
+				},
+				{
+					"addSeq" : 17,
+					"distance" : 156,
+					"line_idx" : 14,
+					"point" : 
+					[
+						852,
+						354
+					],
+					"segTolDistance" : 5830.9766331024493
+				},
+				{
+					"addSeq" : 10,
+					"distance" : 171,
+					"line_idx" : 16,
+					"point" : 
+					[
+						865,
+						107
+					],
+					"segTolDistance" : 6199.9766331024493
+				},
+				{
+					"addSeq" : 21,
+					"distance" : 189,
+					"line_idx" : 17,
+					"point" : 
+					[
+						463,
+						105
+					],
+					"segTolDistance" : 6766.9775196265755
+				},
+				{
+					"addSeq" : 29,
+					"distance" : 204,
+					"line_idx" : 19,
+					"point" : 
+					[
+						205,
+						256
+					],
+					"segTolDistance" : 7189.2262510259461
+				},
+				{
+					"addSeq" : 36,
+					"distance" : 213,
+					"line_idx" : 21,
+					"point" : 
+					[
+						192,
+						429
+					],
+					"segTolDistance" : 7458.3312242004886
+				},
+				{
+					"addSeq" : 30,
+					"distance" : 222,
+					"line_idx" : 21,
+					"point" : 
+					[
+						192,
+						248
+					],
+					"segTolDistance" : 7712.3312242004886
+				},
+				{
+					"addSeq" : 22,
+					"distance" : 236,
+					"line_idx" : 22,
+					"point" : 
+					[
+						459,
+						93
+					],
+					"segTolDistance" : 8148.9650185346809
+				},
+				{
+					"addSeq" : 11,
+					"distance" : 255,
+					"line_idx" : 24,
+					"point" : 
+					[
+						876,
+						94
+					],
+					"segTolDistance" : 8735.4721010456487
+				},
+				{
+					"addSeq" : 18,
+					"distance" : 267,
+					"line_idx" : 26,
+					"point" : 
+					[
+						890,
+						352
+					],
+					"segTolDistance" : 9125.4983986360894
+				},
+				{
+					"addSeq" : 12,
+					"distance" : 281,
+					"line_idx" : 26,
+					"point" : 
+					[
+						888,
+						83
+					],
+					"segTolDistance" : 9503.5036205326069
+				},
+				{
+					"addSeq" : 23,
+					"distance" : 300,
+					"line_idx" : 27,
+					"point" : 
+					[
+						458,
+						81
+					],
+					"segTolDistance" : 10109.506912710194
+				},
+				{
+					"addSeq" : 31,
+					"distance" : 315,
+					"line_idx" : 29,
+					"point" : 
+					[
+						180,
+						241
+					],
+					"segTolDistance" : 10563.722842337205
+				},
+				{
+					"addSeq" : 37,
+					"distance" : 324,
+					"line_idx" : 30,
+					"point" : 
+					[
+						169,
+						431
+					],
+					"segTolDistance" : 10842.520070738079
+				},
+				{
+					"addSeq" : 32,
+					"distance" : 333,
+					"line_idx" : 32,
+					"point" : 
+					[
+						168,
+						233
+					],
+					"segTolDistance" : 11126.099519786689
+				},
+				{
+					"addSeq" : 24,
+					"distance" : 345,
+					"line_idx" : 32,
+					"point" : 
+					[
+						452,
+						71
+					],
+					"segTolDistance" : 11585.143944194786
+				},
+				{
+					"addSeq" : 13,
+					"distance" : 366,
+					"line_idx" : 33,
+					"point" : 
+					[
+						903,
+						72
+					],
+					"segTolDistance" : 12218.649786390864
+				},
+				{
+					"addSeq" : 19,
+					"distance" : 378,
+					"line_idx" : 36,
+					"point" : 
+					[
+						914,
+						353
+					],
+					"segTolDistance" : 12637.65481148477
+				},
+				{
+					"addSeq" : 14,
+					"distance" : 391,
+					"line_idx" : 36,
+					"point" : 
+					[
+						913,
+						60
+					],
+					"segTolDistance" : 13049.659630733897
+				},
+				{
+					"addSeq" : 25,
+					"distance" : 411,
+					"line_idx" : 37,
+					"point" : 
+					[
+						449,
+						59
+					],
+					"segTolDistance" : 13701.660397604612
+				},
+				{
+					"addSeq" : 33,
+					"distance" : 423,
+					"line_idx" : 39,
+					"point" : 
+					[
+						155,
+						231
+					],
+					"segTolDistance" : 14180.560455540035
+				},
+				{
+					"addSeq" : 38,
+					"distance" : 441,
+					"line_idx" : 41,
+					"point" : 
+					[
+						142,
+						428
+					],
+					"segTolDistance" : 14485.588211917355
+				},
+				{
+					"addSeq" : 34,
+					"distance" : 447,
+					"line_idx" : 41,
+					"point" : 
+					[
+						142,
+						226
+					],
+					"segTolDistance" : 14769.588211917355
+				},
+				{
+					"addSeq" : 26,
+					"distance" : 458,
+					"line_idx" : 42,
+					"point" : 
+					[
+						446,
+						49
+					],
+					"segTolDistance" : 15266.248013805254
+				},
+				{
+					"addSeq" : 15,
+					"distance" : 476,
+					"line_idx" : 43,
+					"point" : 
+					[
+						927,
+						49
+					],
+					"segTolDistance" : 15941.149852836523
+				},
+				{
+					"addSeq" : 20,
+					"distance" : 489,
+					"line_idx" : 46,
+					"point" : 
+					[
+						941,
+						353
+					],
+					"segTolDistance" : 16393.149115373795
+				},
+				{
+					"addSeq" : 16,
+					"distance" : 502,
+					"line_idx" : 46,
+					"point" : 
+					[
+						941,
+						38
+					],
+					"segTolDistance" : 16836.149115373795
+				},
+				{
+					"addSeq" : 27,
+					"distance" : 522,
+					"line_idx" : 48,
+					"point" : 
+					[
+						441,
+						38
+					],
+					"segTolDistance" : 17540.563328936169
+				},
+				{
+					"addSeq" : 35,
+					"distance" : 534,
+					"line_idx" : 49,
+					"point" : 
+					[
+						130,
+						216
+					],
+					"segTolDistance" : 18041.877584706228
+				},
+				{
+					"addSeq" : 41,
+					"distance" : 551,
+					"line_idx" : 50,
+					"point" : 
+					[
+						133,
+						630
+					],
+					"segTolDistance" : 18628.039862366397
+				},
+				{
+					"addSeq" : 40,
+					"distance" : 569,
+					"line_idx" : 50,
+					"point" : 
+					[
+						157,
+						631
+					],
+					"segTolDistance" : 18662.877584706228
+				},
+				{
+					"addSeq" : 39,
+					"distance" : 585,
+					"line_idx" : 60,
+					"point" : 
+					[
+						201,
+						510
+					],
+					"segTolDistance" : 19565.066751254828
+				},
+				{
+					"addSeq" : 42,
+					"distance" : 607,
+					"line_idx" : 63,
+					"point" : 
+					[
+						219,
+						632
+					],
+					"segTolDistance" : 19760.031082407211
+				}
+			],
+			"cam_points" : 
+			[
+				{
+					"distance" : 0,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1191,
+						"y" : 70,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 50,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2093,
+						"y" : 70,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 78,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2243,
+						"y" : 70,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 93,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2212,
+						"y" : 764,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 102,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1183,
+						"y" : 150,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 111,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1151,
+						"y" : 273,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 126,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2289,
+						"y" : 132,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 144,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2088,
+						"y" : 11,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 156,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1956,
+						"y" : 54,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 171,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2331,
+						"y" : 3,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 189,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2264,
+						"y" : 27,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 204,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2331,
+						"y" : 892,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 213,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1163,
+						"y" : 186,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 222,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2401,
+						"y" : 171,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 237,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2323,
+						"y" : -14,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 255,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2229,
+						"y" : -4,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 267,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2085,
+						"y" : -4,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 282,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2316,
+						"y" : -29,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 300,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2323,
+						"y" : -62,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 315,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1117,
+						"y" : 665,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 324,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1117,
+						"y" : 124,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 333,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2323,
+						"y" : 844,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 345,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1095,
+						"y" : 498,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 366,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2299,
+						"y" : -5,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 378,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2122,
+						"y" : -5,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 393,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2274,
+						"y" : -5,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 411,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2381,
+						"y" : -5,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 423,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2402,
+						"y" : 137,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 441,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 905,
+						"y" : 459,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 447,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2487,
+						"y" : 65,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 459,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2349,
+						"y" : 22,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 477,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2149,
+						"y" : -43,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 489,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2036,
+						"y" : -43,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 501,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2213,
+						"y" : -43,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 522,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 2414,
+						"y" : 106,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 534,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1099,
+						"y" : 278,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 551,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1191,
+						"y" : 70,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"distance" : 618,
+					"primary" : 
+					{
+						"cid" : 0,
+						"ip" : "192.168.1.99",
+						"isDome" : true,
+						"port" : 37777,
+						"preset" : 0,
+						"pwd" : "admin",
+						"user" : "admin",
+						"x" : 1230,
+						"y" : 148,
+						"z" : 1
+					},
+					"secondary" : 
+					{
+						"cid" : 0,
+						"ip" : "",
+						"isDome" : true,
+						"port" : 0,
+						"preset" : 0,
+						"pwd" : "",
+						"user" : "",
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				}
+			],
+			"joints" : 
+			[
+				[
+					351,
+					644
+				],
+				[
+					117,
+					644
+				],
+				[
+					117,
+					210
+				],
+				[
+					436,
+					27
+				],
+				[
+					951,
+					27
+				],
+				[
+					951,
+					364
+				],
+				[
+					839,
+					365
+				],
+				[
+					839,
+					127
+				],
+				[
+					469,
+					127
+				],
+				[
+					230,
+					264
+				],
+				[
+					230,
+					431
+				],
+				[
+					218,
+					432
+				],
+				[
+					218,
+					259
+				],
+				[
+					467,
+					115
+				],
+				[
+					852,
+					115
+				],
+				[
+					852,
+					355
+				],
+				[
+					865,
+					355
+				],
+				[
+					865,
+					105
+				],
+				[
+					464,
+					105
+				],
+				[
+					205,
+					252
+				],
+				[
+					205,
+					432
+				],
+				[
+					192,
+					430
+				],
+				[
+					192,
+					246
+				],
+				[
+					459,
+					94
+				],
+				[
+					876,
+					93
+				],
+				[
+					876,
+					354
+				],
+				[
+					890,
+					355
+				],
+				[
+					888,
+					82
+				],
+				[
+					458,
+					81
+				],
+				[
+					179,
+					243
+				],
+				[
+					179,
+					432
+				],
+				[
+					167,
+					432
+				],
+				[
+					166,
+					234
+				],
+				[
+					452,
+					72
+				],
+				[
+					903,
+					72
+				],
+				[
+					902,
+					355
+				],
+				[
+					914,
+					355
+				],
+				[
+					913,
+					60
+				],
+				[
+					450,
+					60
+				],
+				[
+					155,
+					230
+				],
+				[
+					155,
+					432
+				],
+				[
+					142,
+					431
+				],
+				[
+					142,
+					224
+				],
+				[
+					444,
+					50
+				],
+				[
+					927,
+					50
+				],
+				[
+					927,
+					355
+				],
+				[
+					941,
+					355
+				],
+				[
+					941,
+					39
+				],
+				[
+					440,
+					39
+				],
+				[
+					130,
+					215
+				],
+				[
+					130,
+					631
+				],
+				[
+					142,
+					631
+				],
+				[
+					142,
+					512
+				],
+				[
+					155,
+					512
+				],
+				[
+					155,
+					632
+				],
+				[
+					167,
+					630
+				],
+				[
+					167,
+					512
+				],
+				[
+					179,
+					512
+				],
+				[
+					180,
+					632
+				],
+				[
+					191,
+					631
+				],
+				[
+					191,
+					511
+				],
+				[
+					205,
+					511
+				],
+				[
+					205,
+					631
+				],
+				[
+					219,
+					631
+				],
+				[
+					219,
+					512
+				],
+				[
+					229,
+					512
+				],
+				[
+					229,
+					632
+				]
+			]
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		},
+		{
+			"cali_points" : null,
+			"cam_points" : null,
+			"joints" : null
+		}
+	],
+	"map_file" : "F:\\outer\\温饱\\源代码LD300\\cfg\\A.bmp",
+	"maxX" : 1366,
+	"maxY" : 768
+}

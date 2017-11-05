@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="../../node_modules/socket.io-client/dist/socket.io.js"></script>
+<script>
+    var socket = io('http://127.0.0.1:3000/api/chat');
+    socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('my other event', { my: 'data' });
+    });
+</script>
+
+<body>
+
+</body>
+</html>
