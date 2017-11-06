@@ -59,16 +59,16 @@ else{
             },
             onvif:{
                 user:ipc.onvif_user,
-                    pwd:ipc.onvif_pwd,
-                    port:ipc.onvif_port,
-                    path:ipc.onvif_path
+                pwd:ipc.onvif_pwd,
+                port:ipc.onvif_port,
+                path:ipc.onvif_path
             }
         };
     }
 
     //数据格式transformIPC
     async function getIPC(id){
-        let ipc= await null;//实现
+        let ipc= await CameraService.find_one(id);//实现
         if(!ipc) await Promise.reject();
         return transformIPC(ipc);
     }

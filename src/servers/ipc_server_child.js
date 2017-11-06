@@ -2,6 +2,8 @@
  * Created by Luky on 2017/9/4.
  */
 
+import 'babel-polyfill';
+
 const http = require('http');
 const _=require('lodash');
 const Live=require('./ipc_live_server');
@@ -11,7 +13,6 @@ const crypto=require('crypto');
 const config=global.server_config||require('../config/config');
 const ptzLock=_.get(config,'ipc.ptzLock',15000);
 const url=require('url');
-const assert=require('assert');
 const logger={};
 const {Parser}=require('../log/log');
 let port=0;

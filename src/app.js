@@ -12,6 +12,7 @@ import config from './config';
 import router from './router';
 import cors from 'koa2-cors';
 //import HostService from './services/HostService';
+import StartUp from './servers/startup';
 
 const app = new Koa();
 
@@ -59,21 +60,24 @@ app.use(router.routes())
         process.exit(-1);
     }
 
-    var server = require('http').createServer(app.callback());
-    var io = require('socket.io')(server);
+    // var server = require('http').createServer(app.callback());
+    // var io = require('socket.io')(server);
+    //
+    // io.on('connection', function(socket){
+    //     //HostService.startHostServer();
+    //     // setInterval(function () {
+    //     //     socket.emit('news', { hello: 'world' });
+    //     // },10000)
+    //     socket.emit('news', { hello: 'world' });
+    //     socket.on('my other event', function (data) {
+    //         console.log(data);
+    //     });
+    //     logger.info('Server start at %s:%s', config.ip, 3000);
+    // });
+    // await server.listen(3000, config.ip);
 
-    io.on('connection', function(socket){
-        //HostService.startHostServer();
-        // setInterval(function () {
-        //     socket.emit('news', { hello: 'world' });
-        // },10000)
-        socket.emit('news', { hello: 'world' });
-        socket.on('my other event', function (data) {
-            console.log(data);
-        });
-        logger.info('Server start at %s:%s', config.ip, 3000);
-    });
-    await server.listen(3000, config.ip);
+    const s = new StartUp();
+    await s.start();
 
     await app.listen(config.port, config.ip);
 

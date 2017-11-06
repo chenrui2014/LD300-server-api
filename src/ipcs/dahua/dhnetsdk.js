@@ -13,7 +13,7 @@ const util = require('util');
 const legacy = require('legacy-encoding');
 const config=global.server_config||require('../../config/config');
 let dll=path.join(config.getLibDir(),(isX64?'DHNetSDK/x64/dhnetsdk':'DHNetSDK/x32/dhnetsdk'));
-
+//console.log("dll path" + dll);
 let bool=ref.types.bool;
 let char=ref.types.char;
 let uchar=ref.types.uchar;
