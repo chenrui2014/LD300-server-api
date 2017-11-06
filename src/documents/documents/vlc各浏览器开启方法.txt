@@ -1,0 +1,19 @@
+vlc 下载 http://download.videolan.org/pub/videolan/vlc
+关于vlc对浏览器的支持安装
+https://www.5kplayer.com/video-music-player/vlc-web-plugin-free-download-install.htm
+
+ie activex 启用即可
+
+chrome 42 以下版本可忽略 NPAPI自动支持
+chrome 42 以上开启方法
+1.在Chrome浏览器地址栏中输入：chrome://flags/
+2.在打开的浏览器配置页面中找到“启用 NPAPI Mac, Windows”点击“启用”超链接
+
+Chrome无法使用非官方市场插件解决方法
+在屏幕顶部的地址栏中，输入 chrome://flags/#enable-npapi
+在随即打开的窗口中，点击启用 NPAPI 标记下方显示启用的链接：unnamed
+点击页面左下角的立即重新启动按钮。
+
+chrome 45 已经不再提供此项以及 NPAPI 支持，vlc也不行
+
+firefox 可在组件中直接安装Send to VLC(VideoLAN) media palyer

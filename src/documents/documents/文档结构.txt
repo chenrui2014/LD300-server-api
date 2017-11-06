@@ -1,0 +1,77 @@
+_**.js 所有以_开始的文件或文件夹全部为暂时不适用或设计过时的类，app/ipcs/_508/_508_ptz.js除外
+app/flv
+     flv_encoder.js flv编码文件，静态类
+app/h264
+     golomb.js 哥伦布编码解码文件，实体类
+     h264_*.js h264包解码文件，静态类
+app/host
+    host.js 报警主机状态监听，单例类，一个实例管理n台主机，可以放在主线程中
+app/ipcs 摄像头包
+    ipc_addin.js 摄像头协议注册类，注册到ipc_factory.js中
+    ipcx/_508
+        _508_ptz.js 508长转台的实体类
+    ipcs/base 抽象操作类
+        ipc ip摄像头抽象类
+        ipc_Integration.js 集成摄像头实例类，实例化由servers/ipc_factory处理
+        ptz.js ip摄像头云台控制抽象类
+    ipcs/dahua 大华摄像头类包
+        dh_init.js 大华摄像头sdk初始化
+        dh_ipc.js 大华摄像头实体类
+        _dh_h264_unpack.js 大化摄像头h264格式数据解包
+    ipcs/onvif onvif协议包
+        onvif_ipc.js onvif协议连接摄像头的操作实体类
+app/rtsp rtsp协议包
+    rtsp_heartbeat.js rtsp 心跳类，实体类
+app/servers 服务包
+    data_server.js 提供服务启动必须的数据,数据库服务模式
+    data_server_file.js 提供服务启动必须的数据,文件服务模式
+    host_server.js 报警主机服务类
+    ipc_factory.js 摄像头实例管理类-单例
+    ipc_server_child.js http服务,提供摄像头直播和ptz以及前台声音信息的接口类
+    ipe_server_master.js http服务,proxy 启动多个摄像头服务进程及接口的代理转发，提供摄像头的心跳状态
+    ipc_live_server.js 摄像头直播类websocket服务，以及路线另存为路劲
+    ipc_video_persistence.js 持久化配置的功能类
+    messager_server.js  主机服务虚类，负责前后台的交互
+    messager_server_http_socket.js http_socket协议
+    messager_server_socket  socket协议
+    startup.js 总的服务启动类
+app/servers/interfaces server_socket数据解析接口
+    addin.js    接口注册类
+    cmd_formatter.js 命令格式化抽象基类
+    Rongfei/i_rong_fei.js 伊犁监狱荣飞接口
+config
+    congif.js 项目配置文件
+    _508_config.js 508转台配置文件
+    dh_config.js 大华设备配置文件
+    onvif_config.js onvif协议配置文件
+clib dll-ffi映射目录
+    DHNetSDK 大华网络sdk包映射目录
+test 测试包
+    _3part 第3放类库的测试类
+    _508 508长摄像头ptz测试类
+    dahua 大华sdk测试类
+    data 测试文件型数据
+    dll 测试用的c++ dll
+    flv flv打包，解包相关测试
+    host 主机测试类及虚拟主机
+    ipc 网络摄像头测试类
+    live 直播测试类
+    startup 服务测试类
+    client 浏览器摄像头画面测出
+    xxx.test.js 对应文件的测试类
+    test.js 小知识测试类
+
+对接说明及实例
+    数据对接：data_server.js
+        对接示例：test/servers/host_server.test.js
+    主机状态对接：messager_server_http_socket.js
+        提供init、update两个事件，用于推送状态，init为所有主机状态，update为更新某个主机状态
+        前台主机复位功能事件为：clear，数据为{hid}hid为主机id
+        对接示例：test/startup/client/client.js test/startup/client/index.html
+    摄像头部分对接：ipe_server_master.js 绑定端口 app/config/config/{ipc_server.port} 3000
+        ipe_server_master为http转发服务，将服务转发到ipe_server_child
+        ipe_server_child是通过child_process.fork启动的进程，数量=cpu数,绑定端口随机
+        http服务接口['live','ptz','freeptz','stoparrchive','arrchive']
+            分别为，申请直播流，ptz操作申请，freeptz释放ptz（因为多个客户端操作，所以需要锁定ptz，所以需要申请，后台会超时自动释放）
+            stoparrchive,arrchive是后台接口，不需要对接
+        对接示例:test/startup/client/index.html
