@@ -13,6 +13,7 @@ import router from './router';
 import cors from 'koa2-cors';
 //import HostService from './services/HostService';
 import StartUp from './servers/startup';
+import vHost from './test/host/virtual_host';
 
 const app = new Koa();
 
@@ -77,8 +78,9 @@ app.use(router.routes())
     // await server.listen(3000, config.ip);
 
     const s = new StartUp();
+    const vh = new vHost(1);
     await s.start();
-
+    await vh.start();
     await app.listen(config.port, config.ip);
 
 
