@@ -4,7 +4,7 @@
 import logger from '../logger';
 
 import PresetService from '../services/PresetService';
-
+import HostService from '../services/hostService';
 class PresetController {
     static async add_preset(ctx){
         const data = ctx.request.body;
