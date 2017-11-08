@@ -52,6 +52,11 @@ app.use(router.routes())
 //     ctx.body = "hello,world";
 // });
 
+const s = new StartUp();
+const vh = new vHost(1);
+s.start();
+vh.start();
+
 (async() => {
     try {
         const connection = await connect();
@@ -63,7 +68,7 @@ app.use(router.routes())
 
     // var server = require('http').createServer(app.callback());
     // var io = require('socket.io')(server);
-    //
+    // //
     // io.on('connection', function(socket){
     //     //HostService.startHostServer();
     //     // setInterval(function () {
@@ -77,10 +82,6 @@ app.use(router.routes())
     // });
     // await server.listen(3000, config.ip);
 
-    const s = new StartUp();
-    const vh = new vHost(1);
-    await s.start();
-    await vh.start();
     await app.listen(config.port, config.ip);
 
 

@@ -41,7 +41,7 @@ const PerimeterPointSchema = new mongoose.Schema({
         isRequired:true
     },
     hostId:{
-        type:String,
+        type:Number,
         isRequired:true
     }
 });
