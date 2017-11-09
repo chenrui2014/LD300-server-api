@@ -13,9 +13,17 @@ var _logger = require('../logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _monitoringArea = require('../models/monitoringArea.model');
+var _monitoringService = require('../services/monitoringService');
 
-var _monitoringArea2 = _interopRequireDefault(_monitoringArea);
+var _monitoringService2 = _interopRequireDefault(_monitoringService);
+
+var _hostService = require('../services/hostService');
+
+var _hostService2 = _interopRequireDefault(_hostService);
+
+var _cameraService = require('../services/cameraService');
+
+var _cameraService2 = _interopRequireDefault(_cameraService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,7 +40,7 @@ var MonitoringAreaController = function () {
         key: 'add_monitoringArea',
         value: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(ctx) {
-                var data, isExit, monitoringArea, msg;
+                var data, result, msg;
                 return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
@@ -50,35 +58,23 @@ var MonitoringAreaController = function () {
 
                             case 4:
                                 _context.next = 6;
-                                return _monitoringArea2.default.findOne({ ip: data.fields.ip });
+                                return _monitoringService2.default.add_monitoringArea(data);
 
                             case 6:
-                                isExit = _context.sent;
+                                result = _context.sent;
+                                msg = '';
 
-                                _logger2.default.info(isExit);
-
-                                if (!isExit) {
-                                    _context.next = 10;
+                                if (!result) {
+                                    _context.next = 13;
                                     break;
                                 }
 
-                                return _context.abrupt('return', ctx.body = { msg: '该监控区域已添加!' });
+                                msg = '添加监控区域成功';
+                                return _context.abrupt('return', ctx.body = { msg: msg, data: data });
 
-                            case 10:
-                                monitoringArea = new _monitoringArea2.default(data.fields);
-
-                                _logger2.default.info(monitoringArea);
-                                msg = '';
-
-                                monitoringArea.save(function (err, monitoringArea) {
-                                    if (!err) {
-                                        msg = '添加监控区域' + monitoringArea.name + '成功';
-                                    } else {
-                                        msg = err;
-                                    }
-                                });
-
-                                return _context.abrupt('return', ctx.body = { msg: msg, data: monitoringArea });
+                            case 13:
+                                msg = '添加监控区域失败';
+                                return _context.abrupt('return', ctx.error = { msg: msg });
 
                             case 15:
                             case 'end':
@@ -98,7 +94,7 @@ var MonitoringAreaController = function () {
         key: 'delete_monitoringArea',
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(ctx) {
-                var id, result;
+                var id, result, msg;
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
@@ -107,22 +103,25 @@ var MonitoringAreaController = function () {
 
                                 _logger2.default.info(id);
                                 _context2.next = 4;
-                                return _monitoringArea2.default.findByIdAndRemove(id).exec();
+                                return _monitoringService2.default.delete_monitoringArea({ id: id });
 
                             case 4:
                                 result = _context2.sent;
+                                msg = '';
 
-                                if (result) {
-                                    _context2.next = 7;
+                                if (!result) {
+                                    _context2.next = 11;
                                     break;
                                 }
 
-                                return _context2.abrupt('return', ctx.error = { msg: '删除监控区域失败!' });
+                                msg = '删除摄像头成功';
+                                return _context2.abrupt('return', ctx.body = { msg: msg, data: result });
 
-                            case 7:
-                                return _context2.abrupt('return', ctx.body = { msg: '删除监控区域成功', data: result });
+                            case 11:
+                                msg = '删除摄像头失败';
+                                return _context2.abrupt('return', ctx.error = { msg: msg });
 
-                            case 8:
+                            case 13:
                             case 'end':
                                 return _context2.stop();
                         }
@@ -140,7 +139,8 @@ var MonitoringAreaController = function () {
         key: 'edit_monitoringArea',
         value: function () {
             var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(ctx) {
-                var data, result;
+                var data, _id, result;
+
                 return regeneratorRuntime.wrap(function _callee3$(_context3) {
                     while (1) {
                         switch (_context3.prev = _context3.next) {
@@ -148,23 +148,19 @@ var MonitoringAreaController = function () {
                                 data = ctx.request.body;
 
                                 _logger2.default.info(data);
-                                _context3.next = 4;
-                                return _monitoringArea2.default.update(data, { id: data.id }).exec();
+                                _id = data._id;
 
-                            case 4:
+                                delete data._id;
+                                _context3.next = 6;
+                                return _monitoringService2.default.edit_monitoringArea({ _id: _id }, data);
+
+                            case 6:
                                 result = _context3.sent;
 
-                                if (result) {
-                                    _context3.next = 7;
-                                    break;
-                                }
-
+                                if (result) ctx.body = { msg: '修改监控区域成功', data: result };
                                 return _context3.abrupt('return', ctx.error = { msg: '修改监控区域失败!' });
 
-                            case 7:
-                                return _context3.abrupt('return', ctx.body = { msg: '修改监控区域成功', data: result });
-
-                            case 8:
+                            case 9:
                             case 'end':
                                 return _context3.stop();
                         }
@@ -182,28 +178,86 @@ var MonitoringAreaController = function () {
         key: 'find_monitoringArea',
         value: function () {
             var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(ctx) {
-                var result;
+                var _ctx$query, sort, range, filter, sortObj, rangeObj, filterObj, sortP, pageStart, pageEnd, total, pagination, result, hosts, cameras;
+
                 return regeneratorRuntime.wrap(function _callee4$(_context4) {
                     while (1) {
                         switch (_context4.prev = _context4.next) {
                             case 0:
-                                _context4.next = 2;
-                                return _monitoringArea2.default.find().exec();
+                                _ctx$query = ctx.query, sort = _ctx$query.sort, range = _ctx$query.range, filter = _ctx$query.filter;
+                                sortObj = JSON.parse(sort);
+                                rangeObj = JSON.parse(range);
+                                filterObj = JSON.parse(filter);
+                                sortP = {};
 
-                            case 2:
+                                if (sortObj && sortObj.length >= 2) {
+                                    if ('ASC' === sortObj[1]) {
+                                        sortP[sortObj[0]] = 1;
+                                    } else {
+                                        sortP[sortObj[0]] = -1;
+                                    }
+                                }
+
+                                pageStart = 0, pageEnd = 0;
+
+                                if (rangeObj && rangeObj.length >= 2) {
+                                    pageStart = rangeObj[0];
+                                    pageEnd = rangeObj[1];
+                                }
+
+                                _context4.next = 10;
+                                return _monitoringService2.default.getTotal();
+
+                            case 10:
+                                total = _context4.sent;
+                                pagination = {};
+
+                                pagination.pageStart = pageStart;
+                                pagination.pageSize = pageEnd - pageStart + 1;
+
+                                _context4.next = 16;
+                                return _monitoringService2.default.find_monitoringArea(filterObj, sortP, pagination);
+
+                            case 16:
                                 result = _context4.sent;
+                                _context4.next = 19;
+                                return _hostService2.default.findAll();
 
-                                if (result) {
-                                    _context4.next = 5;
+                            case 19:
+                                hosts = _context4.sent;
+
+
+                                result.forEach(function (e) {
+                                    hosts.forEach(function (host) {
+                                        if (e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                                        return;
+                                    });
+                                });
+                                _context4.next = 23;
+                                return _cameraService2.default.findAll();
+
+                            case 23:
+                                cameras = _context4.sent;
+
+
+                                result.forEach(function (e) {
+                                    cameras.forEach(function (camera) {
+                                        if (e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+                                        return;
+                                    });
+                                });
+
+                                if (!result) {
+                                    _context4.next = 27;
                                     break;
                                 }
 
+                                return _context4.abrupt('return', ctx.body = { msg: '查询监控区域', data: result, total: total });
+
+                            case 27:
                                 return _context4.abrupt('return', ctx.body = { msg: '没有找到监控区域!' });
 
-                            case 5:
-                                return _context4.abrupt('return', ctx.body = { msg: '查询监控区域', data: result });
-
-                            case 6:
+                            case 28:
                             case 'end':
                                 return _context4.stop();
                         }
@@ -218,32 +272,68 @@ var MonitoringAreaController = function () {
             return find_monitoringArea;
         }()
     }, {
-        key: 'find_one',
+        key: 'find_monitoringArea_noPage',
         value: function () {
             var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(ctx) {
-                var id, result;
+                var sort, sortObj, sortP, result, hosts, cameras;
                 return regeneratorRuntime.wrap(function _callee5$(_context5) {
                     while (1) {
                         switch (_context5.prev = _context5.next) {
                             case 0:
-                                id = ctx.params.id;
-                                _context5.next = 3;
-                                return _monitoringArea2.default.findOne({ id: id }).exec();
+                                sort = ctx.query.sort;
+                                sortObj = JSON.parse(sort);
+                                sortP = {};
 
-                            case 3:
+                                if (sortObj && sortObj.length >= 2) {
+                                    if ('ASC' === sortObj[1]) {
+                                        sortP[sortObj[0]] = 1;
+                                    } else {
+                                        sortP[sortObj[0]] = -1;
+                                    }
+                                }
+                                _context5.next = 6;
+                                return _monitoringService2.default.findAll(sortP);
+
+                            case 6:
                                 result = _context5.sent;
+                                _context5.next = 9;
+                                return _hostService2.default.findAll();
 
-                                if (result) {
-                                    _context5.next = 6;
+                            case 9:
+                                hosts = _context5.sent;
+
+
+                                result.forEach(function (e) {
+                                    hosts.forEach(function (host) {
+                                        if (e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                                        return;
+                                    });
+                                });
+                                _context5.next = 13;
+                                return _cameraService2.default.findAll();
+
+                            case 13:
+                                cameras = _context5.sent;
+
+
+                                result.forEach(function (e) {
+                                    cameras.forEach(function (camera) {
+                                        if (e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+                                        return;
+                                    });
+                                });
+
+                                if (!result) {
+                                    _context5.next = 17;
                                     break;
                                 }
 
-                                return _context5.abrupt('return', ctx.body = { msg: '没有找到监控区域!' });
-
-                            case 6:
                                 return _context5.abrupt('return', ctx.body = { msg: '查询监控区域', data: result });
 
-                            case 7:
+                            case 17:
+                                return _context5.abrupt('return', ctx.error = { msg: '没有找到监控区域!' });
+
+                            case 18:
                             case 'end':
                                 return _context5.stop();
                         }
@@ -251,8 +341,74 @@ var MonitoringAreaController = function () {
                 }, _callee5, this);
             }));
 
-            function find_one(_x5) {
+            function find_monitoringArea_noPage(_x5) {
                 return _ref5.apply(this, arguments);
+            }
+
+            return find_monitoringArea_noPage;
+        }()
+    }, {
+        key: 'find_one',
+        value: function () {
+            var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(ctx) {
+                var id, result, hosts, cameras;
+                return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                    while (1) {
+                        switch (_context6.prev = _context6.next) {
+                            case 0:
+                                id = ctx.params.id;
+                                _context6.next = 3;
+                                return _monitoringService2.default.find_one(id);
+
+                            case 3:
+                                result = _context6.sent;
+                                _context6.next = 6;
+                                return _hostService2.default.findAll();
+
+                            case 6:
+                                hosts = _context6.sent;
+
+
+                                result.forEach(function (e) {
+                                    hosts.forEach(function (host) {
+                                        if (e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+                                        return;
+                                    });
+                                });
+                                _context6.next = 10;
+                                return _cameraService2.default.findAll();
+
+                            case 10:
+                                cameras = _context6.sent;
+
+
+                                result.forEach(function (e) {
+                                    cameras.forEach(function (camera) {
+                                        if (e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+                                        return;
+                                    });
+                                });
+
+                                if (!result) {
+                                    _context6.next = 14;
+                                    break;
+                                }
+
+                                return _context6.abrupt('return', ctx.body = { msg: '查询监控区域', data: result });
+
+                            case 14:
+                                return _context6.abrupt('return', ctx.body = { msg: '没有找到监控区域!' });
+
+                            case 15:
+                            case 'end':
+                                return _context6.stop();
+                        }
+                    }
+                }, _callee6, this);
+            }));
+
+            function find_one(_x6) {
+                return _ref6.apply(this, arguments);
             }
 
             return find_one;

@@ -40,16 +40,26 @@ var _koa2Cors = require('koa2-cors');
 
 var _koa2Cors2 = _interopRequireDefault(_koa2Cors);
 
+var _startup = require('./servers/startup');
+
+var _startup2 = _interopRequireDefault(_startup);
+
+var _virtual_host = require('./test/host/virtual_host');
+
+var _virtual_host2 = _interopRequireDefault(_virtual_host);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; } /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * Created by chen on 17-8-21.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */
 
+//import HostService from './services/HostService';
+
 
 var app = new _koa2.default();
 
-// app.use(cors())
+app.use((0, _koa2Cors2.default)());
 
 app.use(function (ctx, next) {
     // if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
@@ -82,6 +92,11 @@ app.use(_router2.default.routes()).use(_router2.default.allowedMethods());
 //     ctx.body = "hello,world";
 // });
 
+var s = new _startup2.default();
+var vh = new _virtual_host2.default(1);
+s.start();
+vh.start();
+
 _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     var connection;
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -111,6 +126,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
                     return app.listen(_config2.default.port, _config2.default.ip);
 
                 case 13:
+
                     _logger2.default.info('Server start at %s:%s', _config2.default.ip, _config2.default.port);
 
                 case 14:

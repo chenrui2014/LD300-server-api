@@ -1,0 +1,71 @@
+{
+	"nvr" : 
+	[
+		{
+			"ip" : "192.168.1.200",
+			"password" : "888888",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		},
+		{
+			"ip" : "0.0.0.0",
+			"password" : "admin",
+			"port" : 37777,
+			"username" : "admin"
+		}
+	],
+	"relayport" : 
+	[
+		0,
+		0,
+		0,
+		0
+	],
+	"serialport" : 
+	[
+		2
+	],
+	"raillength":
+	[
+		3000,
+		3000,
+		3000,
+		3000
+	]
+}

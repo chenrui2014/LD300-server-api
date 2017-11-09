@@ -2,7 +2,7 @@
  * Created by Luky on 2017/8/6.
  */
 const _=require('lodash');
-const amf=require('../../_3part/amf');
+const amf=require('amf');
 const SPSParser=require('../h264/h264_sps_parser');
 const ADTS=require('../acc/acc_adts_parser');
 const EventEmitter=require('events').EventEmitter;

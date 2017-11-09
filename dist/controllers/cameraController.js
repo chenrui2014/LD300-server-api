@@ -13,9 +13,9 @@ var _logger = require('../logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _camera = require('../models/camera.model');
+var _cameraService = require('../services/cameraService');
 
-var _camera2 = _interopRequireDefault(_camera);
+var _cameraService2 = _interopRequireDefault(_cameraService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,7 +32,7 @@ var CameraController = function () {
         key: 'add_camera',
         value: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(ctx) {
-                var data, isExit, camera, msg;
+                var data, isExist, result, msg;
                 return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
@@ -46,43 +46,43 @@ var CameraController = function () {
                                     break;
                                 }
 
-                                return _context.abrupt('return', ctx.body = { msg: '发送数据失败!' });
+                                return _context.abrupt('return', ctx.error = { msg: '发送数据失败!' });
 
                             case 4:
                                 _context.next = 6;
-                                return _camera2.default.findOne({ ip: data.fields.ip });
+                                return _cameraService2.default.isExist({ ip: data.ip });
 
                             case 6:
-                                isExit = _context.sent;
+                                isExist = _context.sent;
 
-                                _logger2.default.info(isExit);
-
-                                if (!isExit) {
-                                    _context.next = 10;
+                                if (!isExist) {
+                                    _context.next = 9;
                                     break;
                                 }
 
-                                return _context.abrupt('return', ctx.body = { msg: '该摄像头ip已存在!' });
+                                return _context.abrupt('return', ctx.error = { msg: 'ip为[' + data.ip + ']的摄像头ip已存在!' });
 
-                            case 10:
-                                //const result = await CameraModel.create(data);
+                            case 9:
+                                _context.next = 11;
+                                return _cameraService2.default.add_camera(data);
 
-                                camera = new _camera2.default(data.fields);
-
-                                _logger2.default.info(camera);
+                            case 11:
+                                result = _context.sent;
                                 msg = '';
 
-                                camera.save(function (err, camera) {
-                                    if (!err) {
-                                        msg = '添加摄像头' + camera.name + '成功';
-                                    } else {
-                                        msg = err;
-                                    }
-                                });
+                                if (!result) {
+                                    _context.next = 18;
+                                    break;
+                                }
 
-                                return _context.abrupt('return', ctx.body = { msg: msg, data: camera });
+                                msg = '添加摄像头' + data.ip + '成功';
+                                return _context.abrupt('return', ctx.body = { msg: msg, data: data });
 
-                            case 15:
+                            case 18:
+                                msg = '添加失败';
+                                return _context.abrupt('return', ctx.error = { msg: msg });
+
+                            case 20:
                             case 'end':
                                 return _context.stop();
                         }
@@ -100,31 +100,32 @@ var CameraController = function () {
         key: 'delete_camera',
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(ctx) {
-                var id, result;
+                var id, result, msg;
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
                                 id = ctx.params.id;
+                                _context2.next = 3;
+                                return _cameraService2.default.delete_camera({ id: id });
 
-                                _logger2.default.info(id);
-                                _context2.next = 4;
-                                return _camera2.default.findByIdAndRemove(id).exec();
-
-                            case 4:
+                            case 3:
                                 result = _context2.sent;
+                                msg = '';
 
-                                if (result) {
-                                    _context2.next = 7;
+                                if (!result) {
+                                    _context2.next = 10;
                                     break;
                                 }
 
-                                return _context2.abrupt('return', ctx.error = { msg: '删除摄像头失败!' });
+                                msg = '删除摄像头成功';
+                                return _context2.abrupt('return', ctx.body = { msg: msg, data: result });
 
-                            case 7:
-                                return _context2.abrupt('return', ctx.body = { msg: '删除摄像头成功', data: result });
+                            case 10:
+                                msg = '删除摄像头失败';
+                                return _context2.abrupt('return', ctx.error = { msg: msg });
 
-                            case 8:
+                            case 12:
                             case 'end':
                                 return _context2.stop();
                         }
@@ -142,7 +143,8 @@ var CameraController = function () {
         key: 'edit_camera',
         value: function () {
             var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(ctx) {
-                var data, result;
+                var data, _id, result;
+
                 return regeneratorRuntime.wrap(function _callee3$(_context3) {
                     while (1) {
                         switch (_context3.prev = _context3.next) {
@@ -150,23 +152,26 @@ var CameraController = function () {
                                 data = ctx.request.body;
 
                                 _logger2.default.info(data);
-                                _context3.next = 4;
-                                return _camera2.default.update(data, { id: data.id }).exec();
+                                _id = data._id;
 
-                            case 4:
+                                delete data._id;
+                                _context3.next = 6;
+                                return _cameraService2.default.edit_camera({ _id: _id }, data);
+
+                            case 6:
                                 result = _context3.sent;
 
-                                if (result) {
-                                    _context3.next = 7;
+                                if (!result) {
+                                    _context3.next = 9;
                                     break;
                                 }
 
-                                return _context3.abrupt('return', ctx.error = { msg: '修改摄像头失败!' });
-
-                            case 7:
                                 return _context3.abrupt('return', ctx.body = { msg: '修改摄像头成功', data: result });
 
-                            case 8:
+                            case 9:
+                                return _context3.abrupt('return', ctx.error = { msg: '修改摄像头失败!' });
+
+                            case 10:
                             case 'end':
                                 return _context3.stop();
                         }
@@ -184,7 +189,7 @@ var CameraController = function () {
         key: 'find_camera',
         value: function () {
             var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(ctx) {
-                var _ctx$query, sort, range, filter, sortObj, rangeObj, filterObj, sortP, pageStart, pageEnd, total, result;
+                var _ctx$query, sort, range, filter, sortObj, rangeObj, filterObj, sortP, pageStart, pageEnd, total, pagination, result;
 
                 return regeneratorRuntime.wrap(function _callee4$(_context4) {
                     while (1) {
@@ -212,27 +217,32 @@ var CameraController = function () {
                                 }
 
                                 _context4.next = 10;
-                                return _camera2.default.find(filterObj).count();
+                                return _cameraService2.default.getTotal();
 
                             case 10:
                                 total = _context4.sent;
-                                _context4.next = 13;
-                                return _camera2.default.find(filterObj).skip(pageStart).limit(pageEnd - pageStart + 1).sort(sortP);
+                                pagination = {};
 
-                            case 13:
+                                pagination.pageStart = pageStart;
+                                pagination.pageSize = pageEnd - pageStart + 1;
+
+                                _context4.next = 16;
+                                return _cameraService2.default.find_camera(filterObj, sortP, pagination);
+
+                            case 16:
                                 result = _context4.sent;
 
-                                if (result) {
-                                    _context4.next = 16;
+                                if (!result) {
+                                    _context4.next = 19;
                                     break;
                                 }
 
-                                return _context4.abrupt('return', ctx.body = { msg: '没有找到摄像头!' });
-
-                            case 16:
                                 return _context4.abrupt('return', ctx.body = { msg: '查询摄像头', data: result, total: total });
 
-                            case 17:
+                            case 19:
+                                return _context4.abrupt('return', ctx.error = { msg: '没有找到摄像头!' });
+
+                            case 20:
                             case 'end':
                                 return _context4.stop();
                         }
@@ -247,32 +257,42 @@ var CameraController = function () {
             return find_camera;
         }()
     }, {
-        key: 'find_one',
+        key: 'find_camera_noPage',
         value: function () {
             var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(ctx) {
-                var id, result;
+                var sort, sortObj, sortP, result;
                 return regeneratorRuntime.wrap(function _callee5$(_context5) {
                     while (1) {
                         switch (_context5.prev = _context5.next) {
                             case 0:
-                                id = ctx.params.id;
-                                _context5.next = 3;
-                                return _camera2.default.findOne({ id: id });
+                                sort = ctx.query.sort;
+                                sortObj = JSON.parse(sort);
+                                sortP = {};
 
-                            case 3:
+                                if (sortObj && sortObj.length >= 2) {
+                                    if ('ASC' === sortObj[1]) {
+                                        sortP[sortObj[0]] = 1;
+                                    } else {
+                                        sortP[sortObj[0]] = -1;
+                                    }
+                                }
+                                _context5.next = 6;
+                                return _cameraService2.default.findAll(sortP);
+
+                            case 6:
                                 result = _context5.sent;
 
-                                if (result) {
-                                    _context5.next = 6;
+                                if (!result) {
+                                    _context5.next = 9;
                                     break;
                                 }
 
-                                return _context5.abrupt('return', ctx.body = { msg: '没有找到摄像头!' });
-
-                            case 6:
                                 return _context5.abrupt('return', ctx.body = { msg: '查询摄像头', data: result });
 
-                            case 7:
+                            case 9:
+                                return _context5.abrupt('return', ctx.error = { msg: '没有找到摄像头!' });
+
+                            case 10:
                             case 'end':
                                 return _context5.stop();
                         }
@@ -280,8 +300,41 @@ var CameraController = function () {
                 }, _callee5, this);
             }));
 
-            function find_one(_x5) {
+            function find_camera_noPage(_x5) {
                 return _ref5.apply(this, arguments);
+            }
+
+            return find_camera_noPage;
+        }()
+    }, {
+        key: 'find_one',
+        value: function () {
+            var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(ctx) {
+                var id, result;
+                return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                    while (1) {
+                        switch (_context6.prev = _context6.next) {
+                            case 0:
+                                id = ctx.params.id;
+                                _context6.next = 3;
+                                return _cameraService2.default.find_one(id);
+
+                            case 3:
+                                result = _context6.sent;
+
+                                if (result) ctx.body = { msg: '查询摄像头', data: result };
+                                return _context6.abrupt('return', ctx.error = { msg: '没有找到摄像头!' });
+
+                            case 6:
+                            case 'end':
+                                return _context6.stop();
+                        }
+                    }
+                }, _callee6, this);
+            }));
+
+            function find_one(_x6) {
+                return _ref6.apply(this, arguments);
             }
 
             return find_one;

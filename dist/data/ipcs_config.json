@@ -1,0 +1,580 @@
+[
+  {
+    "id": 0,
+    "ip": "33.167.177.21",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "dahua",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    }
+  },
+  {
+    "id": 1,
+    "ip": "33.167.177.22",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 2,
+    "ip": "33.167.177.3",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "dahua",
+    "functions": {
+      "ptz": true,
+      "alarm": true,
+      "audio": false
+    }
+  },
+  {
+    "id": 3,
+    "ip": "33.167.177.4",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 4,
+    "ip": "33.167.177.5",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 5,
+    "ip": "33.167.177.9",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 6,
+    "ip": "33.167.177.27",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "dahua",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    }
+  },
+  {
+    "id": 7,
+    "ip": "33.167.177.24",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 8,
+    "ip": "33.167.177.28",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 9,
+    "ip": "33.167.177.42",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "dahua",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    }
+  },
+  {
+    "id": 10,
+    "ip": "33.167.177.41",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 11,
+    "ip": "33.167.177.60",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 12,
+    "ip": "33.167.177.56",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": true,
+      "alarm": true,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 13,
+    "ip": "33.167.177.63",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 14,
+    "ip": "33.167.177.62",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 15,
+    "ip": "33.167.177.72",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 16,
+    "ip": "33.167.177.77",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 17,
+    "ip": "33.167.177.75",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 18,
+    "ip": "33.167.177.65",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 19,
+    "ip": "33.167.177.71",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": true,
+      "alarm": true,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 20,
+    "ip": "33.167.177.66",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 21,
+    "ip": "33.167.177.69",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 22,
+    "ip": "33.167.177.48",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 23,
+    "ip": "33.167.177.49",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 24,
+    "ip": "33.167.177.35",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 25,
+    "ip": "33.167.177.36",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 26,
+    "ip": "33.167.177.37",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 27,
+    "ip": "33.167.177.13",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 28,
+    "ip": "33.167.177.10",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": true,
+      "alarm": true,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 29,
+    "ip": "33.167.177.16",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 30,
+    "ip": "33.167.177.17",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "hopewell",
+    "functions": {
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif": {
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
+  },
+  {
+    "id": 31,
+    "ip": "33.167.177.23",
+    "port": 37777,
+    "user": "admin",
+    "pwd": "admin",
+    "brand": "dahua",
+    "functions": {
+      "ptz": false,
+      "alarm": true,
+      "audio": false
+    }
+  }
+]

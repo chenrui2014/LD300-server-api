@@ -104,15 +104,46 @@ var UserController = function () {
         key: 'signIn',
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(ctx) {
+                var _ctx$request$body2, name, password, user;
+
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
+                                _ctx$request$body2 = ctx.request.body, name = _ctx$request$body2.name, password = _ctx$request$body2.password;
+                                _context2.prev = 1;
+                                _context2.next = 4;
+                                return _user2.default.findOne({ username: name, password: (0, _md2.default)(password) });
+
+                            case 4:
+                                user = _context2.sent;
+
+                                _logger2.default.info(user);
+
+                                if (!user) {
+                                    _context2.next = 8;
+                                    break;
+                                }
+
+                                return _context2.abrupt('return', ctx.body = { status: "success", data: user });
+
+                            case 8:
+                                _context2.next = 14;
+                                break;
+
+                            case 10:
+                                _context2.prev = 10;
+                                _context2.t0 = _context2['catch'](1);
+
+                                _logger2.default.error("登录失败");
+                                return _context2.abrupt('return', ctx.body = { status: "failed", err: _context2.t0 });
+
+                            case 14:
                             case 'end':
                                 return _context2.stop();
                         }
                     }
-                }, _callee2, this);
+                }, _callee2, this, [[1, 10]]);
             }));
 
             function signIn(_x2) {

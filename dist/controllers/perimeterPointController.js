@@ -13,9 +13,13 @@ var _logger = require('../logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _perimeterPoint = require('../models/perimeterPoint.model');
+var _perimeterPointService = require('../services/perimeterPointService');
 
-var _perimeterPoint2 = _interopRequireDefault(_perimeterPoint);
+var _perimeterPointService2 = _interopRequireDefault(_perimeterPointService);
+
+var _hostService = require('../services/hostService');
+
+var _hostService2 = _interopRequireDefault(_hostService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,7 +36,7 @@ var PerimeterPointController = function () {
         key: 'add_perimeterPoint',
         value: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(ctx) {
-                var data, isExit, perimeterPoint, msg;
+                var data, isExit, result, msg;
                 return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
@@ -46,11 +50,11 @@ var PerimeterPointController = function () {
                                     break;
                                 }
 
-                                return _context.abrupt('return', ctx.body = { msg: '发送数据失败!' });
+                                return _context.abrupt('return', ctx.error = { msg: '发送数据失败!' });
 
                             case 4:
                                 _context.next = 6;
-                                return _perimeterPoint2.default.findOne({ ip: data.fields.ip });
+                                return _perimeterPointService2.default.isExist({ realPosition: data.realPosition });
 
                             case 6:
                                 isExit = _context.sent;
@@ -62,25 +66,25 @@ var PerimeterPointController = function () {
                                     break;
                                 }
 
-                                return _context.abrupt('return', ctx.body = { msg: '该摄像头ip已存在!' });
+                                return _context.abrupt('return', ctx.error = { msg: '该实际距离的周界点已存在!' });
 
                             case 10:
-                                perimeterPoint = new _perimeterPoint2.default(data.fields);
-
-                                _logger2.default.info(perimeterPoint);
+                                result = _perimeterPointService2.default.add_perimeterPoint(data);
                                 msg = '';
 
-                                perimeterPoint.save(function (err, perimeterPoint) {
-                                    if (!err) {
-                                        msg = '添加周界点' + perimeterPoint.name + '成功';
-                                    } else {
-                                        msg = err;
-                                    }
-                                });
+                                if (!result) {
+                                    _context.next = 17;
+                                    break;
+                                }
 
-                                return _context.abrupt('return', ctx.body = { msg: msg, data: perimeterPoint });
+                                msg = '添加实际距离为' + data.port + '的周界点成功';
+                                return _context.abrupt('return', ctx.body = { msg: msg, data: data });
 
-                            case 15:
+                            case 17:
+                                msg = '添加失败';
+                                return _context.abrupt('return', ctx.error = { msg: msg });
+
+                            case 19:
                             case 'end':
                                 return _context.stop();
                         }
@@ -98,7 +102,7 @@ var PerimeterPointController = function () {
         key: 'delete_perimeterPoint',
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(ctx) {
-                var id, result;
+                var id, result, msg;
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
@@ -107,22 +111,25 @@ var PerimeterPointController = function () {
 
                                 _logger2.default.info(id);
                                 _context2.next = 4;
-                                return _perimeterPoint2.default.findByIdAndRemove(id).exec();
+                                return _perimeterPointService2.default.delete_perimeterPoint({ id: id });
 
                             case 4:
                                 result = _context2.sent;
+                                msg = '';
 
-                                if (result) {
-                                    _context2.next = 7;
+                                if (!result) {
+                                    _context2.next = 11;
                                     break;
                                 }
 
-                                return _context2.abrupt('return', ctx.error = { msg: '删除周界点失败!' });
+                                msg = '删除周界点成功';
+                                return _context2.abrupt('return', ctx.body = { msg: msg, data: result });
 
-                            case 7:
-                                return _context2.abrupt('return', ctx.body = { msg: '删除周界点成功', data: result });
+                            case 11:
+                                msg = '删除周界点失败';
+                                return _context2.abrupt('return', ctx.error = { msg: msg });
 
-                            case 8:
+                            case 13:
                             case 'end':
                                 return _context2.stop();
                         }
@@ -140,7 +147,8 @@ var PerimeterPointController = function () {
         key: 'edit_perimeterPoint',
         value: function () {
             var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(ctx) {
-                var data, result;
+                var data, _id, result;
+
                 return regeneratorRuntime.wrap(function _callee3$(_context3) {
                     while (1) {
                         switch (_context3.prev = _context3.next) {
@@ -148,23 +156,19 @@ var PerimeterPointController = function () {
                                 data = ctx.request.body;
 
                                 _logger2.default.info(data);
-                                _context3.next = 4;
-                                return _perimeterPoint2.default.update(data, { id: data.id }).exec();
+                                _id = data._id;
 
-                            case 4:
+                                delete data._id;
+                                _context3.next = 6;
+                                return _perimeterPointService2.default.edit_perimeterPoint({ _id: _id }, data);
+
+                            case 6:
                                 result = _context3.sent;
 
-                                if (result) {
-                                    _context3.next = 7;
-                                    break;
-                                }
-
+                                if (result) ctx.body = { msg: '修改周界点成功', data: result };
                                 return _context3.abrupt('return', ctx.error = { msg: '修改周界点失败!' });
 
-                            case 7:
-                                return _context3.abrupt('return', ctx.body = { msg: '修改周界点成功', data: result });
-
-                            case 8:
+                            case 9:
                             case 'end':
                                 return _context3.stop();
                         }
@@ -182,28 +186,60 @@ var PerimeterPointController = function () {
         key: 'find_perimeterPoint',
         value: function () {
             var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(ctx) {
-                var result;
+                var _ctx$query, sort, range, filter, sortObj, sortP, total, result, hosts;
+
                 return regeneratorRuntime.wrap(function _callee4$(_context4) {
                     while (1) {
                         switch (_context4.prev = _context4.next) {
                             case 0:
-                                _context4.next = 2;
-                                return _perimeterPoint2.default.find().exec();
+                                _ctx$query = ctx.query, sort = _ctx$query.sort, range = _ctx$query.range, filter = _ctx$query.filter;
+                                sortObj = JSON.parse(sort);
+                                sortP = {};
 
-                            case 2:
+                                if (sortObj && sortObj.length >= 2) {
+                                    if ('ASC' === sortObj[1]) {
+                                        sortP[sortObj[0]] = 1;
+                                    } else {
+                                        sortP[sortObj[0]] = -1;
+                                    }
+                                }
+
+                                _context4.next = 6;
+                                return _perimeterPointService2.default.getTotal();
+
+                            case 6:
+                                total = _context4.sent;
+                                _context4.next = 9;
+                                return _perimeterPointService2.default.findAll(sortP);
+
+                            case 9:
                                 result = _context4.sent;
+                                _context4.next = 12;
+                                return _hostService2.default.findAll();
 
-                                if (result) {
-                                    _context4.next = 5;
+                            case 12:
+                                hosts = _context4.sent;
+
+
+                                result.forEach(function (e) {
+                                    hosts.forEach(function (host) {
+                                        if (e._doc.hostId === host._doc.id) e._doc.host = host._doc;
+                                        return;
+                                    });
+                                });
+                                //const result = await PerimeterPointModel.find().exec();
+
+                                if (!result) {
+                                    _context4.next = 16;
                                     break;
                                 }
 
-                                return _context4.abrupt('return', ctx.body = { msg: '没有找到周界点!' });
+                                return _context4.abrupt('return', ctx.body = { msg: '查询周界点成功', data: result, total: total });
 
-                            case 5:
-                                return _context4.abrupt('return', ctx.body = { msg: '查询周界点', data: result });
+                            case 16:
+                                return _context4.abrupt('return', ctx.error = { msg: '没有找到周界点!' });
 
-                            case 6:
+                            case 17:
                             case 'end':
                                 return _context4.stop();
                         }
@@ -221,29 +257,34 @@ var PerimeterPointController = function () {
         key: 'find_one',
         value: function () {
             var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(ctx) {
-                var id, result;
+                var id, result, hosts;
                 return regeneratorRuntime.wrap(function _callee5$(_context5) {
                     while (1) {
                         switch (_context5.prev = _context5.next) {
                             case 0:
                                 id = ctx.params.id;
                                 _context5.next = 3;
-                                return _perimeterPoint2.default.findOne({ id: id }).exec();
+                                return _perimeterPointService2.default.find_one(id);
 
                             case 3:
                                 result = _context5.sent;
-
-                                if (result) {
-                                    _context5.next = 6;
-                                    break;
-                                }
-
-                                return _context5.abrupt('return', ctx.body = { msg: '没有找到周界点!' });
+                                _context5.next = 6;
+                                return _hostService2.default.findAll();
 
                             case 6:
-                                return _context5.abrupt('return', ctx.body = { msg: '查询周界点', data: result });
+                                hosts = _context5.sent;
 
-                            case 7:
+
+                                result.forEach(function (e) {
+                                    hosts.forEach(function (host) {
+                                        if (e._doc.hostId === host._doc.id) e._doc.host = host._doc;
+                                        return;
+                                    });
+                                });
+                                if (result) ctx.body = { msg: '查询周界点', data: result };
+                                return _context5.abrupt('return', ctx.error = { msg: '没有找到周界点!' });
+
+                            case 10:
                             case 'end':
                                 return _context5.stop();
                         }
