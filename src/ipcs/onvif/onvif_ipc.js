@@ -24,51 +24,41 @@ class ONVIF_IPC extends  IPC{
             'b3g_protocol':false
         },(val,key)=>{this.options[key]=key in options?options[key]:val;});
         _.each({'ip':'','port':0,'user':'','pwd':'','path':''},(val,key)=>{this.options[key]=key in options?options[key]:val;});
-        this._connected=false;
         this._camera_handle=null;
         this.__profiles=[];
         this.__profile=null;
         Parser(this,'onvif.js',{id:this.options.id});
     }
 
-    connect(callback){
-        if(this.isConnected) return Promise.resolve();
-        return new Promise((resolve,reject)=>{
-            let opts={
-                hostname:this.options.ip,
-                username:this.options.user,
-                password:this.options.pwd,
-                port:this.options.port
-            };
-            if(this.options.path) opts.path=this.options.path;
-            this._camera_handle=new Cam(opts,(err)=>{
-                if(err){
-                    let error=this.error('ONVIF协议接入错误',{innerError:err});
-                    this.emit(IPC.Events.Error,error);
-                    this._camera_handle=null;
-                    reject(error);
-                    return;
-                }
-                this._connected=true;
-                this.emitEvent(IPC.Events.Connected,this.log('ONVIF协议连接成功'));
-                this.options.fn_ptz='PTZ' in this._camera_handle.capabilities;
-                resolve();
-            });
+    async _connect(){
+        let opts={
+            hostname:this.options.ip,
+            username:this.options.user,
+            password:this.options.pwd,
+            port:this.options.port
+        };
+        if(this.options.path) opts.path=this.options.path;
+        this._camera_handle=new Cam(opts,async (err)=> {
+            if (err) {
+                let error = this.error('ONVIF协议接入错误', {innerError: err});
+                //this.emit(IPC.Events.Error, error);
+                this._camera_handle = null;
+                return await Promise.reject(error);
+            }
+            this.setConnected();
+            this.emit(IPC.Events.Connected, this.log('ONVIF协议连接成功'));
+            this.options.fn_ptz = 'PTZ' in this._camera_handle.capabilities;
         });
     }
-    get isConnected(){return this._connected;}
-    disConnect(){
-        if(!this._connected)return Promise.resolve();
-        return new Promise((resolve)=>{
-            let dis=()=>{
-                delete this._camera_handle;
-                this._connected=false;
-                this.emitEvent(IPC.Events.DisConnected,this.log('ONVIF协议断开连接'));
-                resolve();
-            };
-            Promise.all([this.stopRealPlay(),this.stopTalk()]).then(dis).catch(dis);
-        });
+    async _disConnect(){
+        if(!this._camera_handle)return;
+        let dis= async ()=>{
+            delete this._camera_handle;
+            this.emit(IPC.Events.DisConnected,this.log('ONVIF协议断开连接'));
+        };
+        await Promise.all([this.stopRealPlay(),this.stopTalk()]).then(dis).catch(dis);
     }
+
     get _profiles(){
         if(this.__profiles.length) return this.__profiles;
         assert.ok(this._camera_handle,'connect first');
@@ -93,6 +83,7 @@ class ONVIF_IPC extends  IPC{
         ps=_.sortBy(ps,['bitrate','encodingtype']);
         return this.__profiles=ps;
     }
+
     get _profile(){
         assert.ok(this._camera_handle,'connect first');
         if(this.__profile) return this.__profile;
@@ -117,70 +108,64 @@ class ONVIF_IPC extends  IPC{
         return Math.floor(this._profile.bitrate*8/10*1024/9);
     }
 
-    getRtspUriWithAuth(){
-        return this._getRtspUri().then((uri)=>{
-            return respURI(uri,this.options.user,this.options.pwd);
-        });
+    async getRtspUriWithAuth(){
+        let url=await this._getRtspUri();
+        return respURI(uri,this.options.user,this.options.pwd);
     }
 
-    _getRtspUri(){
-        if(this._rtsp_uri){
-            return Promise.resolve(this._rtsp_uri);
+    async _getRtspUri(){
+        if(this._rtsp_uri) return this._rtsp_uri;
+        await this.connect();
+        let pf = this._profile;
+        if(null===pf){
+            let error=this.error('未获取H264协议相关的配置文件');
+            //this.emit(IPC.Events.Error,error);
+            await this.disConnect();
+            return await Promise.reject(error);
         }
-        return this.connect().then(()=> {
-            return new Promise((resolve, reject) => {
-                let pf = this._profile;
-                if(null===pf){
-                    let error=this.error('未获取H264协议相关的配置文件');
-                    this.emit(IPC.Events.Error,error);
-                    return reject(error);
-                }
-                this._camera_handle.getStreamUri({protocol: 'RTSP', profileToken: pf.token}, (err, uri)=>{
-                    if (err) {
-                        let error=this.error('getRtspUri','获取H264协议RTSP地址错误',{innerError:err});
-                        this.emit(IPC.Events.Error,error,error);
-                        return reject(error);
-                    }
-                    this.log('获取H264到播放地址，协议类型RTSP',{uri:uri.uri});
-                    resolve(this._rtsp_uri=uri.uri);
-                });
-            });
+        this._camera_handle.getStreamUri({protocol: 'RTSP', profileToken: pf.token},async (err, uri)=>{
+            await this.disConnect();
+            if (err) {
+                let error=this.error('getRtspUri','获取H264协议RTSP地址错误',{innerError:err});
+                //this.emit(IPC.Events.Error,error,error);
+                return await Promise.reject(error);
+            }
+            this.log('获取H264到播放地址，协议类型RTSP',{uri:uri.uri});
+            return this._rtsp_uri=uri.uri;
         });
     }
 
-    get inPlay(){return !!this._RtspClient;}
-
-    _connectRtsp(url){
-        if(this._RtspClient)return Promise.resolve(this._RtspClientDetail);
-        const client =this._RtspClient=new RtspClient(this.options.user,this.options.pwd);
-        return client.connect(url, { keepAlive: false }).then((details) => {
-            //console.log('Connected. Video format is', details.format);
-            // Open the output file
-            //assert.ok(details.isH264);
-            this._RtspClientDetail=details;
-            return Promise.resolve(details);
-        }).catch((err)=>{
+    async _connectRtsp(url){
+        if(this._RtspClientDetail)return this._RtspClientDetail;
+        const client =new RtspClient(this.options.user,this.options.pwd);
+        let details=await client.connect(url, { keepAlive: false }).catch( async (err)=>{
             let error=this.error('_connectRtsp','RTSP协议直播接入异常',{innerError:err});
-            this.emit(IPC.Events.Error,error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error,error);
+            return await Promise.reject(error);
         });
+        this._RtspClient=client;
+        //console.log('Connected. Video format is', details.format);
+        // Open the output file
+        //assert.ok(details.isH264);
+        return this._RtspClientDetail=details;
     }
 
-    realPlay() {
-        if(this._RtspClient) return Promise.resolve();
-        return this._getRtspUri().then((uri)=>{
-            return this._connectRtsp(uri).then((details)=>{
-                this._h264Transport= new H264Transport(this._RtspClient,this, details);
-                this._RtspClient.play();
-                this._RtspClient.on('error',(err)=>{
-                    this.stopRealPlay();
-                    let error=this.error('RTSP协议连接发生错误',err);
-                    this.emit(IPC.Events.Error,error);
-                });
-                this.emit(IPC.Events.RealPlay,this.log('RTSP协议直播接入'));
-                return Promise.resolve();
-            });
+    async _realPlay() {
+        let uri=await this._getRtspUri();
+        let details=await this._connectRtsp(uri);
+        this._h264Transport= new H264Transport(this._RtspClient,this, details);
+        await this._RtspClient.play().catch( async ()=>{
+            let error=this.error('RTSP协议连接发生错误',err);
+            this._h264Transport.unpipe(this);
+            this._h264Transport=null;
+            return await Promise.reject(error);
         });
+/*        this._RtspClient.on('error',(err)=>{
+            this.stopRealPlay();
+            let error=this.error('RTSP协议连接发生错误',err);
+            //this.emit(IPC.Events.Error,error);
+        });*/
+        this.emit(IPC.Events.RealPlay,this.log('RTSP协议直播接入'));
     }
 
     _transform(data,enc,next){
@@ -191,24 +176,19 @@ class ONVIF_IPC extends  IPC{
         next(null,buf);
     }
 
-    stopRealPlay(){
-        if(!this._RtspClient) return Promise.resolve();
-        return new Promise((rosolve)=>{
-            this._h264Transport.unpipe(this);
-            this._h264Transport=null;
-            this._RtspClient.close().catch(e=>e);
-            this._RtspClient=null;
-            this.emit(IPC.Events.StopRealPlay,this.log('RTSP协议直播关闭'));
-            rosolve();
-        });
+    async _stopRealPlay(){
+        if(!this._RtspClient) return;
+        this._h264Transport.unpipe(this);
+        this._h264Transport=null;
+        this._RtspClient.close().catch(e=>e);
+        this._RtspClient=null;
+        this.emit(IPC.Events.StopRealPlay,this.log('RTSP协议直播关闭'));
     }
 
-    startTalk(stream){
-        return Promise.resolve();
+    async _startTalk(stream){
     }
 
-    stopTalk(){
-        return Promise.resolve();
+    async _stopTalk(){
     }
 
     _listen(/*offlinecb*/){
@@ -266,49 +246,42 @@ class ONVIF_IPC extends  IPC{
         }
     }
 
-    _PTZ(options){
-        let _this=this;
-        if(!this.supportPTZ) return Promise.reject(this._error('_PTZ','此设备不支持PTZ操作'));
-        return this.connect().then(()=>{
-            return new Promise((resolve,reject)=>{
-                options=_.defaults(options,{profileToken:_this._profileToken});
-                this._camera_handle.relativeMove(options,(err)=>{
-                    if(err){
-                        let error=this.error('PTZ操作异常',{innerError:err});
-                        this.emit(IPC.Events.Error,error);
-                        return reject(error);
-                    }
-                    this.log('成功执行PTZ操作');
-                    resolve();
-                });
-            });
+    async _PTZ(options){
+        if(!this.supportPTZ) return await Promise.reject(this._error('_PTZ','此设备不支持PTZ操作'));
+        await this.connect();
+        options=_.defaults(options,{profileToken:this._profileToken});
+        this._camera_handle.relativeMove(options,async (err)=>{
+            await this.disConnect();
+            if(err){
+                let error=this.error('PTZ操作异常',{innerError:err});
+                //this.emit(IPC.Events.Error,error);
+                return await Promise.reject(error);
+            }
+            this.log('成功执行PTZ操作');
         });
     }
 
     //getNodes
-    ptzStop(callback){
-        return this.connect().then(()=>{
-            return new Promise((resolve,reject)=>{
-                let options={panTilt:false,zoom:true,profileToken:this._profileToken};
-                this._camera_handle.stop(options,(err)=>{
-                    if(err){
-                        let error=this.error('ptz停止异常',{innerError:error});
-                        this.emit(IPC.Events.Error,error);
-                        return reject();
-                    }
-                    this.log('成功执行PTZ操作');
-                    resolve();
-                });
-            });
+    async ptzStop(){
+        await this.connect();
+        let options={panTilt:false,zoom:true,profileToken:this._profileToken};
+        this._camera_handle.stop(options,async (err)=>{
+            await this.disConnect();
+            if(err){
+                let error=this.error('ptz停止异常',{innerError:error});
+                //this.emit(IPC.Events.Error,error);
+                return await Promise.reject(error);
+            }
+            this.log('成功执行PTZ操作');
         });
     }
 
-    zoomAdd(){
-        return this._PTZ({zoom:1,speed:{zoom:config.zoomSpeed}});
+    async zoomAdd(){
+        return await this._PTZ({zoom:1,speed:{zoom:config.zoomSpeed}});
     }
 
-    zoomDec(){
-        this._PTZ({zoom:-1,speed:{zoom:config.zoomSpeed}});
+    async zoomDec(){
+        return await this._PTZ({zoom:-1,speed:{zoom:config.zoomSpeed}});
     }
 
     focusAdd() {
@@ -325,7 +298,7 @@ class ONVIF_IPC extends  IPC{
 
     }
 
-    move(direction) {
+    async move(direction) {
         let x=0,y=0;
         if((direction&PTZ.Directions.top)>0){
             y=1;
@@ -340,34 +313,33 @@ class ONVIF_IPC extends  IPC{
             x=1;
         }
 
-        return this._PTZ({zoom:0,x:x,y:y,speed:{x:this.h_speed,y:this.v_speed}});
+        return await this._PTZ({zoom:0,x:x,y:y,speed:{x:this.h_speed,y:this.v_speed}});
     }
 
-    moveToPoint(x,y,z){throw new Error('未实现函数moveToPoint');}
+    async moveToPoint(x,y,z){throw new Error('未实现函数moveToPoint');}
 
-    moveToPreset(pt)
+    async moveToPreset(pt)
     {
-        return this.connect(()=>{
-            return new Promise((resolve,reject)=>{
-                this._camera_handle.gotoPreset({profileToken:this._profileToken,preset:''+pt},(err)=>{
-                    if(err){
-                        let error=this.error('moveToPreset','移动到预置位异常',{innerError:err});
-                        this.emit(IPC.Events.Error,error);
-                        return reject();
-                    }
-                    this.log('成功执行PTZ操作');
-                    resolve();
-                });
-            });
+        throw new Error('未实现函数moveToPreset');
+        await this.connect();
+        this._camera_handle.gotoPreset({profileToken:this._profileToken,preset:''+pt},async (err)=>{
+            await this.disConnect();
+            if(err){
+                let error=this.error('moveToPreset','移动到预置位异常',{innerError:err});
+                //this.emit(IPC.Events.Error,error);
+                return await Promise.reject(error);
+            }
+            this.log('成功执行PTZ操作');
         });
     }
 
-    setPreset(index)
+    async setPreset(caption)
     {
-
+        throw new Error('未实现函数setPreset');
     }
 
-    getPonintXYZ(){
+    getPoint(){
+        throw new Error('未实现函数getPoint');
         //getStatus
         /*{
             position: {
@@ -380,12 +352,12 @@ class ONVIF_IPC extends  IPC{
         }*/
     }
 
-    removePoint(index){
-
+    async removePreset(preset){
+        throw new Error('未实现函数removePreset');
     }
 
-    getPresets(){
-
+    async getPresets(){
+        throw new Error('未实现函数getPresets');
     }
 
 }

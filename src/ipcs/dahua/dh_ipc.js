@@ -39,7 +39,6 @@ class DHIPC extends IPC{
         _.each({'ip':'','port':0,'user':'','pwd':'',
             'b3g_protocol':false
         },(val,key)=>{this.options[key]=key in options?options[key]:val;});
-        this._connected=false;
         this._loginID=0;
         this._playID=0;
         this._talkID=0;
@@ -89,52 +88,42 @@ class DHIPC extends IPC{
         };
     }
 
-    get isConnected(){return this._connected;}
-    connect() {
-        if(this._connected) return Promise.resolve();
+    async  _connect() {
         if(!dhok) {
             let error=this.error('大华SDK初始化异常');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
-        return new Promise((resolve,reject)=>{
             //let x=timeSpan.start('打开连接');
-            const loginType=dhlib.enums.loginType.TCP;
-            let NET_DEVICEINFO_Ex=new dhlib.structs.NET_DEVICEINFO_Ex();
-            let err=ref.alloc('int');
-            this._loginID=dhlib.functions.CLIENT_LoginEx2(this.options.ip,this.options.port,this.options.user,this.options.pwd,loginType,ref.NULL,NET_DEVICEINFO_Ex.ref(),err)
-            err=err.deref();
-            if(!this._loginID){
-                let error=this._error('设备登入错误');
-                this.emit(IPC.Events.Error,error);
-                reject(error);
+        const loginType=dhlib.enums.loginType.TCP;
+        let NET_DEVICEINFO_Ex=new dhlib.structs.NET_DEVICEINFO_Ex();
+        let err=ref.alloc('int');
+        this._loginID=dhlib.functions.CLIENT_LoginEx2(this.options.ip,this.options.port,this.options.user,this.options.pwd,loginType,ref.NULL,NET_DEVICEINFO_Ex.ref(),err)
+        //err=err.deref();
+        if(!this._loginID){
+            let error=this._error('设备登入错误');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        if(false){
+            let ab=this._getAbility();
+            this.options.fn_ptz=ab.fn_ptz||false;
+            this.options.b3g_protocol=ab.json||NET_DEVICEINFO_Ex.toObject().nChanNum>32||false;
+        }
+        this.setConnected();
+        this.emit(IPC.Events.Connected,this.log('设备已连接'));
+    }
+    async _disConnect() {
+        if(!this._loginID)return await Promise.resolve();
+        let dis=async ()=>{
+            if(dhlib.functions.CLIENT_Logout(this._loginID)){
+                this._loginID=0;
+                this.emit(IPC.Events.DisConnected,this.log('设备已断开连接'));
                 return;
             }
-            if(false){
-                let ab=this._getAbility();
-                this.options.fn_ptz=ab.fn_ptz||false;
-                this.options.b3g_protocol=ab.json||NET_DEVICEINFO_Ex.toObject().nChanNum>32||false;
-            }
-            this._connected=true;
-            this.emit(IPC.Events.Connected,this.log('设备已连接'));
-            //x.end();
-            resolve();
-        });
-    }
-    disConnect() {
-        if(!this._loginID||!this._connected)return Promise.resolve();
-        return new Promise((resolve,reject)=>{
-            let dis=()=>{
-                if(dhlib.functions.CLIENT_Logout(this._loginID)){
-                    this._connected=false;
-                    this._loginID=0;
-                    this.emit(IPC.Events.DisConnected,this.log('设备已断开连接'));
-                    return resolve();
-                }
-                reject(this._error('大华设备登出错误'));
-            };
-            Promise.all([this.stopRealPlay(),this.stopTalk()]).then(dis).catch(dis);
-        });
+            return await Promise.reject(this._error('大华设备登出错误'));
+        };
+        await Promise.all([this.stopRealPlay(),this.stopTalk()]).then(dis).catch(dis);
     }
 
     _transform(buf,enc,next){
@@ -163,195 +152,173 @@ class DHIPC extends IPC{
     }
 
     //有音频设置时同样会返回音频数据
-    realPlay() {
-        if(this._playID) return Promise.resolve();
-        return this.connect().then(()=>{
-            return new Promise((resolve,reject)=> {
-                this._playID=dhlib.functions.CLIENT_RealPlayEx(this._loginID,this._channel,ref.NULL,dhlib.enums.playType.Realplay_1);
-                if(!this._playID){
-                    let error=this._error('获取设备的播放句柄错误');
-                    this.emit(IPC.Events.Error,error);
-                    reject(error);
-                    return;
-                }
-                let id=this.options.id;
-                let cb=this._playcb=dhlib.callbacks.fRealDataCallBackEx((rid,dataType,data,size/*,param,dwuser*/)=>{
-                    let buf=dhlib.utils.readBuffer(data,size);
-                    //console.log(buf.slice(4,5).toString('hex')+'\r');
-                    //if(buf[4]===0xfd) console.log(buf.toString('utf8')+'\r');
-                    this._pushData(buf,(data)=>{
-                        EventEmitter.prototype.emit.call(this,'video',data);
-                    });
-                });
-                if(!dhlib.functions.CLIENT_SetRealDataCallBackEx(this._playID,cb,0,1)){
-                    delete this._playcb;
-                    let error=this._error('直播数据回调函数绑定异常');
-                    this.emit(IPC.Events.Error,error);
-                    reject(error);
-                    return;
-                }
-                this.emit(IPC.Events.RealPlay,this.log('直播端口已打开'));
-                resolve();
+    async _realPlay() {
+        await this.connect();
+        this._playID=dhlib.functions.CLIENT_RealPlayEx(this._loginID,this._channel,ref.NULL,dhlib.enums.playType.Realplay_1);
+        if(!this._playID){
+            let error=this._error('获取设备的播放句柄错误');
+            this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        //let id=this.options.id;
+        let cb=this._playcb=dhlib.callbacks.fRealDataCallBackEx((rid,dataType,data,size/*,param,dwuser*/)=>{
+            let buf=dhlib.utils.readBuffer(data,size);
+            //console.log(buf.slice(4,5).toString('hex')+'\r');
+            //if(buf[4]===0xfd) console.log(buf.toString('utf8')+'\r');
+            this._pushData(buf,(data)=>{
+                EventEmitter.prototype.emit.call(this,'video',data);
             });
         });
-    }
-
-    stopRealPlay() {
-        if(!this._playID) return Promise.resolve();
-        return new Promise((resolve,reject)=>{
-            if(dhlib.functions.CLIENT_StopRealPlayEx(this._playID)){
-                this._playID=0;
-                delete this._playcb;
-                this.emit(IPC.Events.StopRealPlay,this.log('直播端口关闭'));
-                return resolve();
-            }
-            this._playID=0;
+        if(!dhlib.functions.CLIENT_SetRealDataCallBackEx(this._playID,cb,0,1)){
             delete this._playcb;
-            let error=this._error('直播端口关闭异常');
-            this.emit(IPC.Events.Error,error);
-            reject(error);
-        });
+            let error=this._error('直播数据回调函数绑定异常');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        this.setPlaying();
+        this.emit(IPC.Events.RealPlay,this.log('直播端口已打开'));
     }
 
-    startTalk(){
-        if(this._talkID)return Promise.resolve();
-        return this.connect().then(()=>{
-            return this._talkInit().then((type)=>{
-                return new Promise((resolve,reject)=>{
-                    let cb=this._talkcb=dhlib.callbacks.pfAudioDataCallBack(function(tid,data,size/*,remotedwuser*/){
-                        let buf=dhlib.utils.readBuffer(data,size);
-                        this._pushData(buf,(data)=>{
-                            EventEmitter.prototype.emit.call(this,'audio',data);
-                        });
-                    });
-                    this._talkID=dhlib.functions.CLIENT_StartTalkEx(this._loginID,cb,0);
-                    if(!this._talkID) {
-                        delete this._talkcb;
-                        //_this.options.fn_audio=false;
-                        return reject(this._error('startTalk'));
-                    }
-/*                    if(!isLinux){
-                        if(!dhlib.functions.CLIENT_RecordStartEx(_this._talkID)){
-                            return reject(this._error('recordStartEx'));
+    async _stopRealPlay() {
+        if(!this._playID) return;
+        if(dhlib.functions.CLIENT_StopRealPlayEx(this._playID)){
+            this.emit(IPC.Events.StopRealPlay,this.log('直播端口关闭'));
+        }
+        else{
+            this._error('直播端口关闭异常')
+            //this.emit(IPC.Events.Error,this._error('直播端口关闭异常'));
+        }
+        this._playID=0;
+        delete this._playcb;
+        await this.disConnect();
+    }
 
-                        }
-                    }*/
-                    this.emit(IPC.Events.AudioPlay,this.log('音频对讲端口打开'));
-                    resolve();
-                });
+    async _startTalk(){
+        await this.connect();
+        /*let type =*/await this._talkInit();
+        //如果在播放中就不通过talk拉取音频了，视频中已经取回了音频，这里再取会出问题
+        let cb=this._talkcb=dhlib.callbacks.pfAudioDataCallBack(this.isPlaying?()=>{}:(tid,data,size/*,remotedwuser*/)=>{
+            let buf=dhlib.utils.readBuffer(data,size);
+            this._pushData(buf,(data)=>{
+                EventEmitter.prototype.emit.call(this,'audio',data);
             });
         });
+        this._talkID=dhlib.functions.CLIENT_StartTalkEx(this._loginID,cb,0);
+        if(!this._talkID) {
+            delete this._talkcb;
+            //_this.options.fn_audio=false;
+            return await Promise.reject(this._error('startTalk'));
+        }
+/*      if(!isLinux){
+            if(!dhlib.functions.CLIENT_RecordStartEx(_this._talkID)){
+                return reject(this._error('recordStartEx'));
+
+            }
+        }*/
+        this.emit(IPC.Events.AudioPlay,this.log('音频对讲端口打开'));
+        this.setTalking();
     }
 
-    _getAudioEncodeType(){
-        if(this._audio_config) return Promise.resolve(this._audio_config);
-        if(!this._loginID) return Promise.reject('请先连接设备');
-        return new Promise((resolve,reject)=>{
-            let lst=new dhlib.structs.TALKFORMAT_LIST();
-            let nLenRet=ref.alloc('int');
-            let ok=dhlib.functions.CLIENT_QueryDevState(this._loginID,dhlib.consts.DEVSTATE_TALK_ECTYPE,lst.ref(),dhlib.structs.TALKFORMAT_LIST.size,nLenRet,1000);
-            if(!ok/*nLenRet.deref()!==dhlib.structs.TALKFORMAT_LIST.size*/){
-                let error=this._error('无法查找到设备支持的音频编码格式');
-                this.emit(IPC.Events.Error,error);
-                return reject(error);
-            }
-            for(let i=0;i<lst.nSupportNum;i++){
-                let lsti=lst.type[i];
-                if(lsti.encodeType===dhlib.enums.TALK_CODING_TYPE.AAC.value/*||lsti.encodeType===dhlib.enums.TALK_CODING_TYPE.mp3*/){
-                    return resolve(this._audio_config={
-                        dwSampleRate:lsti.dwSampleRate,
-                        encodeType:lsti.encodeType,
-                        nAudioBit:lsti.nAudioBit
-                    });
-                }
-            }
-            let error=this._error('设备不支持AAC音频编码');
+    async _getAudioEncodeType(){
+        if(this._audio_config) return this._audio_config;
+        if(!this._loginID) return await Promise.reject('请先连接设备');
+        let lst=new dhlib.structs.TALKFORMAT_LIST();
+        let nLenRet=ref.alloc('int');
+        let ok=dhlib.functions.CLIENT_QueryDevState(this._loginID,dhlib.consts.DEVSTATE_TALK_ECTYPE,lst.ref(),dhlib.structs.TALKFORMAT_LIST.size,nLenRet,1000);
+        if(!ok/*nLenRet.deref()!==dhlib.structs.TALKFORMAT_LIST.size*/){
+            let error=this._error('无法查找到设备支持的音频编码格式');
             this.emit(IPC.Events.Error,error);
-            return reject(error);
-        });
+            return await Promise.reject(error);
+        }
+        for(let i=0;i<lst.nSupportNum;i++){
+            let lsti=lst.type[i];
+            if(lsti.encodeType===dhlib.enums.TALK_CODING_TYPE.AAC.value/*||lsti.encodeType===dhlib.enums.TALK_CODING_TYPE.mp3*/){
+                return resolve(this._audio_config={
+                    dwSampleRate:lsti.dwSampleRate,
+                    encodeType:lsti.encodeType,
+                    nAudioBit:lsti.nAudioBit
+                });
+            }
+        }
+        let error=this._error('设备不支持AAC音频编码');
+        //this.emit(IPC.Events.Error,error);
+        return await Promise.reject(error);
     }
 
-    _talkInit()
+    async _talkInit()
     {
-        return this._getAudioEncodeType().then((type)=>{
-            return new Promise((resolve,reject)=>{
-                let ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SERVER_MODE,ref.NULL);
-                if(!ok){
-                    let error=this._error('设置音频为服务端模式错误');
-                    this.emit(IPC.Events.Error,error);
-                    return reject(error);
-                }
-                let en=dhlib.structs.TALKDECODE_INFO({
-                    encodeType:type.encodeType,
-                    nAudioBit:type.nAudioBit,
-                    dwSampleRate:type.dwSampleRate,
-                    nPacketPeriod:25
-                });
-
-                ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_ENCODE_TYPE,en.ref());
-                if(!ok){
-                    let error=this._error('设置音频格式错误');
-                    this.emit(IPC.Events.Error,error);
-                    return reject(error);
-                }
-                let sp=new dhlib.structs.NET_SPEAK_PARAM({
-                    dwSize:dhlib.structs.NET_SPEAK_PARAM.size,
-                    nMode:0,
-                    nSpeakerChannel:0,
-                    bEnableWait:0
-                });
-                ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SPEAK_PARAM,sp.ref());
-                if(!ok){
-                    let error=this._error('设置音频模式错误');
-                    this.emit(IPC.Events.Error,error);
-                    return reject(error);
-                }
-                let ttp=new dhlib.structs.NET_TALK_TRANSFER_PARAM({
-                    dwSize:dhlib.structs.NET_TALK_TRANSFER_PARAM.size,
-                    bTransfer:0
-                });
-                ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_TRANSFER_MODE,ttp.ref());
-                if(!ok){
-                    let error=this._error('设置音频传输方式错误');
-                    this.emit(IPC.Events.Error,error);
-                    return reject(error);
-                }
-                return resolve(type);
-            });
+        let type=await this._getAudioEncodeType();
+        let ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SERVER_MODE,ref.NULL);
+        if(!ok){
+            let error=this._error('设置音频为服务端模式错误');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        let en=dhlib.structs.TALKDECODE_INFO({
+            encodeType:type.encodeType,
+            nAudioBit:type.nAudioBit,
+            dwSampleRate:type.dwSampleRate,
+            nPacketPeriod:25
         });
+
+        ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_ENCODE_TYPE,en.ref());
+        if(!ok){
+            let error=this._error('设置音频格式错误');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        let sp=new dhlib.structs.NET_SPEAK_PARAM({
+            dwSize:dhlib.structs.NET_SPEAK_PARAM.size,
+            nMode:0,
+            nSpeakerChannel:0,
+            bEnableWait:0
+        });
+        ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SPEAK_PARAM,sp.ref());
+        if(!ok){
+            let error=this._error('设置音频模式错误');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        let ttp=new dhlib.structs.NET_TALK_TRANSFER_PARAM({
+            dwSize:dhlib.structs.NET_TALK_TRANSFER_PARAM.size,
+            bTransfer:0
+        });
+        ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_TRANSFER_MODE,ttp.ref());
+        if(!ok){
+            let error=this._error('设置音频传输方式错误');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        return type;
     }
 
-    stopTalk(){
+    async _stopTalk(){
         if(this._talkcb) delete this._talkcb;
-        if(!this._talkID) return Promise.resolve();
-        return new Promise((resolve,reject)=>{
-            if(1===dhlib.functions.CLIENT_StopTalkEx(this._talkID)){
-                this.emit(IPC.Events.AudioStopPlay,this.log('音频对讲端口关闭'));
-                return resolve();
-            }
-            let error=this._error('停止对讲发生错误')
-            this.emit(IPC.Events.Error,error);
-            reject(error);
-        });
+        if(!this._talkID) return;
+        if(1===dhlib.functions.CLIENT_StopTalkEx(this._talkID)){
+            this.emit(IPC.Events.AudioStopPlay,this.log('音频对讲端口关闭'));
+        }
+        else{
+            /*let error=*/this._error('停止对讲发生错误')
+            //this.emit(IPC.Events.Error,error);
+        }
+        await this.disConnect();
     }
 
-    setTalkData(data,size){
-        if(!this._talkID)return Promise.reject(this._error('需要先打开通道',false));
-        return new Promise((resolve,reject)=>{
-            if(size===dhlib.functions.CLIENT_TalkSendData(this._talkID,data,size)){
-                return resolve();
-            }
-            let error=this._error('向音频数据发送异常');
-            this.emit(IPC.Events.Error,error);
-            reject(error);
-        });
+    async setTalkData(data,size){
+        if(!this._talkID) return await Promise.reject(this._error('需要先打开通道',false));
+        if(size===dhlib.functions.CLIENT_TalkSendData(this._talkID,data,size)){
+            return;
+        }
+        let error=this._error('向音频数据发送异常');
+        //this.emit(IPC.Events.Error,error);
+        return await Promise.reject(error);
     }
 
     _onDisConnected(loginID/*,string,port,dwuser*/){
         if(this._loginID!==loginID){
             return;
         }
-        this._connected=false;
         clearInterval(this._onlineInterval||0);
         this._offileInterval=setInterval(()=>{
             this.emit(IPC.Events.Offline,this.warn('连接被动断开超过6秒，请查看设备或网络情况'));
@@ -362,7 +329,6 @@ class DHIPC extends IPC{
         if(this._loginID!==loginid){
             return;
         }
-        this._connected=true;
         clearInterval(this._offileInterval||0);
         this._offileInterval=0;
         this.emit(IPC.Events.Online);
@@ -384,70 +350,67 @@ class DHIPC extends IPC{
         dhlib.removeListener('reconnected',this._reConnectFn);
     }
 
-    _PTZ(cmd,p1,p2,p3=0,param4=null,stopCmd=true,stop=false){
-        if(!this.supportPTZ) return Promise.reject(this._error('_PTZ','设备不支持PTZ操作'));
-        return this.connect().then(()=>{
-            return new Promise(_.bind((resolve,reject)=>{
-                let stopCMD=_.bind(dhlib.functions.CLIENT_DHPTZControlEx2,null,this._loginID,this._channel,cmd,p1,p2,p3,true,ref.NULL);
-                if(dhlib.functions.CLIENT_DHPTZControlEx2(this._loginID,this._channel,cmd,p1,p2,p3,false,(param4?param4.ref():ref.NULL))){
-                    if(stopCmd||stop)this._stopCmd=stopCMD;
-                    if(stop) setTimeout(this.ptzStop.bind(this),100);
-                    this.log(`成功执行PTZ操作,操作：${cmd}`);
-                    return resolve();
-                }
-                let error=this._error('ptz操作错误');
-                this.emit(IPC.Events.Error,error);
-                reject(error);
-                //_this.emit(IPC.Events.PTZ);
-            },this));
-        });
-    }
-
-    ptzStop(){
-        if(this._stopCmd===null){
-            return Promise.resolve();
+    async _PTZ(cmd,p1,p2,p3=0,param4=null,stopCmd=true,stop=false){
+        if(!this.supportPTZ) return await Promise.reject(this._error('_PTZ','设备不支持PTZ操作'));
+        await this.connect();
+        let stopCMD=_.bind(dhlib.functions.CLIENT_DHPTZControlEx2,null,this._loginID,this._channel,cmd,p1,p2,p3,true,ref.NULL);
+        if(dhlib.functions.CLIENT_DHPTZControlEx2(this._loginID,this._channel,cmd,p1,p2,p3,false,(param4?param4.ref():ref.NULL))){
+            if(stopCmd||stop)this._stopCmd=stopCMD;
+            if(stop) setTimeout(this.ptzStop.bind(this),100);
+            this.log(`成功执行PTZ操作,操作：${cmd}`);
+            //return;
         }
-        return new Promise(_.bind((resolve,reject)=>{
-            let cmd=this._stopCmd;
-            this._stopCmd=null;
-            if(cmd()){
-                return resolve(this.log('成功执行PTZ停止操作'));
-            }
-            let error=this._error('停止ptz操作错误');
-            this.emit(IPC.Events.Error,error);
-            reject(error);
-        },this));
+        else{
+            /*let error=*/this._error('ptz操作错误');
+            //this.emit(IPC.Events.Error,error);
+            //return await Promise.reject(error);
+        }
+        await this.disConnect();
     }
 
-    zoomAdd(stop) {
-        return this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,this.zoom_speed,0,null,!stop,stop);
+    async ptzStop(){
+        if(this._stopCmd===null){
+            return;
+        }
+        let cmd=this._stopCmd;
+        this._stopCmd=null;
+        if(cmd()){
+            return this.log('成功执行PTZ停止操作');
+        }
+        let error=this._error('停止ptz操作错误');
+        //this.emit(IPC.Events.Error,error);
+        return await Promise.reject(error);
     }
 
-    zoomDec(stop) {
-        return this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_DEC,0,this.zoom_speed,0,null,!stop,stop);
+    async zoomAdd(stop) {
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,this.zoom_speed,0,null,!stop,stop);
     }
 
-    focusAdd(stop) {
-        return this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_ADD,0,this.focus_speed,0,null,!stop,stop);
+    async zoomDec(stop) {
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_DEC,0,this.zoom_speed,0,null,!stop,stop);
     }
 
-    focusDec(stop) {
-        return this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_DEC,0,this.focus_speed,0,null,!stop,stop);
+    async focusAdd(stop) {
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_ADD,0,this.focus_speed,0,null,!stop,stop);
     }
 
-    apertureAdd(stop){
-        return this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_ADD,0,this.aperture_speed,0,null,!stop,stop);
+    async focusDec(stop) {
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_DEC,0,this.focus_speed,0,null,!stop,stop);
     }
 
-    apertureDec(stop) {
-        return this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_DEC,0,this.aperture_speed,0,null,!stop,stop);
+    async apertureAdd(stop){
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_ADD,0,this.aperture_speed,0,null,!stop,stop);
     }
 
-    move(direction,stop){
+    async apertureDec(stop) {
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_DEC,0,this.aperture_speed,0,null,!stop,stop);
+    }
+
+    async move(direction,stop){
         if(!this.supportPTZ) {
             let error =this._error('设备不支持PTZ操作');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
         const _d=IPC.Directions;
         switch(direction){
@@ -472,42 +435,43 @@ class DHIPC extends IPC{
                 direction=-1;break;
             }
         }
-        return this._PTZ(direction,this.v_speed,this.h_speed,0,null,!stop,stop);
+        return await this._PTZ(direction,this.v_speed,this.h_speed,0,null,!stop,stop);
     }
 
-    moveToPoint(x,y,z){
+    async moveToPoint(x,y,z){
         let pos=new dhlib.structs.PTZ_CONTROL_ABSOLUTELY({
             stuPosition:new dhlib.structs.PTZ_SPACE_UNIT({nPositionX:x,nPositionY:y,nZoom:z}),
             stuSpeed:new dhlib.structs.PTZ_SPEED_UNIT({fPositionX:1.0,fPositionY:1.0,fZoom:1.0})
         });
-        return this._PTZ(dhlib.enums.PTZ.EXTPTZ_MOVE_ABSOLUTELY,0,0,0,pos,false);
+        return await this._PTZ(dhlib.enums.PTZ.EXTPTZ_MOVE_ABSOLUTELY,0,0,0,pos,false);
     }
 
-    moveToPreset(pt){
+    async moveToPreset(pt){
         if(!this.supportPTZ) {
             let error =this._error('设备不支持PTZ操作');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
         if(pt.preset){
-            return this._PTZ(dhlib.enums.PTZ.PTZ_POINT_MOVE,0,pt.preset,0,null,false);
+            return await this._PTZ(dhlib.enums.PTZ.PTZ_POINT_MOVE,0,pt.preset,0,null,false);
         }
         else{
-            return this.moveToPoint(pt.x,pt.y,pt.z);
+            return await this.moveToPoint(pt.x,pt.y,pt.z);
         }
     }
 
     //标记当前位置未新的预置点，标题如示，删除预置点通过返回的参数对象进行操作
-    setPreset(caption){
+    async setPreset(caption){
+        throw new Error('未实现函数setPreset');
         if(!this.supportPTZ) {
             let error =this._error('设备不支持PTZ操作');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
         //判断名字是否已经存在，则加入对应的点,同一个位置不同的名称可以重复加入
         assert.ok(!this.existsPreset(caption));
         //let nameBuffer=dhlib.utils.utf82Mbcs(name);
-        return Promise.all([this.getPoint(),this.getNextPresets()]).then((values)=>{
+        return Promise.all([this.getPoint(),this._getNextPresets()]).then((values)=>{
            return this._PTZ(dhlib.enums.PTZ.PTZ_POINT_SET,0,values[1],0,null,false).then(()=>{
                     //{x,y,z,preset,name}
                 let ret=_.extend(values[0],{preset:values[1]});
@@ -518,148 +482,137 @@ class DHIPC extends IPC{
         });
     }
 
-    removePreset(preset){
+    async removePreset(preset){
         throw new Error('未实现函数removePreset');
     }
 
     //获取下一个预置点的编号，大华通过编号移动预置点，标题在移动时在画面上显示
-    getNextPresets(){
-        return this.getPresets().then((orderd)=>{
-            let ret=orderd.length+1;
-            for(let i=0;i<orderd.length;i++){
-                if(orderd[i].nIndex!==i+1){
-                    ret=i+1;
-                }
+    async _getNextPresets(){
+        let lst=await this._getPresets();
+        let ret=lst.length+1;
+        for(let i=0;i<lst.length;i++){
+            if(lst[i].nIndex!==i+1){
+                ret=i+1;
             }
-            return Promise.resolve(ret);
-        });
+        }
+        return ret;
     }
 
     //获取所有的预置点信息
-    getPresets(){
+    async _getPresets(){
         //BYTE 个预置点最多
-        return this.connect().then(()=>{
-            return new Promise((resolve,reject)=>{
-                let PresetType=ArrayType(dhlib.structs.NET_PTZ_PRESET);
-                let plst=new PresetType(255);
-                let lst=new dhlib.structs.NET_PTZ_PRESET_LIST({
-                    'dwSize':dhlib.structs.NET_PTZ_PRESET_LIST.size,
-                    'dwMaxPresetNum':255,//1~255
-                    'dwRetPresetNum':255,
-                    'pstuPtzPorsetList':plst.buffer
-                });
-                let nLenRet=ref.alloc('int');
-                let bok=dhlib.functions.CLIENT_QueryDevState(
-                    this._loginID,
-                    dhlib.consts.DH_DEVSTATE_PTZ_PRESET_LIST,
-                    lst.ref(),
-                    dhlib.structs.NET_PTZ_PRESET_LIST.size,
-                    nLenRet,
-                    1000
-                );
-                if(!bok){
-                    let error =this._error('获取预置点列表发生错误');
-                    this.emit(IPC.Events.Error,error);
-                    return Promise.reject(error);
-                }
-                if(lst.dwRetPresetNum===0) return resolve([]);
-                let presets=[];
-                for(let i=0;i<lst.dwRetPresetNum;i++){
-                    presets.push({
-                        'nIndex':plst[i].nIndex,
-                        'szName':dhlib.utils.mbcs2Utf8(plst[i].szName.buffer)
-                    });
-                }
-
-                resolve(_.sortBy(presets,['nIndex']));
-            });
+        await this.connect();
+        let PresetType=ArrayType(dhlib.structs.NET_PTZ_PRESET);
+        let plst=new PresetType(255);
+        let lst=new dhlib.structs.NET_PTZ_PRESET_LIST({
+            'dwSize':dhlib.structs.NET_PTZ_PRESET_LIST.size,
+            'dwMaxPresetNum':255,//1~255
+            'dwRetPresetNum':255,
+            'pstuPtzPorsetList':plst.buffer
         });
+        let nLenRet=ref.alloc('int');
+        let bok=dhlib.functions.CLIENT_QueryDevState(
+            this._loginID,
+            dhlib.consts.DH_DEVSTATE_PTZ_PRESET_LIST,
+            lst.ref(),
+            dhlib.structs.NET_PTZ_PRESET_LIST.size,
+            nLenRet,
+            1000
+        );
+        await this.disConnect();
+        if(!bok){
+            let error =this._error('获取预置点列表发生错误');
+            //this.emit(IPC.Events.Error,error);
+
+            return await Promise.reject(error);
+        }
+        let presets=[];
+        for(let i=0;i<lst.dwRetPresetNum;i++){
+            presets.push({
+                'nIndex':plst[i].nIndex,
+                'szName':dhlib.utils.mbcs2Utf8(plst[i].szName.buffer)
+            });
+        }
+        return _.sortBy(presets,['nIndex']);
     }
 
     //获得当前球机坐标xyz
-    getPoint(){
+    async getPoint(){
         if(!this.supportPTZ) {
             let error =this._error('设备不支持PTZ操作');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
-        return this.connect().then(()=>{
-            return new Promise((resolve,reject)=>{
-                let nLenRet=ref.alloc('int');
-                let location=dhlib.structs.DH_PTZ_LOCATION_INFO();
-                let bok=dhlib.functions.CLIENT_QueryDevState(
-                    this._loginID,
-                    dhlib.consts.DH_DEVSTATE_PTZ_LOCATION,
-                    location.ref(),
-                    dhlib.structs.DH_PTZ_LOCATION_INFO.size,
-                    nLenRet,
-                    1000
-                );
-                if(!bok){
-                    let error =this._error('获取球机为止发生错误');
-                    this.emit(IPC.Events.Error,error);
-                    return Promise.reject(error);
-                }
-                assert.ok(nLenRet.deref()===dhlib.structs.DH_PTZ_LOCATION_INFO.size);
-                resolve({
-                    x:location.nPTZPan,
-                    y :location.nPTZTilt,
-                    z :location.nPTZZoom
-                });
-            });
-        });
+        await this.connect();
+        let nLenRet=ref.alloc('int');
+        let location=dhlib.structs.DH_PTZ_LOCATION_INFO();
+        let bok=dhlib.functions.CLIENT_QueryDevState(
+            this._loginID,
+            dhlib.consts.DH_DEVSTATE_PTZ_LOCATION,
+            location.ref(),
+            dhlib.structs.DH_PTZ_LOCATION_INFO.size,
+            nLenRet,
+            1000
+        );
+        await this.disConnect();
+        if(!bok){
+            let error =this._error('获取球机为止发生错误');
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
+        }
+        assert.ok(nLenRet.deref()===dhlib.structs.DH_PTZ_LOCATION_INFO.size);
+        return {
+            x:location.nPTZPan,
+            y :location.nPTZTilt,
+            z :location.nPTZZoom
+        };
     }
 
-    _alarm(open){
+    async _alarm(open){
         if(!this.supportAlarm){
             let error =this._error('设备不支持报警输出');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
-        return this.connect().then(()=>{
-            return new Promise((reslove,reject)=> {
-                let ALARMCTRL_PARAM = dhlib.structs.ALARMCTRL_PARAM;
-                let ap = new ALARMCTRL_PARAM({
-                    dwSize: ALARMCTRL_PARAM.size,
-                    nAlarmNo: 0,
-                    nAction: (open ? 1:0)
-                });
-                //dhlib.enums.CTRL_TYPE.TRIGGER_ALARM_OUT
-                let ok=dhlib.functions.CLIENT_ControlDevice(this._loginID,101,ap.ref(), 1000);
-                if (ok!==0) {
-                    this.emit(open?IPC.Events.Alarm:IPC.Events.AlarmStop,this.log(`报警输出已${open?'打开':'关闭'}`));
-                    reslove();
-                    return;
-                }
-                this.options.fn_alarm=false;
-                let error =this._error('报警指令未发出');
-                this.emit(IPC.Events.Error,error);
-                reject(error);
-            });
+        await this.connect();
+        let ALARMCTRL_PARAM = dhlib.structs.ALARMCTRL_PARAM;
+        let ap = new ALARMCTRL_PARAM({
+            dwSize: ALARMCTRL_PARAM.size,
+            nAlarmNo: 0,
+            nAction: (open ? 1:0)
         });
+        //dhlib.enums.CTRL_TYPE.TRIGGER_ALARM_OUT
+        let ok=dhlib.functions.CLIENT_ControlDevice(this._loginID,101,ap.ref(), 1000);
+        await this.disConnect();
+        if (ok!==0) {
+            this.emit(open?IPC.Events.Alarm:IPC.Events.AlarmStop,this.log(`报警输出已${open?'打开':'关闭'}`));
+            return;
+        }
+        this.options.fn_alarm=false;
+        let error =this._error('报警指令未发出');
+        //this.emit(IPC.Events.Error,error);
+        return await Promise.reject(error);
     }
 
-    alarm(){
-        return this._alarm(true);
+    async alarm(){
+        return await this._alarm(true);
     }
-    stopAlarm(){
-        return this._alarm(false);
+    async stopAlarm(){
+        return await this._alarm(false);
     }
 
-    setVolume(pt){
+    async setVolume(pt){
         if(!this._playID){
             let error =this._error('打开视频端口后使用');
-            this.emit(IPC.Events.Error,error);
-            return Promise.reject(error);
+            //this.emit(IPC.Events.Error,error);
+            return await Promise.reject(error);
         }
-        return new Promise((resolve,reject)=>{
-            if(dhlib.functions.CLIENT_SetVolume(this._playID,pt)){
-                resolve();return;
-            }
-            let error =this._error('设置音量异常');
-            this.emit(IPC.Events.Error,error);
-            reject(error);
-        });
+        if(dhlib.functions.CLIENT_SetVolume(this._playID,pt)){
+            return;
+        }
+        let error =this._error('设置音量异常');
+        //this.emit(IPC.Events.Error,error);
+        return await Promise.reject(error);
     }
 }
 
