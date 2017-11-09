@@ -8,6 +8,7 @@ const config=global.server_config||require('../../config/config');
 const ptzLock=_.get(config,'ipc.ptzLock',15000);
 const url=require('url');
 const assert=require('assert');
+const Counter=require('counter');
 
 const _q={
     'smooth':0,
@@ -53,6 +54,8 @@ class IPC extends PTZ{
         /*this._runWay=config.runWay;
          if(config.runWay!==_runWay.pull){
          }*/
+        this._realpaly_counter=new Counter();
+        this._talk_counter=new Counter();
     }
 
     get id(){
@@ -86,19 +89,49 @@ class IPC extends PTZ{
     get supportPTZ(){return false;}
     get supportAudio(){return false;}
     get supportAlarm(){return false;}
-    get config(){return PTZ.prototype.config.call(this);}
-    get isConnected(){return PTZ.prototype.isConnected.call(this);}
-    connect(){return PTZ.prototype.connect.call(this);}
-    disConnect(){return PTZ.prototype.disConnect.call(this);}
+    setPlaying(){
+        assert.ok(!this._realpaly_counter.inReference);
+        this._realpaly_counter.addReference();
+    }
+    get isPlaying(){return this._realpaly_counter.inReference;}
+    async realPlay() {
+        if(this.isPlaying) {
+            this._realpaly_counter.addReference();
+            return;
+        }
+        await this._realPlay();
+    }
+    async stopRealPlay() {
+        if(this._realpaly_counter.release()){
+            await this._stopRealPlay();
+        }
+    }
     //全部从辅码1流中获取，如果需要高精度请对应设置设备参数
-    realPlay() {throw new Error('未实现函数realPlay');}
-    stopRealPlay() {throw new Error('未实现函数stopRealPlay');}
+    async _realPlay() {throw new Error('未实现函数_realPlay');}
+    async _stopRealPlay() {throw new Error('未实现函数_stopRealPlay');}
     //要求promise自己catch掉，视频可用的情况下要启用视频
     //这两个端口暂时不使用,用于打开独立的音频输入输出
-    startTalk(){throw new Error('未实现函数_startTalk');}
-    stopTalk(){throw new Error('未实现函数_stopTalk');}
-    setTalkData(data,size){throw new Error('未实现函数setTalkData');}
-    setVolume(pt){throw new Error('未实现函数setVolume');}
+    setTalking(){
+        assert.ok(!this._talk_counter.inReference);
+        this._talk_counter.addReference();
+    }
+    get inTalking(){return this._talk_counter.inReference;}
+    async startTalk(){
+        if(this.inTalking) {
+            this._talk_counter.addReference();
+            return;
+        }
+        await this._startTalk();
+    }
+    async stopTalk(){
+        if(this._talk_counter.release()){
+            await this._stopTalk();
+        }
+    }
+    async _startTalk(){throw new Error('未实现函数_startTalk');}
+    async _stopTalk(){throw new Error('未实现函数_stopTalk');}
+    async setTalkData(data,size){throw new Error('未实现函数setTalkData');}
+    async setVolume(pt){throw new Error('未实现函数setVolume');}
     _listen(){throw new Error('未实现函数listen');}
     _stopListen(){throw new Error('未实现函数stopListen');}
     alarm(){throw new Error('未实现函数alarm');}
