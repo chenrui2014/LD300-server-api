@@ -1,9 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
-将删除 .gitignore
-将删除 .idea/
-将删除 assets/
-将删除 node_modules/
-将删除 dist/
-将删除 logger-error.log
-将删除 logger-info.log
-将删除 src/logs/
+.gitignore
+.idea/
+assets/
+node_modules/
+dist/
+logger-error.log
+logger-info.log
+src/logs/

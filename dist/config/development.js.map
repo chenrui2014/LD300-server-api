@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/config/development.js"],"names":["mongo","uri"],"mappings":";;;;;AAAA;;;kBAGe;;AAEX;AACAA,WAAO;AACHC,aAAK;AADF;;AAHI,C","file":"development.js","sourcesContent":["/**\n * Created by chen on 17-8-17.\n */\nexport default {\n\n    // MongoDB connection options\n    mongo: {\n        uri: 'mongodb://127.0.0.1:27017/LD300',\n    },\n\n};"]}
