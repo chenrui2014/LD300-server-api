@@ -8,7 +8,7 @@ const config=global.server_config||require('../../config/config');
 const ptzLock=_.get(config,'ipc.ptzLock',15000);
 const url=require('url');
 const assert=require('assert');
-const Counter=require('counter');
+const Counter=require('./counter');
 
 const _q={
     'smooth':0,
