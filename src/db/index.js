@@ -4,11 +4,13 @@
 import mongoose from 'mongoose';
 import logger from '../logger';
 import config from '../config';
+// import bluebird from 'bluebird';
 
 export default function connect() {
 
     return new Promise((resolve, reject) => {
         mongoose.Promise = global.Promise;
+        //mongoose.Promise = bluebird;
         mongoose.connection
             .on('error', (error) => reject(error))
             .on('close', () => logger.info('Database connection closed.'))
