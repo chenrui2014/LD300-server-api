@@ -10,7 +10,7 @@ const config=globalConfig.getConfig('onvif_config.json');
 const Cam=onvif.Cam;
 const _=require('lodash');
 const assert = require('assert');
-const {RtspClient,H264Transport} =require('../../../_3part/yellowstone');
+const {RtspClient,H264Transport} =require('yellowstone');
 const header = new Buffer.from([0x00,0x00,0x00,0x01]);
 const {Parser} =require('../../log/log');
 

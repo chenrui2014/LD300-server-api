@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/
+assets/
+node_modules/
+dist/
+logger-error.log
+logger-info.log
+src/logs/
