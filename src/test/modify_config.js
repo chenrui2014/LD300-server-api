@@ -1,9 +1,9 @@
-let config=require('../app/config/config');
+let config=require('../config/config');
 config.runMode.type='one';
 config.runMode.store='file';
-let hostData=require('../app/data/hosts_config.json');
-let mData=require('../app/data/mointors_config.json');
-let ipcData=require('../app/data/ipcs_config.json');
+let hostData=require('../data/hosts_config.json');
+let mData=require('../data/mointors_config.json');
+let ipcData=require('../data/ipcs_config.json');
 const _=require('lodash');
 
 function setHostData(data) {

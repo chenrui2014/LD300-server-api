@@ -1,12 +1,12 @@
 /**
  * Created by Luky on 2017/7/2.
  */
-const DHIPC=require('../../app/ipcs/dahua/dh_ipc');
-const jIPC=require('../data/dhipc.json');
-const jIPCDemo=require('../data/dhipc_demo.json');
+require('../modify_config');
+const DHIPC=require('../../ipcs/dahua/dh_ipc');
+const Data=require('../../servers/data_server');
 const expect = require('chai').expect;
-const IPC=require('../../app/ipcs/base/ipc');
-let fs=require('fs');
+const IPC=require('../../ipcs/base/ipc');
+const fs=require('fs');
 const wOption = {
     flags: 'w',
     encoding: null,
@@ -15,9 +15,13 @@ const wOption = {
     autoClose: true
 };
 
+async function getInstance(id) {
+    return await new DHIPC(Data.getIPC(id));
+}
+
 describe('大华IPC直连测试', function() {
-    xit('连接测试',function(done){
-        let ipc=new DHIPC(jIPC);
+    it('连接测试',async function(done){
+        let ipc=await getInstance(1);
         ipc.connect().then(()=>{
             console.log('链接成功');
             expect(ipc.isConnected).equal(true);
@@ -25,8 +29,8 @@ describe('大华IPC直连测试', function() {
         }).catch(done);
     });
 
-    xit('视频流测试',function(done){
-        let ipc=new DHIPC(jIPC);
+    it('视频流测试',async function(done){
+        let ipc=await getInstance(1);
         ipc._realPlay(function(id,type,data,size){
             console.log(`id:${id},type:${type},size:${size}`);
         }).then(()=>{
@@ -40,48 +44,48 @@ describe('大华IPC直连测试', function() {
         }).catch(done);
     });
 
-    function move(d,done) {
-        let ipc=new DHIPC(jIPCDemo);
+    async function move(d,done) {
+        let ipc=await getInstance(5);
         ipc.move(d).then().catch(done);
         setTimeout(()=>{
             ipc.ptzStop().then(done).catch(done);
         },400);
     }
 
-    xit('ptz-move-up',(done)=>{
-        move(IPC.Directions.top,done);
+    it('ptz-move-up',async (done)=>{
+        await move(IPC.Directions.top,done);
     });
 
-    xit('ptz-move-down',(done)=>{
-        move(IPC.Directions.down,done);
+    it('ptz-move-down',async (done)=>{
+        await move(IPC.Directions.down,done);
     });
 
-    xit('ptz-move-left',(done)=>{
-        move(IPC.Directions.left,done);
+    it('ptz-move-left',async (done)=>{
+        await move(IPC.Directions.left,done);
     });
 
-    xit('ptz-move-right',(done)=>{
-        move(IPC.Directions.right,done);
+    it('ptz-move-right',async (done)=>{
+        await move(IPC.Directions.right,done);
     });
 
-    xit('ptz-move-topleft',(done)=>{
-        move(IPC.Directions.lefttop,done);
+    it('ptz-move-topleft',async (done)=>{
+        await move(IPC.Directions.lefttop,done);
     });
 
-    xit('ptz-move-rightdown',(done)=>{
-        move(IPC.Directions.rightdown,done);
+    it('ptz-move-rightdown',async (done)=>{
+        await move(IPC.Directions.rightdown,done);
     });
 
-    xit('ptz-move-righttop',(done)=>{
-        move(IPC.Directions.righttop,done);
+    it('ptz-move-righttop',async (done)=>{
+        await move(IPC.Directions.righttop,done);
     });
 
-    xit('ptz-move-leftdown',(done)=>{
-        move(IPC.Directions.leftdown,done);
+    it('ptz-move-leftdown',async(done)=>{
+        await move(IPC.Directions.leftdown,done);
     });
 
-    xit('zoomin',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('zoomin',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.zoomIn().then().catch(done);
         setTimeout(()=>{
             ipc.ptzStop().then(done).catch(done);
@@ -89,87 +93,87 @@ describe('大华IPC直连测试', function() {
         },400);
     });
 
-    xit('zoomout',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('zoomout',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.zoomOut().then().catch(done);
         setTimeout(()=>{
             ipc.ptzStop().then(done).catch(done);
         },400);
     });
 
-    xit('focusIn',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('focusIn',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.focusIn().then().catch(done);
         setTimeout(()=>{
             ipc.ptzStop().then(done).catch(done);
         },400);
     });
 
-    xit('focusOut',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('focusOut',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.focusOut().then().catch(done);
         setTimeout(()=>{
             done();//ipc.ptzStop().then(done).catch(done);
         },4000);
     });
 
-    xit('apertureIn',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('apertureIn',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.apertureIn().then().catch(done);
         setTimeout(()=>{
             ipc.ptzStop().then(done).catch(done);
         },400);
     });
 
-    xit('apertureOut',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('apertureOut',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.apertureOut().then().catch(done);
         setTimeout(()=>{
             ipc.ptzStop().then(done).catch(done);
         },400);
     });
 
-    xit('getPoint',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('getPoint',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.getPoint().then((data)=>{
             console.log(data);
             done();
         }).catch(done);
     });
 
-    xit('getNextPresets',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('getNextPresets',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.getNextPresets().then((data)=>{
             console.log(data);
             done();
         }).catch(done);
     });
 
-    xit('设置预置点',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('设置预置点',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.setPreset('hello').then((p)=>{
             console.log(p);
             done();
         }).catch(done);
     });
 
-    xit('移动到预置位-通过预留点',(done)=>{
+    it('移动到预置位-通过预留点',async (done)=>{
         //{ x: 1320, y: 264, z: 6, preset: 6 }
-        let ipc=new DHIPC(jIPCDemo);
+        let ipc=await getInstance(5);
         ipc.moveToPreset({ x: 1320, y: 264, z: 6, preset: 6 }).then(()=>{done()}).catch(done);
     });
 
-    xit('移动到预置位-通过点位',(done)=>{
+    it('移动到预置位-通过点位',async (done)=>{
         //{ x: 1320, y: 264, z: 6, preset: 6 }
-        let ipc=new DHIPC(jIPCDemo);
+        let ipc=await getInstance(5);
         ipc.moveToPreset({ x: 1320, y: 264, z: 6}).then(()=>{
             setTimeout(done,0);
         }).catch(done);
 
     });
 
-    xit('报警输出',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('报警输出',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.alarm().then(()=>{
             setTimeout(()=>{
                 ipc.stopAlarm().then(done).catch(done);
@@ -177,15 +181,15 @@ describe('大华IPC直连测试', function() {
         }).catch(done);
     });
 
-    xit('音频设置',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('音频设置',async (done)=>{
+        let ipc=await getInstance(5);
         ipc.connect().then(()=>{
             ipc._talkInit().then(done).catch(done);
         });
     });
 
-    it('talk——talk',(done)=>{
-        let ipc=new DHIPC(jIPCDemo);
+    it('talk——talk',async (done)=>{
+        let ipc=await getInstance(5);
         let fw=fs.createWriteStream('d:/dhipc_audio.aac',wOption);
         ipc._startTalk(fw).then(()=>{
             setTimeout(()=> {
