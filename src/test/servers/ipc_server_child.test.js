@@ -1,5 +1,6 @@
+require('../modify_config');
 const http = require('http');
-const {server}=require('../../app/servers/ipc_server_child');
+const {server}=require('../../servers/ipc_server_child');
 const expect=require('chai').expect;
 let port=0;
 async function getUrl(){
@@ -40,7 +41,8 @@ describe('直播子进程http服务测试',()=>{
             expect(data.id-0).equal(1);
             expect(data.type).equal('succeed');
             expect(data.fn).equal('live');
-            expect(data.url.indexOf(`ws://localhost:${port}/live/1`)>-1).equal(true);
+            expect(data.path.indexOf(`/live/1`)>-1).equal(true);
+            expect(data.port).equal(port);
             done();
         });
     });

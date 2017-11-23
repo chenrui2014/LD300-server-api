@@ -16,32 +16,31 @@ const wOption = {
 };
 
 async function getInstance(id) {
-    return await new DHIPC(Data.getIPC(id));
+    let data=await Data.getIPC(id);
+    return await new DHIPC(data);
 }
 
 describe('大华IPC直连测试', function() {
-    it('连接测试',async function(done){
+
+    it('连接测试',async function(){
         let ipc=await getInstance(1);
-        ipc.connect().then(()=>{
-            console.log('链接成功');
-            expect(ipc.isConnected).equal(true);
-            ipc.disConnect().then(done).catch(done);
-        }).catch(done);
+        await ipc.connect();
+        console.log('链接成功');
+        expect(ipc.isConnected).equal(true);
+        return await ipc.disConnect();
     });
 
-    it('视频流测试',async function(done){
+    it('视频流测试',async function(){
         let ipc=await getInstance(1);
-        ipc._realPlay(function(id,type,data,size){
+        await ipc._realPlay(function(id,type,data,size){
             console.log(`id:${id},type:${type},size:${size}`);
-        }).then(()=>{
-            setTimeout(()=>{
-                console.log('played');
-                return ipc._stopRealPlay().then(()=>{
-                    console.log('stoped');
-                    return ipc.disConnect().then(done).catch(done);
-                }).catch(done);
-            },1000);
-        }).catch(done);
+        });
+        setTimeout(async ()=>{
+            console.log('played');
+            await ipc._stopRealPlay();
+            console.log('stoped');
+            await ipc.disConnect();
+        },1000);
     });
 
     async function move(d,done) {

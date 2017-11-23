@@ -6,7 +6,7 @@ const EventEmitter=require('events').EventEmitter;
 const WebSocket = require('ws');
 const config=global.server_config||require('../config/config');
 const _=require('lodash');
-const factory=require('./ipc_factory');
+//const factory=require('./ipc_factory');
 const url=require('url');
 const assert=require('assert');
 //const timeSpan=require('../TimeSpan');
@@ -137,10 +137,10 @@ class Live extends EventEmitter{
         });
 
         this._clientAliveTest= setInterval(()=>{
-            if(!this._wss.clients.size){
+            if(!wss.clients.size){
                 return this._closeWSS();
             }
-            this._wss.clients.forEach((ws)=>{
+            wss.clients.forEach((ws)=>{
                 if (ws.isAlive === false) return ws.terminate();
                 ws.isAlive = false;
                 ws.ping('', false, true);
