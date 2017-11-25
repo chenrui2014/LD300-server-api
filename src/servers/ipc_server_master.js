@@ -1,6 +1,7 @@
 /**
  * Created by Luky on 2017/8/17.
  */
+import logger from '../logger';
 
 const _=require('lodash');
 const IPC=require('../ipcs/base/ipc');
@@ -64,7 +65,10 @@ class IPCServer extends EventEmitter{
     }
 
     async start(){
-        let ipcs=await Data.getIPCIDsSortByPoint().catch(async ()=>{
+        // let ipcs=await Data.getIPCIDsSortByPoint().catch(async ()=>{
+        //     await Promise.resolve([]);
+        // });
+        let ipcs=await Data.getAllIPC().catch(async ()=>{
             await Promise.resolve([]);
         });
         if(!ipcs||!ipcs.length) return Promise.reject('没有可连接摄像头');
@@ -74,15 +78,15 @@ class IPCServer extends EventEmitter{
             proxy.on('error',(err)=>{
                 this.error('http代理返回错误',{innerError:err});
             });
-            listenState&&_.forEach(ipcs,(id)=>{
-                this._addIpcListener(id);
+            listenState&&_.forEach(ipcs,(ipc)=>{
+                this._addIpcListener(ipc.id);
             });
-            this._ipcs=_.transform(ipcs,(result,id)=>{
-                result.push({id:id});
+            this._ipcs=_.transform(ipcs,(result,ipc)=>{
+                result.push({id:ipc.id});
             });
 
             for (let i = 0; i < numCPUs; i++) {
-                let worker=cp.fork(childjs, ['normal']);
+                let worker=cp.fork(childjs, {execArgv: [ '--inspect='+(process.debugPort+i+1)]});
                 //worker.on('error',());
                 let wobj={
                     worker:worker,
@@ -104,11 +108,32 @@ class IPCServer extends EventEmitter{
                     return res.end();
                 }
                 let id=parseInt(uri.pathname.slice(5));
+                let ipc = null;
+                for(let i = 0,len=ipcs.length; i < len; i++) {
+                    logger.info("kv",{key:this._ipcs[i],id:this._ipcs[i].id});
+                    if(ipcs[i].id === id) {
+                        ipc = ipcs[i];
+                        break;
+                    }
+
+                }
+                logger.info("current",{ipc:ipc});
+                let paramStr = "&";
+                let keys = Object.keys(ipc);
+                for(let i = 0,len=keys.length; i < len; i++) {
+                    if(keys[i] !== "__v" && keys[i] !== "_id"){
+                        paramStr+=keys[i]+"="+ipc[keys[i]]+"&";
+                    }
+                }
+
+                logger.info("params",{str:paramStr,params:paramStr.substr(0, paramStr.length -1)});
+                //paramStr = paramStr.substr(0, paramStr.length -1)
+
                 let worker = this.findWorker(id);
                 let find=!!worker;
                 worker=worker||this._workers.shift();
                 if(!find)this._workers.unshift(worker);
-                this.log('请求转发',{'Location': `http://localhost:${worker.port}` + req.url});
+                this.log('请求转发',{'Location': `http://localhost:${worker.port}` + req.url + paramStr.substr(0, paramStr.length -1)});
                 //res.writeHead(302, {'Location': `http://localhost:${worker.port}` + req.url});
                 //res.end();
                 proxy.web(req, res, { target: `http://localhost:${worker.port}` });
@@ -138,8 +163,8 @@ class IPCServer extends EventEmitter{
     stop(){
         if(!this._hServer) return;
         proxy.removeAllListeners();
-        listenState&&_.forEach(this._ipcs,(ipc)=>{
-           this._removeIpcListener(ipc.id);
+        listenState&&_.forEach(this._ipcs,(id)=>{
+           this._removeIpcListener(id);
         });
         this._workers.length&&_.forEach(this._workers,(worker)=>{
             worker.worker.kill();

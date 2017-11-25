@@ -3,7 +3,7 @@
  */
 const addin=require('../ipcs/ipc_addin');
 const _=require('lodash');
-const Data=require('./data_server');
+//const Data=require('./data_server');
 const {Parser}=require('../log/log');
 
 class IPCFactory{
@@ -20,30 +20,30 @@ class IPCFactory{
         ipc.last=new Date().getTime();
     }
 
-    async getIPC(id){
-        let ipc=this._ipcs[id];
+    async getIPC(ipcData){
+        let ipc=this._ipcs[ipcData.id];
         //延迟回收，便于访问后台最新的数据
         if(ipc&&(ipc.last===0||ipc.last-new Date().getTime()<3000)){
             ipc.ref++;
             return ipc.instance;
         }
 
-        let cfg=await Data.getIPC(id).catch(async (e)=>{
-            this.error('摄像头配置数据获取失败',{id:ipc.id,innerError:e});
-            if(ipc) await Promise.resolve(null);
-            else await Promise.reject(e);
-        });
-        if(!cfg&&ipc){
+        // let cfg=await Data.getIPC(id).catch(async (e)=>{
+        //     this.error('摄像头配置数据获取失败',{id:ipc.id,innerError:e});
+        //     if(ipc) await Promise.resolve(null);
+        //     else await Promise.reject(e);
+        // });
+        if(!ipcData&&ipc){
             ipc.ref++;
             this.warn('远程数据拉取失败，使用使用本地保存实例');
             return ipc;
         }
-        ipc=addin.createInstance(cfg);
+        ipc=addin.createInstance(ipcData);
         if(!ipc){
-            await Promise.reject(this.log('获取摄像头实例化失败',{config:cfg}));
+            await Promise.reject(this.log('获取摄像头实例化失败',{config:ipcData}));
         }
-        this.log('获取摄像头实例化成功',{config:cfg});
-        this._ipcs[id]={instance:ipc,ref:1,last:0};
+        this.log('获取摄像头实例化成功',{config:ipcData});
+        this._ipcs[ipcData.id]={instance:ipc,ref:1,last:0};
         return ipc;
         /*
         if(!options) return null;
