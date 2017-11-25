@@ -1,4 +1,5 @@
-require('../modify_config');
+//require('../modify_config');
+const init=require('../init');
 const http = require('http');
 const {server}=require('../../servers/ipc_server_child');
 const expect=require('chai').expect;
@@ -13,6 +14,7 @@ async function getUrl(){
 }
 
 async function send(path) {
+    await init();
     let port=await getUrl();
     const options = {
         hostname: 'localhost',

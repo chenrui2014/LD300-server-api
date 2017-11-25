@@ -1,0 +1,1 @@
+{"_id":{"$oid":"59e1c5f85398ba0c64000a56"},"id":1,"name":"大厅","ip":"192.168.1.98","port":37777,"type":"球机","brand":"大华","ptz":false,"alarm":true,"audio":true,"onvif_port":80,"onvif_user":"admin","onvif_pwd":"admin","onvif_path":"","status":true,"pwd":"admin","user":"admin"}
