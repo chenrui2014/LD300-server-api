@@ -15,6 +15,12 @@ if(store==='file'){
     exports=module.exports=require('./data_server_file');
 }
 else{
+    const setBrands={
+        '大华':'dahua','dahua':'dahua',
+        '和普威尔':'hopewell','hopewell':'hopewell',
+        '海康威视':'hikvision','hikvision':'hikvision',
+        '国营508集成海康威视':'508','508':'508'
+    };
     //数据格式[{id,port},{...},...]
     async function getHosts()
     {
@@ -51,7 +57,7 @@ else{
             port:ipc.port,
             user:ipc.user,
             pwd:ipc.pwd,
-            brand:ipc.brand,
+            brand:setBrands[ipc.brand],
             functions:{
                 ptz:ipc.ptz,
                 alarm:ipc.alarm,
