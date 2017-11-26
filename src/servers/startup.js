@@ -3,7 +3,7 @@
  */
 const Host=require('../host/host');
 const HostServer=require('./host_server');
-const IPCServer=require('./ipc_server_master');
+//const IPCServer=require('./ipc_server_master');
 const {Parser}=require('../log/log');
 const config=global.server_config||require('../config/config');
 const _=require('lodash');
@@ -23,39 +23,41 @@ class StartUp{
 
     _onHostStateChanged(evt){
         this.log('尝试向前台同步主机状态',{innerEvent:evt});
-        this._messengerServer.notifyHostStateChanged(evt);
+        this._messengerServer&&this._messengerServer.notifyHostStateChanged(evt);
     }
 
     _onNewClient(client){
         this.log('尝试向新连入客户端同步主机状态');
-        this._messengerServer.notifyHostsState(client,this._hostServer.hostsState);
+        this._hostServer&&this._messengerServer.notifyHostsState(client,this._hostServer.hostsState);
     }
 
-    start() {
+    async start() {
         this.stop();
         let hostServer = new HostServer();
+        //为了不遗漏数据，先启动服务，后启动状态推送服务
+        await hostServer.start().catch(async (e)=>{
+            this.error('主机服务启动失败',{innerError:e});
+            return await Promise.reject(e);
+        });
+        this._hostServer=hostServer;
         let messengerServer = runModeOne?
             new MessengerServer(hostServer):
             new MessengerServerSocket(hostServer,null,getInterface(projectName));
         hostServer.on(Host.Events.StateChanged, this._host_state_changed);
         messengerServer.on(MessengerServerBase.Events.newClient, this._push_server_new_client);
-        return Promise.all([hostServer.start(),messengerServer.start()]).then(()=>{
-            return new Promise((resolve) => {
-                this._hostServer=hostServer;
-                this._messengerServer=messengerServer;
-                if(runModeOne){
-                    this._ipcServer=new IPCServer();
-                    this._ipcServer.start().catch(e=>e);
-                }
-                this.log('服务启动成功');
-                resolve();
-            }).catch((e)=>{
-                hostServer.removeListener(Host.Events.StateChanged, this._host_state_changed);
-                messengerServer.removeListener(MessengerServerBase.Events.newClient, this._push_server_new_client);
-                this.error('服务启动失败',{innerError:e});
-                reject(e);
-            });
+        await messengerServer.start().catch(()=>{
+            hostServer.removeListener(Host.Events.StateChanged, this._host_state_changed);
+            messengerServer.removeListener(MessengerServerBase.Events.newClient, this._push_server_new_client);
+            this._hostServer=null;
+            this.error('消息服务启动失败',{innerError:e});
+            reject(e);
         });
+        this._messengerServer=messengerServer;
+        //暂时先不启用
+/*        if(runModeOne){
+            this._ipcServer=new IPCServer();
+            this._ipcServer.start().catch(e=>e);
+        }*/
     }
 
     stop(){
