@@ -1,13 +1,14 @@
-let config=require('../../../app/config/config');
-config.runMode.type='one';
-const StartUp=require('../../../app/servers/startup');
+const init=require('../../init');
+const StartUp=require('../../../servers/startup');
 const vHost=require('../../host/virtual_host');
+const _=require('lodash');
 
 let s=null,vh=null;
-let before=()=>{
+let before=async ()=>{
+    await init();
     s=new StartUp();
     vh=new vHost(1);
-    return Promise.all([vh.start(),s.start()]);
+    await Promise.all([vh.start(),s.start()]);
 };
 
 let after=()=>{
@@ -18,9 +19,10 @@ let after=()=>{
 
 let run= ()=>{
     setInterval(()=>{
-        vh.send(vHost.CMD.normal);
+        let r=_.random(0,1,false);
+        r===0?vh.send(vHost.CMD.normal):vh.send(vHost.CMD.alarm,100);
     },400);
 };
 
 before().then(run);
-setTimeout(after,15000);
+//setTimeout(after,15000);
