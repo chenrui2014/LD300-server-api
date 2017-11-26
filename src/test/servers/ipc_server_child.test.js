@@ -39,8 +39,8 @@ async function send(path) {
 
 describe('直播子进程http服务测试',()=>{
     it('直播及获取地址',(done)=>{
-        send('/ipc/1/live').then((data)=>{
-            expect(data.id-0).equal(1);
+        send('/ipc/5/live?&user=admin&pwd=chen1984&brand=dahua&ptz=false&alarm=true&audio=true&onvif_port=80&onvif_user=admin&port=37777&onvif_pwd=admin&onvif_path=&name=大门&status=true&type=枪机&ip=192.168.1.112&id=5').then((data)=>{
+            expect(data.id-0).equal(5);
             expect(data.type).equal('succeed');
             expect(data.fn).equal('live');
             expect(data.path.indexOf(`/live/1`)>-1).equal(true);
@@ -59,7 +59,7 @@ describe('直播子进程http服务测试',()=>{
     });
 
     it('启用文件流',(done)=>{
-       send('/ipc/1/arrchive/1').then((data)=>{
+       send('/ipc/5/arrchive/1').then((data)=>{
            expect(data.id-0).equal(1);
            expect(data.hid-0).equal(1);
            expect(data.type).equal('succeed');
@@ -70,13 +70,13 @@ describe('直播子进程http服务测试',()=>{
 
     it('关闭文件流',(done)=>{
         let stop=()=> {
-            send('/ipc/1/stoparrchive/1').then((data) => {
+            send('/ipc/5/stoparrchive/1').then((data) => {
                 expect(data.id).equal(1);
                 expect(data.fn).equal('stopArrchive');
                 done();
             });
         };
-        send('/ipc/1/arrchive/1').then((data)=>{
+        send('/ipc/5/arrchive/1').then((data)=>{
             expect(data.type).equal('succeed');
             setTimeout(stop,2000);
         });
@@ -84,7 +84,7 @@ describe('直播子进程http服务测试',()=>{
 
     describe('ptz测试',()=>{
         it('无人占用时申请',(done)=>{
-            send('/ipc/1/ptz/zoomAdd').then((data)=>{
+            send('/ipc/5/ptz/zoomAdd').then((data)=>{
                 expect(data.type).equal('succeed');
                 expect(data.handle.length>0).equal(true);
                 expect(data.limit>0).equal(true);
@@ -94,7 +94,7 @@ describe('直播子进程http服务测试',()=>{
         describe('标记占有',()=>{
             let handle='',timeout=0;
             before((done)=>{
-                send('/ipc/1/ptz/zoomAdd').then((data)=>{
+                send('/ipc/5/ptz/zoomAdd').then((data)=>{
                     expect(data.type).equal('succeed');
                     timeout=data.limit;
                     handle=data.handle;
@@ -103,7 +103,7 @@ describe('直播子进程http服务测试',()=>{
             });
 
             it('二次使用',(done)=>{
-                send('/ipc/1/ptz/zoomAdd?handle='+handle).then((data)=>{
+                send('/ipc/5/ptz/zoomAdd?handle='+handle).then((data)=>{
                     expect(data.type).equal('succeed');
                     expect(data.handle).equal(handle);
                     done();
@@ -111,14 +111,14 @@ describe('直播子进程http服务测试',()=>{
             });
 
             it('释放所有权',(done)=>{
-               send('/ipc/1/freeptz?handle='+handle).then((data)=>{
+               send('/ipc/5/freeptz?handle='+handle).then((data)=>{
                   expect(data.type).equal('succeed');
                   done();
                });
             });
 
             it('他人申请',(done)=>{
-                send('/ipc/1/ptz/zoomAdd').then((data)=>{
+                send('/ipc/5/ptz/zoomAdd').then((data)=>{
                     expect(data.type).equal('fault');
                     done();
                 });
@@ -126,7 +126,7 @@ describe('直播子进程http服务测试',()=>{
 
             it('释放后再申请',(done)=>{
                 setTimeout(()=>{
-                    send('/ipc/1/ptz/zoomAdd').then((data)=>{
+                    send('/ipc/5/ptz/zoomAdd').then((data)=>{
                         expect(data.type).equal('succeed');
                         done();
                     });

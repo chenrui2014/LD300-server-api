@@ -79,6 +79,15 @@ else{
         return transformIPC(ipc);
     }
 
+    async function getAllIPC(){
+        let ipcs= await CameraService.findAll({id:1});
+        let ipcList=[];
+        ipcs.forEach(function (ipc) {
+            ipcList.push(ipc._doc);
+        });
+        return ipcList;
+    }
+
     //数据格式[1,2,3,4,5]
     async function getIPCIDsSortByPoint(){
         //查询出所有摄像头的编号返回即可，根据摄像头的编号排序基本没问题
@@ -94,6 +103,7 @@ else{
         getHosts:getHosts,
         getMointors:getMointors,
         getIPC:getIPC,
+        getAllIPC:getAllIPC,
         getIPCIDsSortByPoint:getIPCIDsSortByPoint
     };
 }
