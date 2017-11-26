@@ -1,8 +1,8 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import HostModel from '../models/host.model';
+const logger =require('../logger');
+const HostModel =require('../models/host.model');
 
 class HostService {
     /**
@@ -147,4 +147,5 @@ class HostService {
 
 }
 
-export default HostService;
+exports=module.exports=HostService;
+//export default HostService;

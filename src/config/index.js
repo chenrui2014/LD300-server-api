@@ -1,8 +1,10 @@
 /**
  * Created by chen on 17-8-17.
  */
-import path from 'path';
-import _ from 'lodash';
+//import path from 'path';
+//import _ from 'lodash';
+const path=require('path');
+const _=require('lodash');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -48,4 +50,5 @@ const envConfig = require(`./${process.env.NODE_ENV}`).default;
 const config = _.merge(
     base, envConfig);
 
-export default config;
+//export default config;
+exports=module.exports=config;

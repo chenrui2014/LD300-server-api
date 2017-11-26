@@ -1,9 +1,10 @@
 /**
  * Created by chen on 17-8-23.
  */
-import mongoose from 'mongoose';
-import validate from 'mongoose-validator';
-import validator from 'validator';
+//import mongoose from 'mongoose';
+const mongoose=require('mongoose');
+//import validate from 'mongoose-validator';
+//import validator from 'validator';
 
 const HostSchema = new mongoose.Schema({
 

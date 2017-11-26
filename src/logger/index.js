@@ -1,7 +1,8 @@
 /**
  * Created by chen on 17-8-21.
  */
-import winston from 'winston';
+const winston =require('winston');
+//import winston from 'winston';
 
 const env = process.env.NODE_ENV || 'development';
 const loggerTransports = [];
@@ -36,4 +37,5 @@ const logger = new (winston.Logger)({
     exitOnError: false,
 });
 
-export default logger;
+exports=module.exports=logger;
+//export default logger;

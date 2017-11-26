@@ -1,12 +1,16 @@
 /**
  * Created by chen on 17-8-21.
  */
-import mongoose from 'mongoose';
-import logger from '../logger';
-import config from '../config';
+const mongoose=require('mongoose');
+const logger=require('../logger');
+const config=require('../config');
+//import mongoose from 'mongoose';
+//import logger from '../logger';
+//import config from '../config';
 // import bluebird from 'bluebird';
 
-export default function connect() {
+//export default
+exports=module.exports=function connect() {
 
     return new Promise((resolve, reject) => {
         mongoose.Promise = global.Promise;

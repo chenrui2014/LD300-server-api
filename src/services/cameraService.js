@@ -2,8 +2,10 @@
  * 操作摄像头数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import CameraModel from '../models/camera.model';
+//import logger from '../logger';
+//import CameraModel from '../models/camera.model';
+const logger=require('../logger');
+const CameraModel=require('../models/camera.model');
 
 class CameraService {
 
@@ -149,4 +151,5 @@ class CameraService {
 
 }
 
-export default CameraService;
+exports=module.exports=CameraService;
+//export default CameraService;

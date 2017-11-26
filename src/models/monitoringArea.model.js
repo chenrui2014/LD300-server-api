@@ -1,9 +1,10 @@
 /**
  * Created by chen on 17-8-23.
  */
-import mongoose from 'mongoose';
-import validate from 'mongoose-validator';
-import validator from 'validator';
+//import mongoose from 'mongoose';
+const mongoose=require('mongoose');
+//import validate from 'mongoose-validator';
+//import validator from 'validator';
 
 const PresetSchema = new mongoose.Schema({
     id:{//ID
@@ -33,5 +34,10 @@ const MonitoringAreaSchema = new mongoose.Schema({//一个主机对应多个监�
     min_dis:Number,//监控距离始(实际单位米）
     max_dis:Number,//监控距离末（实际单位米）
 });
-export const Preset = mongoose.model('Preset', PresetSchema);
-export const Monitoring = mongoose.model('Monitoring', MonitoringAreaSchema);
+
+exports=module.exports={
+    Preset :mongoose.model('Preset', PresetSchema),
+    Monitoring :mongoose.model('Monitoring', MonitoringAreaSchema)
+};
+//export const Preset = mongoose.model('Preset', PresetSchema);
+//export const Monitoring = mongoose.model('Monitoring', MonitoringAreaSchema);

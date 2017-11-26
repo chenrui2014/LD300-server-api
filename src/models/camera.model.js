@@ -1,9 +1,10 @@
 /**
  * Created by chen on 17-8-23.
  */
-import mongoose from 'mongoose';
-import validate from 'mongoose-validator';
-import validator from 'validator';
+const mongoose =require('mongoose');
+//import mongoose from 'mongoose';
+//import validate from 'mongoose-validator';
+//import validator from 'validator';
 
 const CameraSchema = new mongoose.Schema({
 

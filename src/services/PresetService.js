@@ -2,8 +2,11 @@
  * 操作预置点数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import {Preset as PresetModel} from '../models/monitoringArea.model';
+//import logger from '../logger';
+//import {Preset as PresetModel} from '../models/monitoringArea.model';
+const logger=require('../logger');
+const {PresetModel} =require('../models/monitoringArea.model');
+
 
 class PresetService {
 
@@ -149,4 +152,5 @@ class PresetService {
 
 }
 
-export default PresetService;
+exports=module.exports=PresetService;
+//export default PresetService;
