@@ -2,10 +2,15 @@
  * Created by Luky on 2017/8/17.
  */
 
-import HostService from '../services/hostService';
-import MonitoringService from '../services/monitoringService';
-import PresetService from '../services/PresetService';
-import CameraService from '../services/cameraService';
+//import HostService from '../services/hostService';
+//import MonitoringService from '../services/monitoringService';
+//import PresetService from '../services/PresetService';
+//import CameraService from '../services/cameraService';
+
+const HostService =require('../services/hostService');
+const MonitoringService =require('../services/monitoringService');
+const PresetService =require('../services/PresetService');
+const CameraService =require('../services/cameraService');
 
 const _=require('lodash');
 const config=global.server_config||require('../config/config');
@@ -104,6 +109,7 @@ else{
         getMointors:getMointors,
         getIPC:getIPC,
         getAllIPC:getAllIPC,
-        getIPCIDsSortByPoint:getIPCIDsSortByPoint
+        getIPCIDsSortByPoint:getIPCIDsSortByPoint,
+        transformIPC:transformIPC
     };
 }
