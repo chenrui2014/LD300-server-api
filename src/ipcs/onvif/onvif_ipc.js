@@ -10,9 +10,12 @@ const config=globalConfig.getConfig('onvif_config.json');
 const Cam=onvif.Cam;
 const _=require('lodash');
 const assert = require('assert');
+//const {RtspClient,H264Transport} =require('../../../_3part/yellowstone');
 const {RtspClient,H264Transport} =require('yellowstone');
 const header = new Buffer.from([0x00,0x00,0x00,0x01]);
 const {Parser} =require('../../log/log');
+const Writable=require('stream').Writable;
+const EventEmitter=require('events').EventEmitter;
 
 class ONVIF_IPC extends  IPC{
     constructor(options){
@@ -159,13 +162,19 @@ class ONVIF_IPC extends  IPC{
     async _realPlay() {
         let uri=await this._getRtspUri();
         let details=await this._connectRtsp(uri);
-        this._h264Transport= new H264Transport(this._RtspClient,this, details);
+        let h264Stream=new Writable();
+        h264Stream._write = (buffer, enc, next) => {
+            this._pushData(buffer);
+            next();
+        };
+        let h264Transport= new H264Transport(this._RtspClient,h264Stream, details);
         await this._RtspClient.play().catch( async ()=>{
             let error=this.error('RTSP协议连接发生错误',err);
-            this._h264Transport.unpipe(this);
-            this._h264Transport=null;
+            h264Stream.removeAllListeners();
             return await Promise.reject(error);
         });
+        this.__h264Stream=h264Stream;
+        this.__h264Stream=h264Transport;
 /*        this._RtspClient.on('error',(err)=>{
             this.stopRealPlay();
             let error=this.error('RTSP协议连接发生错误',err);
@@ -174,18 +183,23 @@ class ONVIF_IPC extends  IPC{
         this.emit(IPC.Events.RealPlay,this.log('RTSP协议直播接入'));
     }
 
-    _transform(data,enc,next){
-        if(data.equals(header)) return next();
+    _pushData(data){
+    //_transform(data,enc,next){
+        if(data.equals(header)) return/* next()*/;
         let buf=Buffer.allocUnsafe(data.length+4);
         buf[0]=0;buf[1]=0;buf[2]=0;buf[3]=1;
         data.copy(buf,4);
-        next(null,buf);
+        //next(null,buf);
+        EventEmitter.prototype.emit.call(this,'video',data);
     }
 
     async _stopRealPlay(){
         if(!this._RtspClient) return;
-        this._h264Transport.unpipe(this);
-        this._h264Transport=null;
+        if(this._h264Transport){
+            this._h264Transport=null;
+            this.__h264Stream.removeAllListeners();
+            this.__h264Stream=null;
+        }
         this._RtspClient.close().catch(e=>e);
         this._RtspClient=null;
         this.emit(IPC.Events.StopRealPlay,this.log('RTSP协议直播关闭'));
