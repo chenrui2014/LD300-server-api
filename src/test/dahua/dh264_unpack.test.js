@@ -1,12 +1,13 @@
 require('../modify_config');
-const H264unPack=require('../../app/ipcs/dahua/_dh_h264_unpack');
+const H264unPack=require('../../ipcs/dahua/_dh_h264_unpack');
 const lineReader = require('line-reader');
 const path=require('path');
 const fs = require('fs');
-const H264_2FLV=require('../../app/servers/cache/_h264_2flv');
-const IPCFactory=require('../../app/servers/ipc_factory');
-const dhlib=require('../../app/ipcs/dahua/dhnetsdk');
-const AAC=require('../../app/acc/acc_adts_parser');
+//const H264_2FLV=require('../../servers/cache/_h264_2flv');
+const IPCFactory=require('../../servers/ipc_factory');
+const dhlib=require('../../ipcs/dahua/dhnetsdk');
+const AAC=require('../../acc/acc_adts_parser');
+const Nalu=require('../../h264/h264_nalu_parser');
 
 const wOption = {
     flags: 'w',
@@ -19,23 +20,23 @@ const wOption = {
 describe('大华h264视频回调数据解包测试',()=>{
 
     function  file(houzui,done) {
-        const fp=path.resolve(__dirname,`data/dh_h264_cb${houzui}.txt`);
-        let fw2=fs.createWriteStream(`d:/dhipc_unpacked${houzui}.dat`,wOption);
-        let unpack=new H264unPack();
+        const fp=path.resolve(__dirname,`../data/dh_h264_cb${houzui}.txt`);
+        const outpath=path.resolve(__dirname,`../data/dh_h264_cb${houzui}.h264`);
+        let fw2=fs.createWriteStream(outpath,wOption);
+        let unpack=new H264unPack(false);
+        unpack.on('data',(obj)=>{
+            let data=obj.d;
+            //console.log(data.toString('hex'));
+            fw2.write(data);
+            const from=(data[2]===1?3:4);
+            console.log(JSON.stringify(new Nalu(data.slice(from))));
+        });
         lineReader.eachLine(fp, function(line, last) {
             //console.log(line);
-            unpack._transform(Buffer.from(line,'hex'),null,(err,data)=>{
-                if(null!=data){
-                    //console.log(data.toString('hex'));
-                    fw2.write(data);
-                    const from=(data[2]===1?3:4);
-                    console.log(JSON.stringify(decode.parseNAL(data.slice(from))));
-                }
-            });
+            unpack.write(Buffer.from(line,'hex'));
             //console.log(line);
             if (last) {
-                fw2.close();
-                done();
+                setTimeout(done,1000);
             }
         });
     }
@@ -72,11 +73,15 @@ describe('大华h264视频回调数据解包测试',()=>{
         let frameInfo2=new dhlib.structs.NET_FRAME_INFO_EX(buf);
         console.log(frameInfo.inspect());*/
     });
-    xit('大华h264视频回调数据解包测试',(done)=>{
+    it('大华h264视频回调数据解包测试',(done)=>{
         file('',done);
     });
-    xit('大华h264视频回调数据解包测试_fps10',(done)=>{
+    it('大华h264视频回调数据解包测试_fps10',(done)=>{
         file('_fps10',done);
+    });
+
+    it('大华h264视频回调数据解包测试_啊牛',(done)=>{
+        file('_niu',done);
     });
 
     async  function ipc(id,done) {
