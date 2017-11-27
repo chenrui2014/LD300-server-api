@@ -50,7 +50,7 @@ setIpcData([
         }
     },
     {//用于onvif连接测试
-        "id": 1,
+        "id": 2,
         "ip": "192.168.1.98",
         "port": 37777,
         "user": "admin",
