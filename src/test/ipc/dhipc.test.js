@@ -1,7 +1,7 @@
 /**
  * Created by Luky on 2017/7/2.
  */
-require('../modify_config');
+const init=require('../init');
 const DHIPC=require('../../ipcs/dahua/dh_ipc');
 const Data=require('../../servers/data_server');
 const expect = require('chai').expect;
@@ -10,6 +10,7 @@ const fs=require('fs');
 const path=require('path');
 const NALU=require('../../h264/h264_nalu_parser');
 const _=require('lodash');
+const Onvif=require('../../ipcs/onvif/onvif_ipc');
 
 const wOption = {
     flags: 'w',
@@ -24,6 +25,11 @@ async function getInstance(id) {
     return await new DHIPC(data);
 }
 
+async function getOnvifInstance(id) {
+    let data=await Data.getIPC(id);
+    return await new Onvif(data);
+}
+
 describe('大华IPC直连测试', function() {
 
     it('连接测试',async function(){
@@ -36,6 +42,17 @@ describe('大华IPC直连测试', function() {
 
     it('视频播放测试',async function(){
         let ipc=await getInstance(1);
+        await ipc._realPlay();
+        setTimeout(async ()=>{
+            console.log('played');
+            await ipc._stopRealPlay();
+            console.log('stoped');
+            await ipc.disConnect();
+        },1000);
+    });
+
+    it('大华onvif方式播放视频测试',async function(){
+        let ipc=await getOnvifInstance(2);
         await ipc._realPlay();
         setTimeout(async ()=>{
             console.log('played');

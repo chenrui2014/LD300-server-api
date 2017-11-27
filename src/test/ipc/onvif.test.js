@@ -1,12 +1,12 @@
 /**
  * Created by Luky on 2017/7/3.
  */
-const ONVIF=require('../../app/ipcs/onvif/onvif_ipc');
+const ONVIF=require('../../ipcs/onvif/onvif_ipc');
 const cfg=require('../data/dhipc_onvif.json');
 const expect = require('chai').expect;
 //const ffmpeg=require('ffmpeg');
 //const rtsp=require('rtsp-ffmpeg');
-const ffmpegStream=require('../../app/_ffmpeg/__stream_ffmpeg');
+//const ffmpegStream=require('../../_ffmpeg/__stream_ffmpeg');
 //node-rtsp-stream
 //const Recorder = require('rtsp-recorder');
 const fs = require('fs');
@@ -22,7 +22,7 @@ const wOption = {
 
 describe('onvif 大华测试',function(){
 
-   xit('连接测试',(done)=>{
+   it('连接测试',(done)=>{
        let ipc=new ONVIF(cfg);
        ipc.connect().then(()=>{
            console.log('链接成功');
