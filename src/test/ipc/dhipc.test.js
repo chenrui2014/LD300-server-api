@@ -7,6 +7,10 @@ const Data=require('../../servers/data_server');
 const expect = require('chai').expect;
 const IPC=require('../../ipcs/base/ipc');
 const fs=require('fs');
+const path=require('path');
+const NALU=require('../../h264/h264_nalu_parser');
+const _=require('lodash');
+
 const wOption = {
     flags: 'w',
     encoding: null,
@@ -30,17 +34,44 @@ describe('大华IPC直连测试', function() {
         return await ipc.disConnect();
     });
 
-    it('视频流测试',async function(){
+    it('视频播放测试',async function(){
         let ipc=await getInstance(1);
-        await ipc._realPlay(function(id,type,data,size){
-            console.log(`id:${id},type:${type},size:${size}`);
-        });
+        await ipc._realPlay();
         setTimeout(async ()=>{
             console.log('played');
             await ipc._stopRealPlay();
             console.log('stoped');
             await ipc.disConnect();
         },1000);
+    });
+
+    async function videoStreamOutput2File(id,timeout){
+        let ipc=await  getInstance(id);
+        let name=ipc.options.ip.split('.').join('_');
+        const file=path.resolve(__dirname,`../data/${name}.h264`);
+        const fileTxt=path.resolve(__dirname,`../data/${name}.txt`);
+        const fileNalu=path.resolve(__dirname,`../data/${name}_nalu.txt`);
+        let fw=fs.createWriteStream(file,wOption);
+        let fw2=fs.createWriteStream(fileTxt,wOption);
+        let fw3=fs.createWriteStream(fileNalu,wOption);
+        let onVideo=(data)=>{
+            fw.write(data);
+            fw2.write(data.toString('hex')+'\r\n');
+            const from=(data[2]===1?3:4);
+            fw3.write(JSON.stringify(new NALU(data.slice(from)))+'\r\n');
+        };
+        ipc.on('video',onVideo);
+        await ipc._realPlay();
+        setTimeout(async ()=>{
+            await  ipc._stopRealPlay();
+            fw.close();
+            fw2.close();
+            fw3.close();
+        },timeout);
+    }
+
+    it('取出视频流',async function(){
+        await videoStreamOutput2File(1,5000);
     });
 
     async function move(d,done) {
