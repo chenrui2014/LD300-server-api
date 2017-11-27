@@ -38,17 +38,21 @@ class ONVIF_IPC extends  IPC{
             port:this.options.port
         };
         if(this.options.path) opts.path=this.options.path;
-        this._camera_handle=new Cam(opts,async (err)=> {
-            if (err) {
-                let error = this.error('ONVIF协议接入错误', {innerError: err});
-                //this.emit(IPC.Events.Error, error);
-                this._camera_handle = null;
-                return await Promise.reject(error);
-            }
-            this.setConnected();
-            this.emit(IPC.Events.Connected, this.log('ONVIF协议连接成功'));
-            this.options.fn_ptz = 'PTZ' in this._camera_handle.capabilities;
+        return new Promise((resolve,reject)=>{
+            let cameraHandle=new Cam(opts,async (err)=> {
+                if (err) {
+                    let error = this.error('ONVIF协议接入错误', {innerError: err});
+                    //this.emit(IPC.Events.Error, error);
+                    return reject(error);
+                }
+                this._camera_handle=cameraHandle;
+                this.setConnected();
+                this.emit(IPC.Events.Connected, this.log('ONVIF协议连接成功'));
+                this.options.fn_ptz = 'PTZ' in this._camera_handle.capabilities;
+                resolve();
+            });
         });
+
     }
     async _disConnect(){
         if(!this._camera_handle)return;
@@ -120,18 +124,20 @@ class ONVIF_IPC extends  IPC{
         if(null===pf){
             let error=this.error('未获取H264协议相关的配置文件');
             //this.emit(IPC.Events.Error,error);
-            await this.disConnect();
+            await this.disConnect().catch();
             return await Promise.reject(error);
         }
-        this._camera_handle.getStreamUri({protocol: 'RTSP', profileToken: pf.token},async (err, uri)=>{
-            await this.disConnect();
-            if (err) {
-                let error=this.error('getRtspUri','获取H264协议RTSP地址错误',{innerError:err});
-                //this.emit(IPC.Events.Error,error,error);
-                return await Promise.reject(error);
-            }
-            this.log('获取H264到播放地址，协议类型RTSP',{uri:uri.uri});
-            return this._rtsp_uri=uri.uri;
+        return new Promise((resolve,reject)=>{
+            this._camera_handle.getStreamUri({protocol: 'RTSP', profileToken: pf.token},(err, uri)=>{
+                this.disConnect().catch();
+                if (err) {
+                    let error=this.error('getRtspUri','获取H264协议RTSP地址错误',{innerError:err});
+                    //this.emit(IPC.Events.Error,error,error);
+                    return reject(error);
+                }
+                this.log('获取H264到播放地址，协议类型RTSP',{uri:uri.uri});
+                return  resolve(this._rtsp_uri=uri.uri);
+            });
         });
     }
 
@@ -250,14 +256,17 @@ class ONVIF_IPC extends  IPC{
         if(!this.supportPTZ) return await Promise.reject(this._error('_PTZ','此设备不支持PTZ操作'));
         await this.connect();
         options=_.defaults(options,{profileToken:this._profileToken});
-        this._camera_handle.relativeMove(options,async (err)=>{
-            await this.disConnect();
-            if(err){
-                let error=this.error('PTZ操作异常',{innerError:err});
-                //this.emit(IPC.Events.Error,error);
-                return await Promise.reject(error);
-            }
-            this.log('成功执行PTZ操作');
+        return new Promise((resolve,reject)=>{
+            this._camera_handle.relativeMove(options,(err)=>{
+                this.disConnect().catch();
+                if(err){
+                    let error=this.error('PTZ操作异常',{innerError:err});
+                    //this.emit(IPC.Events.Error,error);
+                    return reject(error);
+                }
+                this.log('成功执行PTZ操作');
+                resolve();
+            });
         });
     }
 
@@ -265,14 +274,17 @@ class ONVIF_IPC extends  IPC{
     async ptzStop(){
         await this.connect();
         let options={panTilt:false,zoom:true,profileToken:this._profileToken};
-        this._camera_handle.stop(options,async (err)=>{
-            await this.disConnect();
-            if(err){
-                let error=this.error('ptz停止异常',{innerError:error});
-                //this.emit(IPC.Events.Error,error);
-                return await Promise.reject(error);
-            }
-            this.log('成功执行PTZ操作');
+        return new Promise((resolve,reject)=>{
+            this._camera_handle.stop(options,(err)=>{
+                this.disConnect().catch();
+                if(err){
+                    let error=this.error('ptz停止异常',{innerError:error});
+                    //this.emit(IPC.Events.Error,error);
+                    return reject(error);
+                }
+                this.log('成功执行PTZ操作');
+                resolve();
+            });
         });
     }
 
@@ -322,14 +334,17 @@ class ONVIF_IPC extends  IPC{
     {
         throw new Error('未实现函数moveToPreset');
         await this.connect();
-        this._camera_handle.gotoPreset({profileToken:this._profileToken,preset:''+pt},async (err)=>{
-            await this.disConnect();
-            if(err){
-                let error=this.error('moveToPreset','移动到预置位异常',{innerError:err});
-                //this.emit(IPC.Events.Error,error);
-                return await Promise.reject(error);
-            }
-            this.log('成功执行PTZ操作');
+        return new Promise((resolve,reject)=>{
+            this._camera_handle.gotoPreset({profileToken:this._profileToken,preset:''+pt},(err)=>{
+                this.disConnect().catch();
+                if(err){
+                    let error=this.error('moveToPreset','移动到预置位异常',{innerError:err});
+                    //this.emit(IPC.Events.Error,error);
+                    return reject(error);
+                }
+                this.log('成功执行PTZ操作');
+                resolve();
+            });
         });
     }
 
