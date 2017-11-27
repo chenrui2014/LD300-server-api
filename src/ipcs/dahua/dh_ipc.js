@@ -126,9 +126,9 @@ class DHIPC extends IPC{
         await Promise.all([this.stopRealPlay(),this.stopTalk()]).then(dis).catch(dis);
     }
 
-    _transform(buf,enc,next){
+/*    _transform(buf,enc,next){
         next(null,buf);
-    }
+    }*/
 
     get inPlay(){return !!this._playID;}
 
