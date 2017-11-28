@@ -28,10 +28,10 @@ class IPCFactory{
             return ipc.instance;
         }
 
-        let cfg=await Data.getIPC(id).catch(async (e)=>{
+        let cfg=await Data.getIPC(id).catch((e)=>{
             this.error('摄像头配置数据获取失败',{id:ipc.id,innerError:e});
-            if(ipc) await Promise.resolve(null);
-            else await Promise.reject(e);
+            if(ipc) return null;
+            else return Promise.reject(e);
         });
         if(!cfg&&ipc){
             ipc.ref++;

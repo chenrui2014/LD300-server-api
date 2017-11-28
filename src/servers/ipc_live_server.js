@@ -85,7 +85,7 @@ class Live extends EventEmitter{
             cache.clear();
             cache=null;
             ipc.removeListener('video',videoToCache);
-            throw new Error(this.error('无法获取直播流',{innerError:e}))
+            return Promise.reject(this.error('无法获取直播流',{innerError:e}))
         });
         this.log('获取直播流');
         this._cache=cache;

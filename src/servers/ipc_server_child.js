@@ -41,9 +41,9 @@ let lives={length:0};
 async function getLive(id) {
     let l=lives[id];
     if(l) return l;
-    let ipc=await IPCFactory.getIPC(id).catch( async ()=>{
+    let ipc=await IPCFactory.getIPC(id).catch( ()=>{
         logger.warn('请求的摄像头不存在',{id:id});
-        await Promise.resolve(null);
+        return null;
     });
     if(!ipc)return null;
     return lives[id]=new Live(server,ipc,'',{autoClose:true});
@@ -107,8 +107,8 @@ async function ptz(res,id,fun,params){
     if(_.findIndex(ptzFun,(item)=>{return fun===item;})===-1) {
         return fault(res,'ptz','错误的PTZ命令',{op:fun});
     }
-    let ipc=await IPCFactory.getIPC(id).catch(async ()=>{
-        await Promise.resolve(null);
+    let ipc=await IPCFactory.getIPC(id).catch(()=>{
+        return Promise.resolve(null);
     });
     if(!ipc){
         return fault(res,'ptz','请求的摄像头不存在',{id});
@@ -144,8 +144,8 @@ async function freePTZ(res,id,params) {
     if(!handle){
         return fault(res,'freePTZ','不具备PTZ的控制权',{id});
     }
-    let ipc=await IPCFactory.getIPC(id).catch(async ()=>{
-        await Promise.resolve(null);
+    let ipc=await IPCFactory.getIPC(id).catch(()=>{
+        return Promise.resolve(null);
     });
     if(!ipc)return fault(res,'freePTZ','请求的摄像头不存在',{id});
     if(handle===ipc.ptz.handle){

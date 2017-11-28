@@ -100,8 +100,8 @@ class HostServer extends  EventEmitter{
         const hostID=evt.hid;
         let host=this._getHost(hostID);
         host.monintors=[];
-        let ms=await host.mointorHandle.getMointors(evt.position).catch(async ()=>{
-            await Promise.resolve([]);
+        let ms=await host.mointorHandle.getMointors(evt.position).catch(()=>{
+            return Promise.resolve([]);
         });
         this.emit(Host.Events.StateChanged,_.extend(evt,{monintors:_.transform(ms,(result,val)=>{
             result.push({id:val.id,demo:val.demo,talk:val.talk});
