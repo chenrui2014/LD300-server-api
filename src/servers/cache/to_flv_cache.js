@@ -16,6 +16,7 @@ const _=require('lodash');
 const assert=require('assert');
 const ADTS=require('../../acc/acc_adts_parser');
 const h264Prefix=Buffer.from([0,0,1]);
+const {Parser}=require('../../log/log');
 /*let fs=require('fs');
 let file=fs.createWriteStream('d:/audio_flv.test.aac',{
     flags: 'w',
@@ -30,7 +31,12 @@ class H264AndAACCache extends Writable{
         super({ objectMode: true });
         this._hasVideo=video;
         this._hasAudio=audio;
+        this._size_video_totle=0;
+        this._size_audio_totle=0;
+        this._size_video=0;
+        this._size_audio=0;
         this.clear();
+        Parser(this,'to_flv_cache.js');
     }
 
     clear(){
@@ -66,15 +72,21 @@ class H264AndAACCache extends Writable{
             metadata.stereo=false;//立体声,
         }
         this.metadata=metadata;
+        this._size_video_totle=0;
+        this._size_audio_totle=0;
+        this._size_video=0;
+        this._size_audio=0;
     }
 
     removeClient(client){
         _.remove(this._clients,(c)=>{return c===client});
+        this.log('客户退出',{length:this._clients.length});
     }
 
     addClient(client){
         client.time0=0;
         this._clients.push(client);
+        this.log('新连入客户',{length:this._clients.length});
         if(this._ready){
             this._sendHead([client]);
         }
@@ -206,12 +218,29 @@ class H264AndAACCache extends Writable{
     _write(data_temp,enc,cb){
         //不知道为什么数据会被篡改，所以复制一份
         let data=Buffer.from(data_temp);
+
         if(this._hasVideo){
             let index;
-            if((index=data.slice(0,4).indexOf(h264Prefix))!==-1)this._pushVedioH264(data.slice(index+3));
+            if((index=data.slice(0,4).indexOf(h264Prefix))!==-1){
+                this._pushVedioH264(data.slice(index+3));
+                this._size_video+=data.length;
+                if(this._size_video>1024*1024*5){//5MB
+                    this._size_video_totle+=this._size_video;
+                    this._size_video=0;
+                    this.log('接受视频数据增量记录',{totle:this._size_video_totle});
+                }
+            }
         }
         if(this._hasAudio){
-            if(data[0] === 0xff&&((data[1]&0xf0)===0xf0)) this._pushAudioADTS(data);
+            if(data[0] === 0xff&&((data[1]&0xf0)===0xf0)) {
+                this._pushAudioADTS(data);
+                this._size_audio+=data.length;
+                if(this._size_audio>1024*1024){//1MB
+                    this._size_audio_totle+=this._size_audio;
+                    this._size_audio=0;
+                    this.log('接受音频数据增量记录',{totle:this._size_audio_totle});
+                }
+            }
         }
         cb();
     }
