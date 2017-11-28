@@ -1,7 +1,7 @@
 /**
  * Created by Luky on 2017/7/2.
  */
-const init=require('../init');
+const {db,file}=require('../init');
 const DHIPC=require('../../ipcs/dahua/dh_ipc');
 const Data=require('../../servers/data_server');
 const expect = require('chai').expect;
@@ -32,6 +32,16 @@ async function getOnvifInstance(id) {
 
 describe('大华IPC直连测试', function() {
 
+    let dbInstance=null;
+    before(async ()=>{
+        //打开注释启动数据库取数据
+        dbInstance=await db();
+    });
+
+    after(async ()=>{
+        if(dbInstance)await  dbInstance.close();
+    });
+
     it('连接测试',async function(){
         let ipc=await getInstance(1);
         await ipc.connect();
@@ -43,23 +53,28 @@ describe('大华IPC直连测试', function() {
     it('视频播放测试',async function(){
         let ipc=await getInstance(1);
         await ipc._realPlay();
-        setTimeout(async ()=>{
-            console.log('played');
-            await ipc._stopRealPlay();
-            console.log('stoped');
-            await ipc.disConnect();
-        },1000);
+        console.log('played');
+        return await new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+                ipc._stopRealPlay().then(()=>{
+                    console.log('stoped');
+                    ipc.disConnect();
+                    resolve();
+                }).catch(reject);
+            },1000);
+        });
     });
 
     it('大华onvif方式播放视频测试',async function(){
         let ipc=await getOnvifInstance(2);
         await ipc._realPlay();
-        setTimeout(async ()=>{
-            console.log('played');
-            await ipc._stopRealPlay();
-            console.log('stoped');
-            await ipc.disConnect();
-        },1000);
+        console.log('played');
+        return await new Promise((resolve)=>{
+            setTimeout(()=>{
+                ipc._stopRealPlay().then(resolve).catch();
+                console.log('stoped');
+            },1000);
+        });
     });
 
     async function videoStreamOutput2File(id,timeout){
@@ -79,16 +94,20 @@ describe('大华IPC直连测试', function() {
         };
         ipc.on('video',onVideo);
         await ipc._realPlay();
-        setTimeout(async ()=>{
-            await  ipc._stopRealPlay();
-            fw.close();
-            fw2.close();
-            fw3.close();
-        },timeout);
+        return await new Promise((resolve)=>{
+            setTimeout(()=>{
+                ipc._stopRealPlay().catch();
+                fw.close();
+                fw2.close();
+                fw3.close();
+                resolve();
+            },timeout);
+        }) ;
+
     }
 
     it('取出视频流',async function(){
-        await videoStreamOutput2File(1,5000);
+        return await videoStreamOutput2File(1,5000);
     });
 
     async function move(d,done) {
