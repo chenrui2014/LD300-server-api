@@ -3,7 +3,7 @@
  */
 const Host=require('../host/host');
 const HostServer=require('./host_server');
-//const IPCServer=require('./ipc_server_master');
+const IPCServer=require('./ipc_server_master');
 const {Parser}=require('../log/log');
 const config=global.server_config||require('../config/config');
 const _=require('lodash');
@@ -35,9 +35,9 @@ class StartUp{
         this.stop();
         let hostServer = new HostServer();
         //为了不遗漏数据，先启动服务，后启动状态推送服务
-        await hostServer.start().catch(async (e)=>{
+        await hostServer.start().catch((e)=>{
             this.error('主机服务启动失败',{innerError:e});
-            return await Promise.reject(e);
+            return Promise.reject(e);
         });
         this._hostServer=hostServer;
         let messengerServer = runModeOne?
@@ -50,14 +50,14 @@ class StartUp{
             messengerServer.removeListener(MessengerServerBase.Events.newClient, this._push_server_new_client);
             this._hostServer=null;
             this.error('消息服务启动失败',{innerError:e});
-            reject(e);
+            return Promise.reject(e);
         });
         this._messengerServer=messengerServer;
-        //暂时先不启用
-/*        if(runModeOne){
+        if(runModeOne){
             this._ipcServer=new IPCServer();
-            this._ipcServer.start().catch(e=>e);
-        }*/
+            await this._ipcServer.start().catch();
+        }
+        this.log('服务已启动');
     }
 
     stop(){
