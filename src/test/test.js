@@ -1,15 +1,16 @@
 
 const Transform = require('stream').Transform;
 const PassThrough=require('stream').PassThrough;
-var assert = require('assert');
-var config = require('../config');
-const dhlib=require('../app/ipcs/dahua/dhnetsdk');
+const assert = require('assert');
+let config = require('../config/config');
+const dhlib=require('../ipcs/dahua/dhnetsdk');
 const path = require('path');
-const root=require('../app/config/config').root;
+const root=require('../config/config').root;
 const Event=require('events').EventEmitter;
 const amf=require('amf');
 const expect=require('chai').expect;
 const _=require('lodash');
+const cp=require('child_process');
 
 console.log('config.port=' + config.port);
 
@@ -265,5 +266,24 @@ describe('async测试',()=>{
         let y=await Promise.resolve(2);
         console.log('y');
         expect(x).equal(1);
+    });
+
+    async function Throw() {
+        await Promise.reject(1);
+    }
+
+    //error
+    it('catch',async ()=>{
+        let x=await Throw().catch(()=>{
+            return Promise.resolve(2);
+        });
+        console.log(x);
+    });
+});
+
+describe('cp',()=>{
+    it('fork',()=>{
+        let file=path.resolve(__dirname,'./init.js');
+        cp.fork(file, ['--inspect',`--debug-brk=${12000}`]);
     });
 });

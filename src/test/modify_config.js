@@ -27,106 +27,6 @@ function setIpcData(data) {
     });
 }
 
-setHostData([{id:1,port:'\\\\.\\COM2'}]);
-
-setIpcData([
-    {
-        "id": 1,
-        "ip": "192.168.1.98",
-        "port": 37777,
-        "user": "admin",
-        "pwd": "admin",
-        "brand": "dahua",
-        "functions": {
-            "ptz": false,
-            "alarm": false,
-            "audio": false
-        },
-        "onvif": {
-            "port": 80,
-            "user": "admin",
-            "pwd": "admin",
-            "path": ""
-        }
-    },
-    {//用于onvif连接测试
-        "id": 2,
-        "ip": "192.168.1.98",
-        "port":80,
-        "user": "admin",
-        "pwd": "admin",
-        "brand": "onvif",
-        "functions": {
-            "ptz": false,
-            "alarm": false,
-            "audio": false
-        },
-        "onvif": {
-            "port": 80,
-            "user": "admin",
-            "pwd": "admin",
-            "path": ""
-        }
-    },
-    {
-        "id":3,
-        "ip":"192.168.1.107",
-        "port":"",
-        "path":"",
-        "user":"",
-        "pwd":"",
-        "brand":"hopewell",
-        "functions":{
-            "ptz": false,
-            "alarm": false,
-            "audio": false
-        },
-        "onvif":{
-            "port": 80,
-            "user": "admin",
-            "pwd": "admin",
-            "path": ""
-        }
-    },
-    {//onvif 链接
-        "id": 4,
-        "ip": "192.168.1.106",
-        "port": 37777,
-        "user": "admin",
-        "pwd": "888888",
-        "brand": "dahua",
-        "functions": {
-            "ptz": true,
-            "alarm": true,
-            "audio": true
-        },
-        "onvif": {
-            "port": 80,
-            "user": "admin",
-            "pwd": "admin",
-            "path": ""
-        }
-    },
-    {
-        "id": 5,
-        "ip": "192.168.1.106",
-        "port": 37777,
-        "user": "admin",
-        "pwd": "888888",
-        "brand": "dahua",
-        "functions": {
-            "ptz": true,
-            "alarm": true,
-            "audio": true
-        },
-        "onvif": {
-            "port": 80,
-            "user": "admin",
-            "pwd": "admin",
-            "path": ""
-        }
-    }
-]);
 
 setMData([{
     id: 1,
@@ -139,7 +39,7 @@ setMData([{
         presets: [],
         min: 80,
         max: 90
-    },
+        },
         {
             id: 5,//106_dahua_demo
             alarm: true,
