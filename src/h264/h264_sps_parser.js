@@ -118,7 +118,7 @@ class SPSParser {
         let vui_parameters_present_flag = gb.readBoolean();
         if (vui_parameters_present_flag) {
             if (gb.readBoolean()) {  // aspect_ratio_info_present_flag
-                let aspect_ratio_idc = gb.readByte();
+                let aspect_ratio_idc = gb.readBits(8);
                 let sar_w_table = [1, 12, 10, 16, 40, 24, 20, 32, 80, 18, 15, 64, 160, 4, 3, 2];
                 let sar_h_table = [1, 11, 11, 11, 33, 11, 11, 11, 33, 11, 11, 33,  99, 3, 2, 1];
 
@@ -126,8 +126,8 @@ class SPSParser {
                     sar_width = sar_w_table[aspect_ratio_idc - 1];
                     sar_height = sar_h_table[aspect_ratio_idc - 1];
                 } else if (aspect_ratio_idc === 255) {
-                    sar_width = gb.readByte() << 8 | gb.readByte();
-                    sar_height = gb.readByte() << 8 | gb.readByte();
+                    sar_width = gb.readBits(8) << 8 | gb.readBits(8);
+                    sar_height = gb.readBits(8) << 8 | gb.readBits(8);
                 }
             }
 

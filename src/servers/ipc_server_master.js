@@ -83,13 +83,15 @@ class IPCServer extends EventEmitter{
 
             for (let i = 0; i < numCPUs; i++) {
                 let args={};
+                let worker = worker=cp.fork(childjs, ['normal']);
                 if(process.env.NODE_ENV==='development'){
-                    args={
-                        execPath:'D:\\ProgramFiles\\nodejs\\node.exe',
-                        execArgv: [ '--inspect-brk='+(process.debugPort+i+1) ]
-                    };
+                    // args={
+                    //     execPath:'C:\\Program Files\\nodejs\\node.exe',
+                    //     execArgv: [ '--inspect-brk='+(process.debugPort+i+1) ]
+                    // };
+                    worker=cp.fork(childjs, {execArgv: [ '--inspect='+(process.debugPort+i+1)]});
                 }
-                let worker=cp.fork(childjs,['normal'], args);
+                //let worker=cp.fork(childjs,['normal'], args);
                 let wobj={worker:worker,payload:0,start:new Date()};
 
                 wobj.lsn=worker.on('message',this._onProcessMessage.bind(this,wobj));
