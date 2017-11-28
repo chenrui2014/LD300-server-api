@@ -9,7 +9,7 @@ let config={
         type:'one',
         project:'RongFei-YiLiPrison',
         interfaces:'RongFei/i_rong_fei.js',
-        store:'db'//file数据由文件方式存储，db由数据库方式存储
+        store:'file'//file数据由文件方式存储，db由数据库方式存储
     },
     state_server:{//状态广播服务配置
         type:'socket',//暂时不解析，socket用于作为代理模式，其他厂商提供客户端，http-socket则使用集成平台
