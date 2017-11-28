@@ -1,5 +1,5 @@
 //require('../modify_config');
-const init=require('../init');
+const {db,file}=require('../init');
 const http = require('http');
 const {server}=require('../../servers/ipc_server_child');
 const expect=require('chai').expect;
@@ -14,7 +14,6 @@ async function getUrl(){
 }
 
 async function send(path) {
-    await init();
     let port=await getUrl();
     const options = {
         hostname: 'localhost',
@@ -38,8 +37,19 @@ async function send(path) {
 }
 
 describe('直播子进程http服务测试',()=>{
+
+    let dbInstance=null;
+    before(async ()=>{
+        //打开注释启动数据库取数据
+        dbInstance=await db();
+    });
+
+    after(async ()=>{
+        if(dbInstance)await  dbInstance.close();
+    });
+
     it('直播及获取地址',(done)=>{
-        send('/ipc/5/live?&user=admin&pwd=chen1984&brand=dahua&ptz=false&alarm=true&audio=true&onvif_port=80&onvif_user=admin&port=37777&onvif_pwd=admin&onvif_path=&name=大门&status=true&type=枪机&ip=192.168.1.112&id=5').then((data)=>{
+        send('/ipc/5/live').then((data)=>{
             expect(data.id-0).equal(5);
             expect(data.type).equal('succeed');
             expect(data.fn).equal('live');
