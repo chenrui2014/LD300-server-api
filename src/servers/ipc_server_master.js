@@ -64,8 +64,8 @@ class IPCServer extends EventEmitter{
     }
 
     async start(){
-        let ipcs=await Data.getIPCIDsSortByPoint().catch(async ()=>{
-            await Promise.resolve([]);
+        let ipcs=await Data.getIPCIDsSortByPoint().catch(()=>{
+            return Promise.resolve([]);
         });
         if(!ipcs||!ipcs.length) return Promise.reject('没有可连接摄像头');
         this.stop();
@@ -82,13 +82,16 @@ class IPCServer extends EventEmitter{
             });
 
             for (let i = 0; i < numCPUs; i++) {
-                let worker=cp.fork(childjs, ['normal']);
-                //worker.on('error',());
-                let wobj={
-                    worker:worker,
-                    payload:0,
-                    start:new Date()
-                };
+                let args={};
+                if(process.env.NODE_ENV==='development'){
+                    args={
+                        execPath:'D:\\ProgramFiles\\nodejs\\node.exe',
+                        execArgv: [ '--inspect-brk='+(process.debugPort+i+1) ]
+                    };
+                }
+                let worker=cp.fork(childjs,['normal'], args);
+                let wobj={worker:worker,payload:0,start:new Date()};
+
                 wobj.lsn=worker.on('message',this._onProcessMessage.bind(this,wobj));
                 this._workers.push(wobj);
             }
