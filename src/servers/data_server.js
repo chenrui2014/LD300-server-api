@@ -24,7 +24,7 @@ const setBrands={
     '和普威尔':'hopewell','hopewell':'hopewell',
     '海康威视':'hikvision','hikvision':'hikvision',
     '国营508集成海康威视':'508','508':'508',
-    'onvif':'onvif'
+    'onvif协议':'onvif','onvif':'onvif'
 };
 //数据格式[{id,port},{...},...]
 async function getHosts()
