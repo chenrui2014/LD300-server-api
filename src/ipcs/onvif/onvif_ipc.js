@@ -10,8 +10,11 @@ const config=globalConfig.getConfig('onvif_config.json');
 const Cam=onvif.Cam;
 const _=require('lodash');
 const assert = require('assert');
-//const {RtspClient,H264Transport} =require('../../../_3part/yellowstone');
-const {RtspClient,H264Transport} =require('yellowstone');
+let yellowstone =require('yellowstone');
+if(!('H264Transport' in yellowstone)){
+    yellowstone=require('../../../_3part/yellowstone');
+}
+const {RtspClient,H264Transport}=yellowstone;
 const header = new Buffer.from([0x00,0x00,0x00,0x01]);
 const {Parser} =require('../../log/log');
 const Writable=require('stream').Writable;
@@ -168,10 +171,10 @@ class ONVIF_IPC extends  IPC{
             next();
         };
         let h264Transport= new H264Transport(this._RtspClient,h264Stream, details);
-        await this._RtspClient.play().catch( async ()=>{
+        await this._RtspClient.play().catch(()=>{
             let error=this.error('RTSP协议连接发生错误',err);
             h264Stream.removeAllListeners();
-            return await Promise.reject(error);
+            return Promise.reject(error);
         });
         this.__h264Stream=h264Stream;
         this.__h264Stream=h264Transport;
@@ -190,7 +193,7 @@ class ONVIF_IPC extends  IPC{
         buf[0]=0;buf[1]=0;buf[2]=0;buf[3]=1;
         data.copy(buf,4);
         //next(null,buf);
-        EventEmitter.prototype.emit.call(this,'video',data);
+        EventEmitter.prototype.emit.call(this,'video',buf);
     }
 
     async _stopRealPlay(){
