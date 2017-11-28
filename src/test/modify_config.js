@@ -52,10 +52,10 @@ setIpcData([
     {//用于onvif连接测试
         "id": 2,
         "ip": "192.168.1.98",
-        "port": 37777,
+        "port": 80,
         "user": "admin",
         "pwd": "admin",
-        "brand": "dahua",
+        "brand": "onvif",
         "functions": {
             "ptz": false,
             "alarm": false,
