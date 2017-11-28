@@ -150,10 +150,10 @@ class ONVIF_IPC extends  IPC{
     async _connectRtsp(url){
         if(this._RtspClientDetail)return this._RtspClientDetail;
         const client =new RtspClient(this.options.user,this.options.pwd);
-        let details=await client.connect(url, { keepAlive: false }).catch( async (err)=>{
+        let details=await client.connect(url, { keepAlive: false }).catch((err)=>{
             let error=this.error('_connectRtsp','RTSP协议直播接入异常',{innerError:err});
             //this.emit(IPC.Events.Error,error,error);
-            return await Promise.reject(error);
+            return Promise.reject(error);
         });
         this._RtspClient=client;
         //console.log('Connected. Video format is', details.format);
