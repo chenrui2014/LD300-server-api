@@ -105,6 +105,9 @@ exports.regIPCBrand('hikvision','海康威视',(options)=>{
 exports.regIPCBrand('508','国营508集成海康威视',(options)=>{
     return integration(onvif,options,_508,_.extend({},options,options.ptz));
 });
+exports.regIPCBrand('onvif','onvif协议',(options)=>{
+    return new onvif(options);
+});
 //exports.regVedioComponent('dahua','大华私有协议',dh);
 //exports.regVedioComponent('onvif','onvif标准协议',onvif);
 //exports.regPTZComponent('onvif','onvif标准协议',onvif);
