@@ -1,10 +1,10 @@
 /**
  * Created by chen on 17-8-23.
  */
-//import logger from '../logger';
-//import PerimeterPointModel from '../models/perimeterPoint.model';
-const logger=require('../logger');
-const PerimeterPointModel=require('../models/perimeterPoint.model');
+import logger from '../logger';
+import PerimeterPointModel from '../models/perimeterPoint.model';
+// const logger=require('../logger');
+// const PerimeterPointModel=require('../models/perimeterPoint.model');
 
 class PerimeterPointService {
     /**

@@ -2,8 +2,6 @@
  * Created by chen on 17-8-23.
  */
 import mongoose from 'mongoose';
-import validate from 'mongoose-validator';
-import validator from 'validator';
 
 const EventSchema = new mongoose.Schema({
 

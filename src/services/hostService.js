@@ -1,8 +1,10 @@
 /**
  * Created by chen on 17-8-23.
  */
-const logger =require('../logger');
-const HostModel =require('../models/host.model');
+import logger from '../logger';
+import HostModel from '../models/host.model';
+// const logger =require('../logger');
+// const HostModel =require('../models/host.model');
 
 class HostService {
     /**

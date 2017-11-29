@@ -1,10 +1,8 @@
 /**
  * Created by chen on 17-8-23.
  */
-//import mongoose from 'mongoose';
-const mongoose=require('mongoose');
-//import validate from 'mongoose-validator';
-//import validator from 'validator';
+import mongoose from 'mongoose';
+// const mongoose=require('mongoose');
 
 const PresetSchema = new mongoose.Schema({
     id:{//ID
