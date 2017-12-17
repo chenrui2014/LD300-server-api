@@ -3,6 +3,7 @@
  */
 import logger from '../logger';
 import {Monitoring as MonitoringAreaModel} from '../models/monitoringArea.model';
+import HostModel from "../models/host.model";
 // const logger=require('../logger');
 // const {MonitoringAreaModel}=require('../models/monitoringArea.model');
 
@@ -15,12 +16,12 @@ class MonitoringAreaService {
     static async add_monitoringArea(data){
         const id = await MonitoringAreaService.findMaxId();
         data.id = Number(id) + 1;
-        let monitoringArea = new MonitoringAreaModel(data);
+        // let monitoringArea = new MonitoringAreaModel(data);
         let success = false;
-        await monitoringArea.save(function (err,monitoringArea) {
+        await MonitoringAreaModel.create(data,function (err,monitoringArea) {
             if(!err) {
-                logger.info('添加监控区域['+ monitoringArea.id +']成功');
                 success = true;
+                logger.info('添加监控区域成功');
             }else{
                 logger.error(err.message);
             }

@@ -3,6 +3,7 @@
  */
 import logger from '../logger';
 import PerimeterPointModel from '../models/perimeterPoint.model';
+import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
 // const logger=require('../logger');
 // const PerimeterPointModel=require('../models/perimeterPoint.model');
 
@@ -15,12 +16,12 @@ class PerimeterPointService {
     static async add_perimeterPoint(data){
         const id = await PerimeterPointService.findMaxId();
         data.id = Number(id) + 1;
-        let perimeterPoint = new PerimeterPointModel(data);
+        // let perimeterPoint = new PerimeterPointModel(data);
         let success = false;
-        await perimeterPoint.save(function (err,perimeterPoint) {
+        await PerimeterPointModel.create(data,function (err,perimeterPoint) {
             if(!err) {
-                logger.info('添加周界点['+ perimeterPoint.realPosition +']成功');
                 success = true;
+                logger.info('添加周界点成功');
             }else{
                 logger.error(err.message);
             }

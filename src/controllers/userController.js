@@ -6,9 +6,46 @@ import md5 from 'md5';
 import logger from '../logger';
 
 import UserModel from '../models/user.model';
+import TokenModel from '../models/accessToken';
+
+import {getHash} from '../utils';
+import admin from '../config/admin';
 
 
 class UserController {
+    static async signToken (ctx, next) {
+        const { user } = ctx.req
+        await TokenModel.findOneAndRemove({user: user._id})
+        const result = await TokenModel.create({
+            token: genHash(user.username + Date.now()),
+            user: user._id
+        })
+
+        ctx.status = 200
+        ctx.body = {
+            success: true,
+            data: result
+        }
+    }
+
+    static async getUserByToken (ctx, next) {
+        ctx.status = 200
+        ctx.body = {
+            success: true,
+            data: ctx.req.user
+        }
+    }
+
+    // 当数据库中user表示空的时候，创建超级管理员
+    static async seed (ctx, next) {
+        const users = await UserModel.find({})
+        if (users.length === 0) {
+            const _admin = new UserModel(admin)
+            const adminUser = await _admin.save()
+        }
+    }
+
+
     // 添加用户
     static async create_user(ctx){
         const { name, email, password } = ctx.request.body;

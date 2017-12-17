@@ -1,47 +1,48 @@
 /**
- * 操作预置点数据对象
+ * 操作摄像头类型数据对象
  * Created by chen on 17-8-23.
  */
 import logger from '../logger';
-import {Monitoring as MonitoringAreaModel, Preset as PresetModel} from '../models/monitoringArea.model';
+import CameraTypeModel from '../models/cameraType.model';
+import CameraModel from "../models/camera.model";
 // const logger=require('../logger');
-// const {PresetModel} =require('../models/monitoringArea.model');
+// const CameraTypeModel=require('../models/cameraType.model');
 
-
-class PresetService {
+class CameraTypeService {
 
     /**
-     * 添加一个预置点
-     * @param data 需要添加的预置点数据
+     * 添加一个摄像头类型
+     * @param data 需要添加的摄像头类型数据
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
-    static async add_preset(data){
-        const id = await PresetService.findMaxId();
+    static async add_cameraType(data){
+        const id = await CameraTypeService.findMaxId();
         data.id = Number(id) + 1;
-        // let preset = new PresetModel(data);
+        // let cameraType = new CameraTypeModel(data);
         let success = false;
-        await PresetModel.create(data,function (err,preset) {
+        await CameraTypeModel.create(data,function (err,cameraType) {
             if(!err) {
                 success = true;
-                logger.info('添加周界成功');
+                logger.info('添加摄像头类型['+ cameraType.name +']成功');
             }else{
                 logger.error(err.message);
             }
         });
+
         return success;
     }
 
     /**
-     * 根据条件删除预置点
+     * 根据条件删除摄像头类型
      * @param conditions 删除条件
      * @returns {Promise.<boolean>}删除成功返回true，否则返回false；
      */
-    static async delete_preset(conditions) {
+    static async delete_cameraType(conditions) {
         let success = false;
-        const result = await PresetModel.remove(conditions,function (err,preset) {
+        const result = await CameraTypeModel.remove(conditions,function (err,cameraType) {
             if(!err) {
                 success = true;
-                logger.info('删除预置点['+ preset.ip +']成功');
+                logger.info('删除摄像头类型['+ cameraType.ip +']成功');
             }else{
                 logger.error(err.message);
             }
@@ -50,62 +51,62 @@ class PresetService {
     }
 
     /**
-     * 修改预置点信息
+     * 修改摄像头类型信息
      * @param conditions 修改条件
-     * @param data 新的预置点数据
+     * @param data 新的摄像头类型数据
      * @returns {Promise.<*>} 返回修改后的数据
      */
-    static async edit_preset(conditions,data){
+    static async edit_cameraType(conditions,data){
         let result = null;
-        result = await PresetModel.update(conditions,data).exec();
+        result = await CameraTypeModel.update(conditions,data).exec();
         return result;
     }
 
     /**
-     * 根据条件查询符合条件的预置点数量
+     * 根据条件查询符合条件的摄像头类型数量
      * @param conditions
      * @returns {Promise.<*>}
      */
     static async getTotal(conditions){
-        return await PresetModel.find(conditions).count();
+        return await CameraTypeModel.find(conditions).count();
 
     }
 
 
     /**
-     * 查询所有预置点
+     * 查询所有摄像头类型
      * @returns {Promise.<*>}
      */
     static async findAll(sort){
         if(sort){
-            return await PresetModel.find().sort(sort);
+            return await CameraTypeModel.find().sort(sort);
         }else{
-            return await PresetModel.find();
+            return await CameraTypeModel.find();
         }
 
     }
 
     /**
-     * 根据条件查询预置点
+     * 根据条件查询摄像头类型
      * @param conditions 查询条件
      * @param sort 排序
      * @param pagination 分页
      * @returns {Promise.<*>} 返回查询到的数据
      */
-    static async find_preset(conditions,sort,pagination){
+    static async find_cameraType(conditions,sort,pagination){
         let result = null;
         if(sort){
 
             if(pagination){
-                result = await PresetModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize).sort(sort);
+                result = await CameraTypeModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize).sort(sort);
             }else{
-                result = await PresetModel.find().sort(sort);
+                result = await CameraTypeModel.find().sort(sort);
             }
         }else{
             if(pagination){
-                result = await PresetModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize);
+                result = await CameraTypeModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize);
             }else{
-                result = await PresetModel.find(conditions);
+                result = await CameraTypeModel.find(conditions);
             }
         }
 
@@ -113,12 +114,12 @@ class PresetService {
     }
 
     /**
-     * 根据ID查找预置点信息
+     * 根据ID查找摄像头类型信息
      * @param id
      * @returns {Promise.<*>}
      */
     static async find_one(id){
-        return await PresetModel.findOne({id:id});
+        return await CameraTypeModel.findOne({id:id});
     }
 
     /**
@@ -126,7 +127,7 @@ class PresetService {
      * @returns {Promise.<number>}
      */
     static async findMaxId(){
-        const result = await PresetModel.find().sort({id:-1}).limit(1);
+        const result = await CameraTypeModel.find().sort({id:-1}).limit(1);
         if(result && result.length > 0){
             return result[0]._doc.id;
         }else{
@@ -136,12 +137,12 @@ class PresetService {
 
 
     /**
-     * 根据条件判断是否存在符合条件的预置点
+     * 根据条件判断是否存在符合条件的摄像头类型
      * @param conditions 查询条件
      * @returns {Promise.<boolean>} 有符合条件的对象返回true，否则返回false
      */
     static async isExist(conditions){
-        const result = await PresetModel.find(conditions);
+        const result = await CameraTypeModel.find(conditions);
         if(result && result.length > 0){
             return true;
         }else{
@@ -151,5 +152,5 @@ class PresetService {
 
 }
 
-exports=module.exports=PresetService;
-//export default PresetService;
+exports=module.exports=CameraTypeService;
+//export default CameraTypeService;

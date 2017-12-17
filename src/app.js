@@ -3,6 +3,8 @@
  */
 import path from 'path';
 import Koa from 'koa';
+import passport from 'koa-passport';
+import session from 'koa-session2';
 import bodyParser from 'koa-bodyparser';
 import koaBody from 'koa-body';
 import logger from './logger';
@@ -41,6 +43,16 @@ app.use((ctx, next) => {
     formLimit: '10mb',
     textLimit: '10mb'
 }));
+
+//session
+app.use(session({
+    key: "SESSIONID",   //default "koa:sess"
+}));
+// authentication
+require('./controllers/auth/LDPassport');
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(router.routes())
     .use(router.allowedMethods());

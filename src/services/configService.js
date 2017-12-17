@@ -1,27 +1,29 @@
 /**
+ * 操作系统配置数据对象
  * Created by chen on 17-8-23.
  */
 import logger from '../logger';
-import HostModel from '../models/host.model';
-import EventModel from "../models/event.model";
-// const logger =require('../logger');
-// const HostModel =require('../models/host.model');
+import ConfigModel from '../models/config.model';
+import CameraTypeModel from "../models/cameraType.model";
+// const logger=require('../logger');
+// const ConfigModel=require('../models/config.model');
 
-class HostService {
+class ConfigService {
+
     /**
-     * 添加一个主机
-     * @param data 需要添加的主机数据
+     * 添加一个系统配置
+     * @param data 需要添加的系统配置数据
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
-    static async add_host(data){
-        const id = await HostService.findMaxId();
+    static async add_config(data){
+        const id = await ConfigService.findMaxId();
         data.id = Number(id) + 1;
-        // let host = new HostModel(data);
+        // let config = new ConfigModel(data);
         let success = false;
-        await HostModel.create(data,function (err,host) {
+        await ConfigModel.create(data,function (err,config) {
             if(!err) {
                 success = true;
-                logger.info('添加摄像头['+ host.port +']成功');
+                logger.info('添加系统配置成功');
             }else{
                 logger.error(err.message);
             }
@@ -31,16 +33,16 @@ class HostService {
     }
 
     /**
-     * 根据条件删除主机
+     * 根据条件删除系统配置
      * @param conditions 删除条件
      * @returns {Promise.<boolean>}删除成功返回true，否则返回false；
      */
-    static async delete_host(conditions) {
+    static async delete_config(conditions) {
         let success = false;
-        const result = await HostModel.remove(conditions,function (err,host) {
+        const result = await ConfigModel.remove(conditions,function (err,config) {
             if(!err) {
                 success = true;
-                logger.info('删除主机['+ host.port +']成功');
+                logger.info('删除系统配置['+ config.ip +']成功');
             }else{
                 logger.error(err.message);
             }
@@ -49,62 +51,62 @@ class HostService {
     }
 
     /**
-     * 修改主机信息
+     * 修改系统配置信息
      * @param conditions 修改条件
-     * @param data 新的主机数据
+     * @param data 新的系统配置数据
      * @returns {Promise.<*>} 返回修改后的数据
      */
-    static async edit_host(conditions,data){
+    static async edit_config(conditions,data){
         let result = null;
-        result = await HostModel.update(conditions,data).exec();
+        result = await ConfigModel.update(conditions,data).exec();
         return result;
     }
 
     /**
-     * 根据条件查询符合条件的主机数量
+     * 根据条件查询符合条件的系统配置数量
      * @param conditions
      * @returns {Promise.<*>}
      */
     static async getTotal(conditions){
-        return await HostModel.find(conditions).count();
+        return await ConfigModel.find(conditions).count();
 
     }
 
 
     /**
-     * 查询所有主机
+     * 查询所有系统配置
      * @returns {Promise.<*>}
      */
     static async findAll(sort){
         if(sort){
-            return await HostModel.find().sort(sort);
+            return await ConfigModel.find().sort(sort);
         }else{
-            return await HostModel.find();
+            return await ConfigModel.find();
         }
 
     }
 
     /**
-     * 根据条件查询主机
+     * 根据条件查询系统配置
      * @param conditions 查询条件
      * @param sort 排序
      * @param pagination 分页
      * @returns {Promise.<*>} 返回查询到的数据
      */
-    static async find_host(conditions,sort,pagination){
+    static async find_config(conditions,sort,pagination){
         let result = null;
         if(sort){
 
             if(pagination){
-                result = await HostModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize).sort(sort);
+                result = await ConfigModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize).sort(sort);
             }else{
-                result = await HostModel.find().sort(sort);
+                result = await ConfigModel.find().sort(sort);
             }
         }else{
             if(pagination){
-                result = await HostModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize);
+                result = await ConfigModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize);
             }else{
-                result = await HostModel.find(conditions);
+                result = await ConfigModel.find(conditions);
             }
         }
 
@@ -112,12 +114,12 @@ class HostService {
     }
 
     /**
-     * 根据ID查找主机信息
+     * 根据ID查找系统配置信息
      * @param id
      * @returns {Promise.<*>}
      */
     static async find_one(id){
-        return await HostModel.findOne({id:id});
+        return await ConfigModel.findOne({id:id});
     }
 
     /**
@@ -125,7 +127,7 @@ class HostService {
      * @returns {Promise.<number>}
      */
     static async findMaxId(){
-        const result = await HostModel.find().sort({id:-1}).limit(1);
+        const result = await ConfigModel.find().sort({id:-1}).limit(1);
         if(result && result.length > 0){
             return result[0]._doc.id;
         }else{
@@ -135,12 +137,12 @@ class HostService {
 
 
     /**
-     * 根据条件判断是否存在符合条件的主机
+     * 根据条件判断是否存在符合条件的系统配置
      * @param conditions 查询条件
      * @returns {Promise.<boolean>} 有符合条件的对象返回true，否则返回false
      */
     static async isExist(conditions){
-        const result = await HostModel.find(conditions);
+        const result = await ConfigModel.find(conditions);
         if(result && result.length > 0){
             return true;
         }else{
@@ -150,5 +152,5 @@ class HostService {
 
 }
 
-exports=module.exports=HostService;
-//export default HostService;
+exports=module.exports=ConfigService;
+//export default ConfigService;

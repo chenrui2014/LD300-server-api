@@ -4,9 +4,8 @@
  */
 import logger from '../logger';
 import CameraModel from '../models/camera.model';
-// const logger=require('../logger');
-// const CameraModel=require('../models/camera.model');
-
+import CameraTypeModel from "../models/cameraType.model";
+// import uuidv1 from 'uuid/v1';
 class CameraService {
 
     /**
@@ -16,17 +15,26 @@ class CameraService {
      */
     static async add_camera(data){
         const id = await CameraService.findMaxId();
-        data.id = Number(id) + 1;
-        let camera = new CameraModel(data);
+        // data.id = uuidv1();
+        data.id = id + 1;
+        //let camera = new CameraModel(data);
         let success = false;
-        await camera.save(function (err,camera) {
+        await CameraModel.create(data,function (err,camera) {
             if(!err) {
-                logger.info('添加摄像头['+ camera.ip +']成功');
                 success = true;
+                logger.info('添加摄像头['+ camera.ip +']成功');
             }else{
                 logger.error(err.message);
             }
         });
+        // await camera.save(function (err,camera) {
+        //     if(!err) {
+        //         success = true;
+        //         logger.info('添加摄像头['+ camera.ip +']成功');
+        //     }else{
+        //         logger.error(err.message);
+        //     }
+        // });
 
         return success;
     }
@@ -41,6 +49,7 @@ class CameraService {
         const result = await CameraModel.remove(conditions,function (err,camera) {
             if(!err) {
                 success = true;
+                logger.info(camera);
                 logger.info('删除摄像头['+ camera.ip +']成功');
             }else{
                 logger.error(err.message);
@@ -111,16 +120,6 @@ class CameraService {
 
         return result;
     }
-
-    /**
-     * 根据ID查找摄像头信息
-     * @param id
-     * @returns {Promise.<*>}
-     */
-    static async find_one(id){
-        return await CameraModel.findOne({id:id});
-    }
-
     /**
      * 获得ID最大值
      * @returns {Promise.<number>}
@@ -134,6 +133,14 @@ class CameraService {
         }
     }
 
+    /**
+     * 根据ID查找摄像头信息
+     * @param id
+     * @returns {Promise.<*>}
+     */
+    static async find_one(id){
+        return await CameraModel.findOne({id:id});
+    }
 
     /**
      * 根据条件判断是否存在符合条件的摄像头

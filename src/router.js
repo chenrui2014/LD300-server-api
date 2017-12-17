@@ -10,11 +10,38 @@ import PerimeterPointController from './controllers/perimeterPointController';
 import EventController from './controllers/eventController';
 import UserController from './controllers/userController';
 import PresetController from './controllers/PresetController';
+import CameraTypeController from './controllers/cameraTypeController';
+import ConfigController from './controllers/configController';
+import VendorController from './controllers/vendorController';
+import UnitController from './controllers/unitController';
+import { isBearerAuthenticated, isLocalAuthenticated } from './lib/auth';
 
 import Router from 'koa-router';
 
 const router = new Router();
 router.prefix('/api');
+
+// // 初始化用户数据
+// UserController.seed();
+//
+// router.use(async (ctx, next) => {
+//     try {
+//         await next()
+//     } catch (error) {
+//         console.error(error)
+//         ctx.status = ctx.status || 400
+//         ctx.body = {
+//             code: error.code,
+//             message: error.message || error.errmsg || error.msg || 'unknown_error',
+//             error
+//         }
+//     }
+// })
+
+
+// // Auth
+// router.post('/auth', isLocalAuthenticated(), UserController.signToken)
+// router.get('/auth', isBearerAuthenticated(), UserController.getUserByToken)
 // module.exports.initialize = function () {
 //     router.get('/', async (ctx, next) => {
 //         await ctx.render('index.pug');
@@ -71,6 +98,34 @@ router.get('/event', EventController.find_event)
     .post('/event',EventController.add_event)
     .put('/event/:id',EventController.edit_event)
     .delete('/event/:id',EventController.delete_event);
+
+//摄像头类型路由
+router.get('/cameraType', CameraTypeController.find_cameraType)
+    .get('/cameraType/:id',CameraTypeController.find_one)
+    .post('/cameraType',CameraTypeController.add_cameraType)
+    .put('/cameraType/:id',CameraTypeController.edit_cameraType)
+    .delete('/cameraType/:id',CameraTypeController.delete_cameraType);
+
+//单位路由
+router.get('/unit', UnitController.find_unit)
+    .get('/unit/:id',UnitController.find_one)
+    .post('/unit',UnitController.add_unit)
+    .put('/unit/:id',UnitController.edit_unit)
+    .delete('/unit/:id',UnitController.delete_unit);
+
+//系统配置路由
+router.get('/config', ConfigController.find_config)
+    .get('/config/:id',ConfigController.find_one)
+    .post('/config',ConfigController.add_config)
+    .put('/config/:id',ConfigController.edit_config)
+    .delete('/config/:id',ConfigController.delete_config);
+
+//厂商路由
+router.get('/vendor', VendorController.find_vendor)
+    .get('/vendor/:id',VendorController.find_one)
+    .post('/vendor',VendorController.add_vendor)
+    .put('/vendor/:id',VendorController.edit_vendor)
+    .delete('/vendor/:id',VendorController.delete_vendor);
 
 //用户路由
 router.post('/user',UserController.create_user)

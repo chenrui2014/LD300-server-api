@@ -3,24 +3,24 @@
  */
 import logger from '../logger';
 
-import CameraService from '../services/cameraService';
+import UnitService from '../services/unitService';
 
-class CameraController {
-    static async add_camera(ctx){
+class UnitController {
+    static async add_unit(ctx){
         const data = ctx.request.body;
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        //const isExist = await CameraService.isExist({ip:data.ip})
-        //const isExist = await CameraModel.findOne({ip:data.ip});
+        const isExist = await UnitService.isExist({ip:data.ip})
+        //const isExist = await UnitModel.findOne({ip:data.ip});
 
-        //if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的摄像头ip已存在!' };
+        if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的单位ip已存在!' };
 
-        const result = await CameraService.add_camera(data)
+        const result = await UnitService.add_unit(data)
 
         let msg = '';
         if(result) {
-            msg = '添加摄像头'+ data.ip +'成功';
+            msg = '添加单位'+ data.ip +'成功';
             return ctx.body = {msg:msg,data:data};
         }else{
             msg = '添加失败';
@@ -29,31 +29,31 @@ class CameraController {
 
     }
 
-    static async delete_camera(ctx) {
+    static async delete_unit(ctx) {
         const { id } = ctx.params;
-        const result = await CameraService.delete_camera({id:id})
+        const result = await UnitService.delete_unit({id:id})
         let msg = '';
         if(result) {
-            msg = '删除摄像头成功';
+            msg = '删除单位成功';
             return ctx.body = {msg:msg,data:result};
         }else{
-            msg = '删除摄像头失败';
+            msg = '删除单位失败';
             return ctx.error={msg: msg};
         }
 
     }
 
-    static async edit_camera(ctx){
+    static async edit_unit(ctx){
         const data = ctx.request.body;
         logger.info(data);
         let _id = data._id;
         delete data._id;
-        const result = await CameraService.edit_camera({_id:_id},data);
-        if(result) return ctx.body = {msg:'修改摄像头成功',data:result};
-        return ctx.error={msg: '修改摄像头失败!'};
+        const result = await UnitService.edit_unit({_id:_id},data);
+        if(result) return ctx.body = {msg:'修改单位成功',data:result};
+        return ctx.error={msg: '修改单位失败!'};
     }
 
-    static async find_camera(ctx){
+    static async find_unit(ctx){
         const { sort,range,filter } = ctx.query;
         let sortObj = JSON.parse(sort);
         let rangeObj = JSON.parse(range);
@@ -73,18 +73,18 @@ class CameraController {
             pageEnd = rangeObj[1];
         }
 
-        const total = await CameraService.getTotal();
+        const total = await UnitService.getTotal();
 
         const pagination = {};
         pagination.pageStart = pageStart;
         pagination.pageSize = pageEnd-pageStart+1;
 
-        let result = await CameraService.find_camera(filterObj,sortP,pagination);
-        if(result) return ctx.body = {msg:'查询摄像头',data:result,total:total};
-        return ctx.error={msg: '没有找到摄像头!'};
+        let result = await UnitService.find_unit(filterObj,sortP,pagination);
+        if(result) return ctx.body = {msg:'查询单位',data:result,total:total};
+        return ctx.error={msg: '没有找到单位!'};
     }
 
-    static async find_camera_noPage(ctx){
+    static async find_unit_noPage(ctx){
         const { sort} = ctx.query;
         let sortObj = JSON.parse(sort);
         let sortP = {};
@@ -95,18 +95,18 @@ class CameraController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await CameraService.findAll(sortP);
-        if(result) return ctx.body = {msg:'查询摄像头',data:result};
-        return ctx.error={msg: '没有找到摄像头!'};
+        let result = await UnitService.findAll(sortP);
+        if(result) return ctx.body = {msg:'查询单位',data:result};
+        return ctx.error={msg: '没有找到单位!'};
     }
 
     static async find_one(ctx){
         const { id } = ctx.params;
-        const result = await CameraService.find_one(id);
-        if(result) ctx.body = {msg:'查询摄像头',data:result};
-        return ctx.error = {msg: '没有找到摄像头!'};
+        const result = await UnitService.find_one(id);
+        if(result) ctx.body = {msg:'查询单位',data:result};
+        return ctx.error = {msg: '没有找到单位!'};
     }
 
 }
 
-export default CameraController;
+export default UnitController;
