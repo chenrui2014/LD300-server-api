@@ -134,20 +134,18 @@ class MonitoringAreaController {
         const result = await MonitoringService.find_one(id);
         const hosts = await HostService.findAll();
 
-        result.forEach(function (e) {
-            hosts.forEach(function (host) {
-                if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+        hosts.forEach(function (host) {
+                if(result._doc.hostId === host._doc.id) result._doc.hostName = host._doc.hostName;
                 return;
-            });
         });
+
         const cameras = await CameraService.findAll();
 
-        result.forEach(function (e) {
-            cameras.forEach(function (camera) {
-                if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+        cameras.forEach(function (camera) {
+                if(result._doc.cameraId === camera._doc.id) result._doc.cameraName = camera._doc.name;
                 return;
-            });
         });
+
         if(result) return ctx.body = {msg:'查询监控区域',data:result};
         return ctx.body = {msg: '没有找到监控区域!'};
     }

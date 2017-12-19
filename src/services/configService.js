@@ -4,7 +4,7 @@
  */
 import logger from '../logger';
 import ConfigModel from '../models/config.model';
-import CameraTypeModel from "../models/cameraType.model";
+import uuidv1 from 'uuid/v1';
 // const logger=require('../logger');
 // const ConfigModel=require('../models/config.model');
 
@@ -16,9 +16,10 @@ class ConfigService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_config(data){
-        const id = await ConfigService.findMaxId();
-        data.id = Number(id) + 1;
+        //const id = await ConfigService.findMaxId();
+        //data.id = Number(id) + 1;
         // let config = new ConfigModel(data);
+        data.id = uuidv1();
         let success = false;
         await ConfigModel.create(data,function (err,config) {
             if(!err) {

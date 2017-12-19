@@ -115,6 +115,7 @@ router.get('/unit', UnitController.find_unit)
 
 //系统配置路由
 router.get('/config', ConfigController.find_config)
+    .get('/config_noPage',ConfigController.find_config_noPage)
     .get('/config/:id',ConfigController.find_one)
     .post('/config',ConfigController.add_config)
     .put('/config/:id',ConfigController.edit_config)
