@@ -3,7 +3,7 @@
  */
 import logger from '../logger';
 import PerimeterPointModel from '../models/perimeterPoint.model';
-import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
+import uuidv1 from 'uuid/v1';
 // const logger=require('../logger');
 // const PerimeterPointModel=require('../models/perimeterPoint.model');
 
@@ -14,9 +14,10 @@ class PerimeterPointService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_perimeterPoint(data){
-        const id = await PerimeterPointService.findMaxId();
-        data.id = Number(id) + 1;
+        // const id = await PerimeterPointService.findMaxId();
+        // data.id = Number(id) + 1;
         // let perimeterPoint = new PerimeterPointModel(data);
+        data.id = uuidv1();
         let success = false;
         await PerimeterPointModel.create(data,function (err,perimeterPoint) {
             if(!err) {
@@ -27,6 +28,16 @@ class PerimeterPointService {
             }
         });
 
+        return success;
+    }
+
+    static async add_list(data){
+        let success = true;
+        if(Array.isArray(data)){
+            for(let i = 0,len=data.length; i < len; i++) {
+                success =await PerimeterPointService.add_perimeterPoint(data[i]);
+            }
+        }
         return success;
     }
 

@@ -3,6 +3,7 @@
  */
 import logger from '../logger';
 import PerimeterPointService from "../services/perimeterPointService";
+import PerimeterService from '../services/perimeterService';
 import HostService from '../services/hostService';
 
 class PerimeterPointController {
@@ -10,15 +11,33 @@ class PerimeterPointController {
         const data = ctx.request.body;
         logger.info(data);
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExit = await PerimeterPointService.isExist({realPosition:data.realPosition});
-        logger.info(isExit);
-        if(isExit) return ctx.error={ msg: '该实际距离的周界点已存在!' };
+        // const isExit = await PerimeterPointService.isExist({realPosition:data.realPosition});
+        // logger.info(isExit);
+        // if(isExit) return ctx.error={ msg: '该实际距离的周界点已存在!' };
 
+        let perimeter = {name:data.name,status:1};
+        let perimeterId = await PerimeterService.add_perimeter(perimeter)
+        if(perimeterId != null){
+            return ctx.error={ msg: '添加周界失败!' };
+        }
+        let pps = [];
+        for(let i = 0,len=data.pp.length; i < len; i++) {
+            let perimeterPoint = {};
+            perimeterPoint.name = data.name;
+            perimeterPoint.x = data.pp[i].x;
+            perimeterPoint.y = data.pp[i].y;
+            perimeterPoint.No = data.pp[i].No;
+            perimeterPoint.mapPosition = data.pp[i].mapPosition;
+            perimeterPoint.realPosition = data.pp[i].realPosition;
+            perimeterPoint.perimeterId = perimeterId;
 
-        const result = PerimeterPointService.add_perimeterPoint(data);
+            pps.push(perimeterPoint);
+        }
+
+        const result = PerimeterPointService.add_list(pps);
         let msg = '';
         if(result) {
-            msg = '添加实际距离为'+ data.port +'的周界点成功';
+            msg = '添加周界'+data.name+'成功';
             return ctx.body = {msg:msg,data:data};
         }else{
             msg = '添加失败';
@@ -73,7 +92,7 @@ class PerimeterPointController {
 
         result.forEach(function (e) {
             hosts.forEach(function (host) {
-                if(e._doc.hostId === host._doc.id) e._doc.host = host._doc;
+                if(e._doc.perimeterId === host._doc.id) e._doc.host = host._doc;
                 return;
             });
         });
@@ -88,7 +107,7 @@ class PerimeterPointController {
 
         result.forEach(function (e) {
             hosts.forEach(function (host) {
-                if(e._doc.hostId === host._doc.id) e._doc.host = host._doc;
+                if(e._doc.perimeterId === host._doc.id) e._doc.host = host._doc;
                 return;
             });
         });
