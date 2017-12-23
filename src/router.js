@@ -14,6 +14,7 @@ import CameraTypeController from './controllers/cameraTypeController';
 import ConfigController from './controllers/configController';
 import VendorController from './controllers/vendorController';
 import UnitController from './controllers/unitController';
+import PpController from './controllers/ppController';
 import { isBearerAuthenticated, isLocalAuthenticated } from './lib/auth';
 
 import Router from 'koa-router';
@@ -70,6 +71,14 @@ router.get('/monitoringArea', MonitoringAreaController.find_monitoringArea)
     .post('/monitoringArea',MonitoringAreaController.add_monitoringArea)
     .put('/monitoringArea/:id',MonitoringAreaController.edit_monitoringArea)
     .delete('/monitoringArea/:id',MonitoringAreaController.delete_monitoringArea);
+
+//周界路由
+router.get('/pp', PpController.find_pp)
+    .get('/pp_noPage',PpController.find_pp_noPage)
+    .get('/pp/:id',PpController.find_one)
+    .post('/pp',PpController.add_pp)
+    .put('/pp/:id',PpController.edit_pp)
+    .delete('/pp/:id',PpController.delete_pp);
 
 //周界路由
 router.get('/perimeter', PerimeterController.find_perimeter)

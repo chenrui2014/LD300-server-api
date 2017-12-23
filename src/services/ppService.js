@@ -1,32 +1,32 @@
 import logger from '../logger';
-import PerimeterModel from '../models/perimeter.model';
+import PpModel from '../models/pp.model';
 import uuidv1 from 'uuid/v1';
 import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
 // const logger=require('../logger');
-// const PerimeterModel=require('../models/perimeter.model');
+// const PpModel=require('../models/pp.model');
 
-class PerimeterService {
+class PpService {
     /**
      * 添加一个周界
      * @param data 需要添加的周界数据
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
-    static async add_perimeter(data){
-        // const id = await PerimeterService.findMaxId();
+    static async add_pp(data){
+        // const id = await PpService.findMaxId();
         // data.id = Number(id) + 1;
-        // let perimeter = new PerimeterModel(data);
+        // let pp = new PpModel(data);
         data.id = uuidv1();
-        let perimeterId=null;
-        await PerimeterModel.create(data,function (err,perimeter) {
+        let ppId=null;
+        await PpModel.create(data,function (err,pp) {
             if(!err) {
-                perimeterId = perimeter._doc.id;
+                ppId = pp._doc.id;
                 logger.info('添加周界成功');
             }else{
                 logger.error(err.message);
             }
         });
 
-        return perimeterId;
+        return ppId;
     }
 
     /**
@@ -34,12 +34,12 @@ class PerimeterService {
      * @param conditions 删除条件
      * @returns {Promise.<boolean>}删除成功返回true，否则返回false；
      */
-    static async delete_perimeter(conditions) {
+    static async delete_pp(conditions) {
         let success = false;
-        const result = await PerimeterModel.remove(conditions,function (err,perimeter) {
+        const result = await PpModel.remove(conditions,function (err,pp) {
             if(!err) {
                 success = true;
-                logger.info('删除周界['+ perimeter.realPosition +']成功');
+                logger.info('删除周界['+ pp.realPosition +']成功');
             }else{
                 logger.error(err.message);
             }
@@ -53,9 +53,9 @@ class PerimeterService {
      * @param data 新的周界数据
      * @returns {Promise.<*>} 返回修改后的数据
      */
-    static async edit_perimeter(conditions,data){
+    static async edit_pp(conditions,data){
         let result = null;
-        result = await PerimeterModel.update(conditions,data).exec();
+        result = await PpModel.update(conditions,data).exec();
         return result;
     }
 
@@ -65,7 +65,7 @@ class PerimeterService {
      * @returns {Promise.<*>}
      */
     static async getTotal(conditions){
-        return await PerimeterModel.find(conditions).count();
+        return await PpModel.find(conditions).count();
 
     }
 
@@ -76,9 +76,9 @@ class PerimeterService {
      */
     static async findAll(sort){
         if(sort){
-            return await PerimeterModel.find().sort(sort);
+            return await PpModel.find().sort(sort);
         }else{
-            return await PerimeterModel.find();
+            return await PpModel.find();
         }
 
     }
@@ -90,20 +90,20 @@ class PerimeterService {
      * @param pagination 分页
      * @returns {Promise.<*>} 返回查询到的数据
      */
-    static async find_perimeter(conditions,sort,pagination){
+    static async find_pp(conditions,sort,pagination){
         let result = null;
         if(sort){
 
             if(pagination){
-                result = await PerimeterModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize).sort(sort);
+                result = await PpModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize).sort(sort);
             }else{
-                result = await PerimeterModel.find().sort(sort);
+                result = await PpModel.find().sort(sort);
             }
         }else{
             if(pagination){
-                result = await PerimeterModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize);
+                result = await PpModel.find(conditions).skip(pagination.pageStart).limit(pagination.pageSize);
             }else{
-                result = await PerimeterModel.find(conditions);
+                result = await PpModel.find(conditions);
             }
         }
 
@@ -116,7 +116,7 @@ class PerimeterService {
      * @returns {Promise.<*>}
      */
     static async find_one(id){
-        return await PerimeterModel.findOne({id:id});
+        return await PpModel.findOne({id:id});
     }
 
     /**
@@ -124,7 +124,7 @@ class PerimeterService {
      * @returns {Promise.<number>}
      */
     static async findMaxId(){
-        const result = await PerimeterModel.find().sort({id:-1}).limit(1);
+        const result = await PpModel.find().sort({id:-1}).limit(1);
         if(result && result.length > 0){
             return result[0]._doc.id;
         }else{
@@ -139,7 +139,7 @@ class PerimeterService {
      * @returns {Promise.<boolean>} 有符合条件的对象返回true，否则返回false
      */
     static async isExist(conditions){
-        const result = await PerimeterModel.find(conditions);
+        const result = await PpModel.find(conditions);
         if(result && result.length > 0){
             return true;
         }else{
@@ -149,4 +149,4 @@ class PerimeterService {
 
 }
 
-exports=module.exports=PerimeterService;
+exports=module.exports=PpService;

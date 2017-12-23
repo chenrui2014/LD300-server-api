@@ -12,10 +12,7 @@ const PerimeterSchema = new mongoose.Schema({
         index:{unique:true}
     },
     name:{
-        type:String,
-        isRequired:true,
-        unique:true,
-        index:{ unique: true }
+        type:String
     },
     status:{
         type:String
