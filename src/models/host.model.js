@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 const HostSchema = new mongoose.Schema({
 
     id:{
-        type:Number,
+        type:String,
         unique:true,
         isRequired:true,
         index:{unique:true}

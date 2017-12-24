@@ -3,7 +3,7 @@
  */
 import logger from '../logger';
 import HostModel from '../models/host.model';
-import EventModel from "../models/event.model";
+import uuidv1 from 'uuid/v1';
 // const logger =require('../logger');
 // const HostModel =require('../models/host.model');
 
@@ -14,9 +14,10 @@ class HostService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_host(data){
-        const id = await HostService.findMaxId();
-        data.id = Number(id) + 1;
+        // const id = await HostService.findMaxId();
+        // data.id = Number(id) + 1;
         // let host = new HostModel(data);
+        data.id = uuidv1();
         let success = false;
         await HostModel.create(data,function (err,host) {
             if(!err) {

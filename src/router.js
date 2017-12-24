@@ -81,11 +81,11 @@ router.get('/pp', PpController.find_pp)
     .delete('/pp/:id',PpController.delete_pp);
 
 //周界路由
-router.get('/perimeter', PerimeterController.find_perimeter)
-    .get('/perimeter/:id',PerimeterController.find_one)
-    .post('/perimeter',PerimeterController.add_perimeter)
-    .put('/perimeter/:id',PerimeterController.edit_perimeter)
-    .delete('/perimeter/:id',PerimeterController.delete_perimeter);
+router.get('/perimeter', PpController.find_pp)
+    .get('/perimeter/:id',PpController.find_one)
+    .post('/perimeter',PpController.add_pp)
+    .put('/perimeter/:id',PpController.edit_pp)
+    .delete('/perimeter/:id',PpController.delete_pp);
 
 //周界点路由
 router.get('/perimeterPoint', PerimeterPointController.find_perimeterPoint)
