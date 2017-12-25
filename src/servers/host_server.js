@@ -83,10 +83,11 @@ class HostServer extends  EventEmitter{
         });
     }
 
-    async _arrchive(id,hid){
+    async _arrchive(id,hid,evtID){
         let data=await this._IPCRequest(`/ipc/${id}/arrchive/${hid}?t=${new Date().getTime()})}`);
         if(data.type==='fault') await Promise.reject(this.error('录制视频失败',{innerError:data}));
-        return this.log('启用视频录制',{id,hid});
+        Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});
+        return this.log('启用视频录制',{id,hid,evtID});
     }
 
     async _stopArrchive(id,hid){
@@ -99,6 +100,7 @@ class HostServer extends  EventEmitter{
         this.log('收到主机报警指令',{innerEvent:evt});
         const hostID=evt.hid;
         let host=this._getHost(hostID);
+        Data.recordAlert({hid:hostID,id:evt.id,position:evt.position});
         host.monintors=[];
         let ms=await host.mointorHandle.getMointors(evt.position).catch(()=>{
             return Promise.resolve([]);
@@ -121,7 +123,7 @@ class HostServer extends  EventEmitter{
         _.forEach(ms,(msi)=>{
             factory.getIPC(msi.id).then((ipc)=>{
                 host.monintors.push(ipc);
-                this._arrchive(ipc.id,hostID).catch(e=>e);
+                this._arrchive(ipc.id,hostID,evt.id).catch(e=>e);
                 if(!ipc.supportAlarm&&!ipc.supportPTZ){
                     return;
                 }

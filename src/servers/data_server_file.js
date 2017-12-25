@@ -24,6 +24,14 @@ async function getIPC(id){
     return _.find(ipcs,(ipc)=>{return ipc.id===id;});
 }
 
+async function  recordAlert() {
+    return true;
+}
+
+async  function  recordAlertVideo() {
+    return true;
+}
+
 //根据摄像头第一个监控位置来排序，多个主机独立布线，独立排序
 async function getIPCIDsSortByPoint(){
     let ret=[];
@@ -39,8 +47,10 @@ async function getIPCIDsSortByPoint(){
 }
 
 exports=module.exports={
-    getHosts:getHosts,
-    getMointors:getMointors,
-    getIPC:getIPC,
-    getIPCIDsSortByPoint:getIPCIDsSortByPoint
+    getHosts,
+    getMointors,
+    getIPC,
+    getIPCIDsSortByPoint,
+    recordAlert,
+    recordAlertVideo
 };

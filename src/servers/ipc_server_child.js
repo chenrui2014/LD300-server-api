@@ -85,8 +85,8 @@ async function arrchive(res,id,hid) {
     logger.log('收到存档请求',{id,hid,fn:'arrchive'});
     let l=await getLive(id);
     if(!l) return fault(res,'arrchive','请求的摄像头不存在',{id,hid});
-    l.arrchive(hid).then((ok)=>{
-        return ok?succeed(res,'arrchive',{id,hid}):fault(res,'arrchive','发生内部错误，无法存档视频流或无法打开视频流',{id,hid},false);
+    l.arrchive(hid).then((path)=>{
+        return path?succeed(res,'arrchive',{id,hid,path}):fault(res,'arrchive','发生内部错误，无法存档视频流或无法打开视频流',{id,hid},false);
     });
 }
 
