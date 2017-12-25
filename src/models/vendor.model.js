@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const VendorSchema = new mongoose.Schema({
 
     id:{
-        type:Number,
+        type:String,
         unique:true,
         isRequired:true,
         index:{unique:true}
@@ -13,7 +13,10 @@ const VendorSchema = new mongoose.Schema({
         type:String
     },
     vendorCode:{
-        type:String
+        type:String,
+        unique:true,
+        isRequired:true,
+        index:{unique:true}
     },
     telephone:{
         type:String

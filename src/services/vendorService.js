@@ -4,7 +4,7 @@
  */
 import logger from '../logger';
 import VendorModel from '../models/vendor.model';
-import UnitModel from "../models/unit.model";
+import uuidv1 from 'uuid/v1';
 // const logger=require('../logger');
 // const VendorModel=require('../models/vendor.model');
 
@@ -16,9 +16,10 @@ class VendorService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_vendor(data){
-        const id = await VendorService.findMaxId();
-        data.id = Number(id) + 1;
+        // const id = await VendorService.findMaxId();
+        // data.id = Number(id) + 1;
         // let vendor = new VendorModel(data);
+        data.id = uuidv1();
         let success = false;
         await VendorModel.create(data,function (err,vendor) {
             if(!err) {

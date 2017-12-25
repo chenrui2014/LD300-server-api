@@ -11,7 +11,7 @@ const PresetSchema = new mongoose.Schema({
         isRequired:true,
         index:{unique:true}
     },
-    monitorId:Number,//监控区域ID
+    cameraId:String,//监控区域ID
     x:Number,//x坐标
     y:Number,//y坐标
     z:Number,//zoom缩放，ptz是三轴操作设备，提供x、y、zoom三轴，另外一个操作是调焦，一般支持自动对焦，不做设置

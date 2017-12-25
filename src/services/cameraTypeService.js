@@ -4,7 +4,7 @@
  */
 import logger from '../logger';
 import CameraTypeModel from '../models/cameraType.model';
-import CameraModel from "../models/camera.model";
+import uuidv1 from 'uuid/v1';
 // const logger=require('../logger');
 // const CameraTypeModel=require('../models/cameraType.model');
 
@@ -16,9 +16,10 @@ class CameraTypeService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_cameraType(data){
-        const id = await CameraTypeService.findMaxId();
-        data.id = Number(id) + 1;
+        // const id = await CameraTypeService.findMaxId();
+        // data.id = Number(id) + 1;
         // let cameraType = new CameraTypeModel(data);
+        data.id = uuidv1();
         let success = false;
         await CameraTypeModel.create(data,function (err,cameraType) {
             if(!err) {

@@ -3,6 +3,7 @@
  */
 
 import CaremaController from './controllers/cameraController';
+import CaremasController from './controllers/camerasController';
 import HostController from './controllers/hostController';
 import MonitoringAreaController from './controllers/monitoringAreaController';
 import PerimeterController from './controllers/perimeterController';
@@ -49,12 +50,20 @@ router.prefix('/api');
 //     });
 // };
 //摄像头路由
-router.get('/cameras',CaremaController.find_camera)
-    .get('/cameras_noPage',CaremaController.find_camera_noPage)
-    .get('/cameras/:id',CaremaController.find_one)
-    .post('/cameras',CaremaController.add_camera)
-    .put('/cameras/:id',CaremaController.edit_camera)
-    .delete('/cameras/:id',CaremaController.delete_camera);
+router.get('/camera',CaremaController.find_camera)
+    .get('/camera_noPage',CaremaController.find_camera_noPage)
+    .get('/camera/:id',CaremaController.find_one)
+    .post('/camera',CaremaController.add_camera)
+    .put('/camera/:id',CaremaController.edit_camera)
+    .delete('/camera/:id',CaremaController.delete_camera);
+
+//摄像头路由
+router.get('/cameras',CaremasController.find_cameras)
+    .get('/cameras_noPage',CaremasController.find_cameras_noPage)
+    .get('/cameras/:id',CaremasController.find_one)
+    .post('/cameras',CaremasController.add_cameras)
+    .put('/cameras/:id',CaremasController.edit_cameras)
+    .delete('/cameras/:id',CaremasController.delete_cameras);
 
 //主机路由
 router.get('/hosts', HostController.find_host)

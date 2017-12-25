@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const CameraTypeSchema = new mongoose.Schema({
 
     id:{
-        type:Number,
+        type:String,
         unique:true,
         isRequired:true,
         index:{unique:true}
@@ -13,7 +13,10 @@ const CameraTypeSchema = new mongoose.Schema({
         type:String
     },
     typeCode:{
-        type:String
+        type:String,
+        unique:true,
+        isRequired:true,
+        index:{unique:true}
     }
 
 });

@@ -3,25 +3,25 @@
  */
 import logger from '../logger';
 
-import CameraTypeService from '../services/cameraTypeService';
+import CamerasService from '../services/camerasService';
 import HostService from "../services/hostService";
 
-class CameraTypeController {
-    static async add_cameraType(ctx){
+class CamerasController {
+    static async add_cameras(ctx){
         const data = ctx.request.body;
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await CameraTypeService.isExist({typeCode:data.typeCode})
-        //const isExist = await CameraTypeModel.findOne({ip:data.ip});
+        //const isExist = await CamerasService.isExist({ip:data.ip})
+        //const isExist = await CamerasModel.findOne({ip:data.ip});
 
-        if(isExist) return ctx.error={ msg: '类型编码为[' + data.typeCode + ']的摄像头类型已存在!' };
+        //if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的摄像头ip已存在!' };
 
-        const result = await CameraTypeService.add_cameraType(data)
+        const result = await CamerasService.add_cameras(data)
 
         let msg = '';
         if(result) {
-            msg = '添加摄像头类型'+ data.typeCode +'成功';
+            msg = '添加摄像头'+ data.ip +'成功';
             return ctx.body = {msg:msg,data:data};
         }else{
             msg = '添加失败';
@@ -30,31 +30,31 @@ class CameraTypeController {
 
     }
 
-    static async delete_cameraType(ctx) {
+    static async delete_cameras(ctx) {
         const { id } = ctx.params;
-        const result = await CameraTypeService.delete_cameraType({id:id})
+        const result = await CamerasService.delete_cameras({id:id})
         let msg = '';
         if(result) {
-            msg = '删除摄像头类型成功';
+            msg = '删除摄像头成功';
             return ctx.body = {msg:msg,data:result};
         }else{
-            msg = '删除摄像头类型失败';
+            msg = '删除摄像头失败';
             return ctx.error={msg: msg};
         }
 
     }
 
-    static async edit_cameraType(ctx){
+    static async edit_cameras(ctx){
         const data = ctx.request.body;
         logger.info(data);
         let _id = data._id;
         delete data._id;
-        const result = await CameraTypeService.edit_cameraType({_id:_id},data);
-        if(result) return ctx.body = {msg:'修改摄像头类型成功',data:result};
-        return ctx.error={msg: '修改摄像头类型失败!'};
+        const result = await CamerasService.edit_cameras({_id:_id},data);
+        if(result) return ctx.body = {msg:'修改摄像头成功',data:result};
+        return ctx.error={msg: '修改摄像头失败!'};
     }
 
-    static async find_cameraType(ctx){
+    static async find_cameras(ctx){
         const { sort,range,filter } = ctx.query;
         let sortObj = null;
         if(sort){
@@ -75,6 +75,7 @@ class CameraTypeController {
                 filterObj = obj;
             }
         }
+
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
@@ -90,7 +91,7 @@ class CameraTypeController {
             pageEnd = rangeObj[1];
         }
 
-        const total = await CameraTypeService.getTotal();
+        const total = await CamerasService.getTotal();
 
         const pagination = {};
         pagination.pageStart = pageStart;
@@ -106,9 +107,9 @@ class CameraTypeController {
                 const pagination = {};
                 pagination.pageStart = pageStart;
                 pagination.pageSize = pageEnd-pageStart+25;
-                result = await CameraTypeService.find_cameraType(filterObj,sortP,pagination);
+                result = await CamerasService.find_cameras(filterObj,sortP,pagination);
             }else{
-                result = await CameraTypeService.find_cameraType(filterObj,sortP);
+                result = await CamerasService.find_cameras(filterObj,sortP);
             }
         }else{
             if(rangeObj){
@@ -120,17 +121,17 @@ class CameraTypeController {
                 const pagination = {};
                 pagination.pageStart = pageStart;
                 pagination.pageSize = pageEnd-pageStart+25;
-                result = await CameraTypeService.find_cameraType(filterObj,null,pagination);
+                result = await CamerasService.find_cameras(filterObj,null,pagination);
             }else{
-                result = await CameraTypeService.find_cameraType(filterObj);
+                result = await CamerasService.find_cameras(filterObj);
             }
         }
-        // let result = await CameraTypeService.find_cameraType(filterObj,sortP,pagination);
-        if(result) return ctx.body = {msg:'查询摄像头类型',data:result,total:total};
-        return ctx.error={msg: '没有找到摄像头类型!'};
+        // let result = await CamerasService.find_cameras(filterObj,sortP,pagination);
+        if(result) return ctx.body = {msg:'查询摄像头',data:result,total:total};
+        return ctx.error={msg: '没有找到摄像头!'};
     }
 
-    static async find_cameraType_noPage(ctx){
+    static async find_cameras_noPage(ctx){
         const { sort} = ctx.query;
         let sortObj = JSON.parse(sort);
         let sortP = {};
@@ -141,18 +142,25 @@ class CameraTypeController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await CameraTypeService.findAll(sortP);
-        if(result) return ctx.body = {msg:'查询摄像头类型',data:result};
-        return ctx.error={msg: '没有找到摄像头类型!'};
+        let result = await CamerasService.findAll(sortP);
+        if(result) return ctx.body = {msg:'查询摄像头',data:result};
+        return ctx.error={msg: '没有找到摄像头!'};
     }
 
     static async find_one(ctx){
         const { id } = ctx.params;
-        const result = await CameraTypeService.find_one(id);
-        if(result) ctx.body = {msg:'查询摄像头类型',data:result};
-        return ctx.error = {msg: '没有找到摄像头类型!'};
+        const result = await CamerasService.find_one(id);
+        if(result) ctx.body = {msg:'查询摄像头',data:result};
+        return ctx.error = {msg: '没有找到摄像头!'};
+    }
+
+    static async find_preset(ctx){
+        const {camera_id} = ctx.params;
+        const result = await CamerasService.find_one(id);
+        if(result) return ctx.body = {msg:'查询摄像头',data:result.preset};
+        return ctx.error={msg: '该摄像头没有预置点!'};
     }
 
 }
 
-export default CameraTypeController;
+export default CamerasController;

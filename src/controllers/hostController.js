@@ -3,6 +3,7 @@
  */
 import logger from '../logger';
 import HostService from '../services/hostService';
+import PpService from "../services/ppService";
 
 class HostsController {
     static async add_host(ctx){
@@ -71,9 +72,27 @@ class HostsController {
 
     static async find_host(ctx){
         const { sort,range,filter } = ctx.query;
-        let sortObj = JSON.parse(sort);
-        let rangeObj = JSON.parse(range);
-        let filterObj = JSON.parse(filter);
+
+        let sortObj = null;
+        if(sort){
+            sortObj = JSON.parse(sort);
+        }
+
+        let rangeObj = null;
+        if(range){
+            rangeObj = JSON.parse(range);
+        }
+
+        let filterObj = null;
+        if(filter && "{}" !==filter){
+            let obj = JSON.parse(filter);
+            if(obj && Array.isArray(obj.id)){
+                filterObj = {id:{$in:obj.id}};
+            }else{
+                filterObj = obj;
+            }
+        }
+
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
@@ -95,8 +114,38 @@ class HostsController {
             const pagination = {};
             pagination.pageStart = pageStart;
             pagination.pageSize = pageEnd-pageStart+1;
+            let result = null;
+            if(sortP){
+                if(rangeObj){
+                    let pageStart = 0,pageEnd = 0
+                    if(rangeObj && rangeObj.length >=2){
+                        pageStart = rangeObj[0];
+                        pageEnd = rangeObj[1];
+                    }
+                    const pagination = {};
+                    pagination.pageStart = pageStart;
+                    pagination.pageSize = pageEnd-pageStart+25;
+                    result = await HostService.find_host(filterObj,sortP,pagination);
+                }else{
+                    result = await HostService.find_host(filterObj,sortP);
+                }
+            }else{
+                if(rangeObj){
+                    let pageStart = 0,pageEnd = 0
+                    if(rangeObj && rangeObj.length >=2){
+                        pageStart = rangeObj[0];
+                        pageEnd = rangeObj[1];
+                    }
+                    const pagination = {};
+                    pagination.pageStart = pageStart;
+                    pagination.pageSize = pageEnd-pageStart+25;
+                    result = await HostService.find_host(filterObj,null,pagination);
+                }else{
+                    result = await HostService.find_host(filterObj);
+                }
+            }
 
-            let result = await HostService.find_host(filterObj,sortP,pagination);
+            // let result = await HostService.find_host(filterObj,sortP,pagination);
             if(result) return ctx.body = {msg:'查询主机',data:result,total:total};
             return ctx.body={msg: '没有找到主机!'};
         }catch(error){
