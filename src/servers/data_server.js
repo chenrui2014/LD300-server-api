@@ -104,11 +104,13 @@ async function getIPCIDsSortByPoint(){
     return ipcIds;
 }
 
+//记录警报
 async function  recordAlert(record) {
     //属性id，hid(主机id),position(报警位置)
 }
 
-async function recordAlertVideo() {
+//用于事件调用摄像头记录下的路线
+async function recordAlertVideo(record) {
     //属性id(同recordalert中的id，为事件编号)，path,pid(摄像头id),hid(主机id)
 
 }
