@@ -5,6 +5,7 @@ import logger from '../logger';
 import MonitoringService from '../services/monitoringService';
 import HostService from '../services/hostService';
 import CameraService from '../services/cameraService';
+import CameraTypeService from "../services/cameraTypeService";
 
 class MonitoringAreaController {
     static async add_monitoringArea(ctx){
@@ -52,9 +53,28 @@ class MonitoringAreaController {
 
     static async find_monitoringArea(ctx){
         const { sort,range,filter } = ctx.query;
-        let sortObj = JSON.parse(sort);
-        let rangeObj = JSON.parse(range);
-        let filterObj = JSON.parse(filter);
+        // let sortObj = JSON.parse(sort);
+        // let rangeObj = JSON.parse(range);
+        // let filterObj = JSON.parse(filter);
+        let sortObj = null;
+        if(sort){
+            sortObj = JSON.parse(sort);
+        }
+
+        let rangeObj = null;
+        if(range){
+            rangeObj = JSON.parse(range);
+        }
+
+        let filterObj = null;
+        if(filter && "{}" !==filter){
+            let obj = JSON.parse(filter);
+            if(obj && Array.isArray(obj.id)){
+                filterObj = {id:{$in:obj.id}};
+            }else{
+                filterObj = obj;
+            }
+        }
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
@@ -77,23 +97,54 @@ class MonitoringAreaController {
         pagination.pageStart = pageStart;
         pagination.pageSize = pageEnd-pageStart+1;
 
-        let result = await MonitoringService.find_monitoringArea(filterObj,sortP,pagination);
-        const hosts = await HostService.findAll();
+        let result = null;
+        if(sortP){
+            if(rangeObj){
+                let pageStart = 0,pageEnd = 0
+                if(rangeObj && rangeObj.length >=2){
+                    pageStart = rangeObj[0];
+                    pageEnd = rangeObj[1];
+                }
+                const pagination = {};
+                pagination.pageStart = pageStart;
+                pagination.pageSize = pageEnd-pageStart+25;
+                result = await MonitoringService.find_monitoringArea(filterObj,sortP,pagination);
+            }else{
+                result = await MonitoringService.find_monitoringArea(filterObj,sortP);
+            }
+        }else{
+            if(rangeObj){
+                let pageStart = 0,pageEnd = 0
+                if(rangeObj && rangeObj.length >=2){
+                    pageStart = rangeObj[0];
+                    pageEnd = rangeObj[1];
+                }
+                const pagination = {};
+                pagination.pageStart = pageStart;
+                pagination.pageSize = pageEnd-pageStart+25;
+                result = await MonitoringService.find_monitoringArea(filterObj,null,pagination);
+            }else{
+                result = await MonitoringService.find_monitoringArea(filterObj);
+            }
+        }
 
-        result.forEach(function (e) {
-            hosts.forEach(function (host) {
-                if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
-                return;
-            });
-        });
-        const cameras = await CameraService.findAll();
-
-        result.forEach(function (e) {
-            cameras.forEach(function (camera) {
-                if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
-                return;
-            });
-        });
+        // let result = await MonitoringService.find_monitoringArea(filterObj,sortP,pagination);
+        // const hosts = await HostService.findAll();
+        //
+        // result.forEach(function (e) {
+        //     hosts.forEach(function (host) {
+        //         if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
+        //         return;
+        //     });
+        // });
+        // const cameras = await CameraService.findAll();
+        //
+        // result.forEach(function (e) {
+        //     cameras.forEach(function (camera) {
+        //         if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
+        //         return;
+        //     });
+        // });
         if(result) return ctx.body = {msg:'查询监控区域',data:result,total:total};
         return ctx.body={msg: '没有找到监控区域!'};
     }

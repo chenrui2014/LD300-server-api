@@ -10,7 +10,8 @@
 const HostService =require('../services/hostService');
 const MonitoringService =require('../services/monitoringService');
 const PresetService =require('../services/PresetService');
-const CameraService =require('../services/cameraService');
+const CamerasService =require('../services/camerasService');
+const PerimeterService = require('../services/ppService');
 
 const _=require('lodash');
 const config=global.server_config||require('../config/config');
@@ -40,12 +41,13 @@ async function getHosts()
 async function getMointors(hostID,distance){
     //MonitoringAreaSchema条件 hostid==host && min<=distance&&distance<=max
     let monitorArea = {};
-    const monitors = await MonitoringService.find_monitoringArea({hostId:hostID,min:{$lte:distance},max:{$gte:distance}});//获得监控区域
+    const perimeters = await PerimeterService.find_perimeter({hostId:hostID});
+    const monitors = await MonitoringService.find_monitoringArea({perimeterId:{$in:perimeters},min:{$lte:distance},max:{$gte:distance}});//获得监控区域
     monitorArea.id = hostID;
     monitorArea.monitors = monitors;
 
     monitors.forEach(async function (monitor) {
-        const camera = await CameraService.find_one(monitors.cameraId);//获得关联摄像头
+        const camera = await CamerasService.find_one(monitors.cameraId);//获得关联摄像头
         const presets = await PresetService.find_preset({monitorId:monitor.id});
         let m = {id:camera.id,demo:camera.ptz,alarm:camera.alarm,audio:camera.audio,min:monitor.min,max:monitor.max};
         m.presets = presets;
@@ -79,13 +81,13 @@ function transformIPC(ipc) {
 
 //数据格式transformIPC
 async function getIPC(id){
-    let ipc= await CameraService.find_one(id);//实现
+    let ipc= await CamerasService.find_one(id);//实现
     if(!ipc) await Promise.reject();
     return transformIPC(ipc);
 }
 
 async function getAllIPC(){
-    let ipcs= await CameraService.findAll({id:1});
+    let ipcs= await CamerasService.findAll({id:1});
     let ipcList=[];
     ipcs.forEach(function (ipc) {
         ipcList.push(ipc._doc);
@@ -96,7 +98,7 @@ async function getAllIPC(){
 //数据格式[1,2,3,4,5]
 async function getIPCIDsSortByPoint(){
     //查询出所有摄像头的编号返回即可，根据摄像头的编号排序基本没问题
-    let ipcs= await CameraService.findAll({id:1});
+    let ipcs= await CamerasService.findAll({id:1});
     let ipcIds=[];
     ipcs.forEach(function (ipc) {
         ipcIds.push(ipc._doc.id);

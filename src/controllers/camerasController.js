@@ -142,7 +142,7 @@ class CamerasController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await CamerasService.findAll(sortP);
+        let result = await CamerasService.find_cameras(null,sortP,null);
         if(result) return ctx.body = {msg:'查询摄像头',data:result};
         return ctx.error={msg: '没有找到摄像头!'};
     }
