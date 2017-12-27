@@ -13,9 +13,10 @@ class CamerasService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_cameras(data){
-        // const id = await CamerasService.findMaxId();
-        data.id = uuidv1();
-        // data.id = id + 1;
+        const id = await CamerasService.findMaxId();
+        //data.id = uuidv1();
+        //data.num = num+1;
+         data.id = id + 1;
         //let cameras = new CamerasModel(data);
         let success = false;
         await CamerasModel.create(data,function (err,cameras) {
@@ -120,7 +121,7 @@ class CamerasService {
         return result;
     }
     /**
-     * 获得ID最大值
+     * 获得num最大值
      * @returns {Promise.<number>}
      */
     static async findMaxId(){

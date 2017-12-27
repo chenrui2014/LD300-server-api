@@ -12,6 +12,7 @@ const MonitoringService =require('../services/monitoringService');
 const PresetService =require('../services/PresetService');
 const CamerasService =require('../services/camerasService');
 const PerimeterService = require('../services/ppService');
+const VendorService = require('../services/vendorService');
 
 const _=require('lodash');
 const config=global.server_config||require('../config/config');
@@ -58,6 +59,7 @@ async function getMointors(hostID,distance){
 }
 
 function transformIPC(ipc) {
+
     return {
         id:ipc.id,
         ip:ipc.ip,
@@ -83,6 +85,12 @@ function transformIPC(ipc) {
 async function getIPC(id){
     let ipc= await CamerasService.find_one(id);//实现
     if(!ipc) await Promise.reject();
+    let vendor = await VendorService.find_one(ipc.brand);
+    if(vendor) {
+        ipc.brand = vendor.vendorCode;
+        logger.log('摄像头厂商',vendor.vendorCode);
+        console.log('摄像头厂商'+vendor.vendorCode);
+    }
     return transformIPC(ipc);
 }
 

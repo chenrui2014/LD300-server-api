@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 const CamerasSchema = new mongoose.Schema({
 
     id:{
-        type:String,
+        type:Number,
         unique:true,
         isRequired:true,
         index:{unique:true}
@@ -26,6 +26,7 @@ const CamerasSchema = new mongoose.Schema({
         type:String,
         isRequired:true
     },
+    //num:{type:Number},//序号
     user:{type:String,default:"admin"},//摄像头用户名
     pwd:{type:String,default:"admin"},//摄像头密码
     ptz:Boolean,//是否有云台功能，即是否是球机
