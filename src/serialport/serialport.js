@@ -206,7 +206,7 @@ class Com extends EventEmitter{
             this.serialPort.close((err)=>{
                 if(err){
                     let data=this._error(_Errors.closeError,'端口关闭异常',{innerError:err.toString()});
-                    this.emit(_Events.error,data)
+                    this.emit(_Events.error,data);
                     return reject(data);
                 }
                 this.log('端口应要关闭');
