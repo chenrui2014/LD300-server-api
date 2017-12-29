@@ -155,6 +155,21 @@ async function freePTZ(res,id,params) {
     return fault(res,'freePTZ','不具备PTZ的控制权',{id,handle});
 }
 
+async function getPoint(res,id){
+    logger.log('收到获取球机坐标申请',{id});
+    let ipc=await IPCFactory.getIPC(id).catch(()=>{
+        return Promise.resolve(null);
+    });
+    if(!ipc)return fault(res,'getPoint','请求的摄像头不存在',{id});
+    let xyz=await ipc.getPoint().catch((e)=>{
+        return Promise.resolve({innerError:e});
+    });
+    if('innerError' in xyz){
+        return fault(res,'getPoint','getPoint方法内部发生错误',{id,innerError:xyz.innerError});
+    }
+    return succeed(res,'getPoint',xyz);
+}
+
 const server=http.createServer();
 /*server.on('upgrade', (req, socket, head) => {
     console.log('upgrade');
@@ -178,7 +193,7 @@ server.on('request',(req,res)=>{
     let id=paths[1]-0;
     let fun=paths[2];
     let index;
-    if((index=['live','stoparrchive','ptz','freeptz','arrchive'].indexOf(_.toLower(fun)))===-1){
+    if((index=['live','stoparrchive','ptz','freeptz','arrchive','getPoint'].indexOf(_.toLower(fun)))===-1){
         res.statusCode = 404;
         return res.end();
     }
@@ -197,6 +212,9 @@ server.on('request',(req,res)=>{
     }
     if(index===4){
         return arrchive(res,id,paths[3]);
+    }
+    if(index===5){
+        return getPoint(res,id);
     }
 
     logger.warn('未知的方法请求',{fun,uri});
