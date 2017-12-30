@@ -2,57 +2,171 @@
  * Created by chen on 17-8-23.
  */
 import logger from '../logger';
-import EventModel from '../models/event.model';
+
+import EventService from '../services/eventService';
 
 class EventController {
     static async add_event(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        if(!data) return ctx.body={ msg: '发送数据失败!' };
-        const isExit = await EventModel.findOne({ip:data.fields.ip});
-        logger.info(isExit);
-        if(isExit) return ctx.body={ msg: 'ID冲突!' };
 
-        let event = new EventModel(data.fields);
-        logger.info(event);
+        if(!data) return ctx.error={ msg: '发送数据失败!' };
+        const isExist = await EventService.isExist({typeCode:data.typeCode})
+        //const isExist = await EventModel.findOne({ip:data.ip});
+
+        if(isExist) return ctx.error={ msg: '类型编码为[' + data.typeCode + ']的事件已存在!' };
+
+        const result = await EventService.add_event(data)
+
         let msg = '';
-        event.save(function (err,event) {
-            if(!err) {
-                msg = '添加事件'+ event.name +'成功';
-            }else{
-                msg = err;
-            }
-        });
+        if(result) {
+            msg = '添加事件'+ data.typeCode +'成功';
+            return ctx.body = {msg:msg,data:data};
+        }else{
+            msg = '添加失败';
+            return ctx.error={msg: msg};
+        }
 
-        return ctx.body = {msg:msg,data:event};
     }
 
     static async delete_event(ctx) {
         const { id } = ctx.params;
-        logger.info(id);
-        const result = await EventModel.findByIdAndRemove(id).exec();
-        if(!result) return ctx.error={msg: '删除事件失败!'};
-        return ctx.body = {msg:'删除事件成功',data:result};
+        const result = await EventService.delete_event({id:id})
+        let msg = '';
+        if(result) {
+            msg = '删除事件成功';
+            return ctx.body = {msg:msg,data:result};
+        }else{
+            msg = '删除事件失败';
+            return ctx.error={msg: msg};
+        }
+
     }
 
     static async edit_event(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        const result = await EventModel.update(data,{id:data.id}).exec();
-        if(!result) return ctx.error={msg: '修改事件失败!'};
-        return ctx.body = {msg:'修改事件成功',data:result};
+        let _id = data._id;
+        delete data._id;
+        const result = await EventService.edit_event({_id:_id},data);
+        if(result) return ctx.body = {msg:'修改事件成功',data:result};
+        return ctx.error={msg: '修改事件失败!'};
     }
 
     static async find_event(ctx){
-        const result = await EventModel.find().exec();
-        if(!result) return ctx.body={msg: '没有找到事件!'};
-        return ctx.body = {msg:'查询事件',data:result};
+        const { sort,range,filter } = ctx.query;
+        let sortObj = null;
+        if(sort){
+            sortObj = JSON.parse(sort);
+        }
+
+        let rangeObj = null;
+        if(range){
+            rangeObj = JSON.parse(range);
+        }
+
+        let filterObj = null;
+        if(filter && "{}" !==filter){
+            let obj = JSON.parse(filter);
+            if(obj && Array.isArray(obj.id)){
+                filterObj = {id:{$in:obj.id}};
+            }else{
+                filterObj = obj;
+            }
+        }
+        let sortP = {};
+        if(sortObj && sortObj.length >=2){
+            if('ASC' ===sortObj[1]){
+                sortP[sortObj[0]] = 1
+            }else{
+                sortP[sortObj[0]] = -1
+            }
+        }
+
+        let pageStart = 0,pageEnd = 0
+        if(rangeObj && rangeObj.length >=2){
+            pageStart = rangeObj[0];
+            pageEnd = rangeObj[1];
+        }
+
+        const total = await EventService.getTotal();
+
+        const pagination = {};
+        pagination.pageStart = pageStart;
+        pagination.pageSize = pageEnd-pageStart+1;
+        let result = null;
+        if(sortP){
+            if(rangeObj){
+                let pageStart = 0,pageEnd = 0
+                if(rangeObj && rangeObj.length >=2){
+                    pageStart = rangeObj[0];
+                    pageEnd = rangeObj[1];
+                }
+                const pagination = {};
+                pagination.pageStart = pageStart;
+                pagination.pageSize = pageEnd-pageStart+25;
+                result = await EventService.find_event(filterObj,sortP,pagination);
+            }else{
+                result = await EventService.find_event(filterObj,sortP);
+            }
+        }else{
+            if(rangeObj){
+                let pageStart = 0,pageEnd = 0
+                if(rangeObj && rangeObj.length >=2){
+                    pageStart = rangeObj[0];
+                    pageEnd = rangeObj[1];
+                }
+                const pagination = {};
+                pagination.pageStart = pageStart;
+                pagination.pageSize = pageEnd-pageStart+25;
+                result = await EventService.find_event(filterObj,null,pagination);
+            }else{
+                result = await EventService.find_event(filterObj);
+            }
+        }
+        // let result = await EventService.find_event(filterObj,sortP,pagination);
+        if(result) return ctx.body = {msg:'查询事件',data:result,total:total};
+        return ctx.error={msg: '没有找到事件!'};
     }
+
+    static async find_eventVideo(ctx){
+        const {filter } = ctx.query;
+        let filterObj = null;
+        if(filter && "{}" !==filter){
+            let obj = JSON.parse(filter);
+            if(obj && Array.isArray(obj.id)){
+                filterObj = {id:{$in:obj.id}};
+            }else{
+                filterObj = obj;
+            }
+        }
+
+        let result = await EventService.find_event(filterObj);
+        if(result) return ctx.body = {msg:'查询事件',data:result};
+
+    }
+
+    static async find_event_noPage(ctx){
+        const { sort} = ctx.query;
+        let sortObj = JSON.parse(sort);
+        let sortP = {};
+        if(sortObj && sortObj.length >=2){
+            if('ASC' ===sortObj[1]){
+                sortP[sortObj[0]] = 1
+            }else{
+                sortP[sortObj[0]] = -1
+            }
+        }
+        let result = await EventService.find_event(null,sortP,null);
+        if(result) return ctx.body = {msg:'查询事件',data:result};
+        return ctx.error={msg: '没有找到事件!'};
+    }
+
     static async find_one(ctx){
         const { id } = ctx.params;
-        const result = await EventModel.findOne({id:id}).exec();
-        if(!result) return ctx.body = {msg: '没有找到事件!'};
-        return ctx.body = {msg:'查询事件',data:result};
+        const result = await EventService.find_one(id);
+        if(result) ctx.body = {msg:'查询事件',data:result};
+        return ctx.error = {msg: '没有找到事件!'};
     }
 
 }

@@ -13,6 +13,8 @@ const PresetService =require('../services/PresetService');
 const CamerasService =require('../services/camerasService');
 const PerimeterService = require('../services/ppService');
 const VendorService = require('../services/vendorService');
+const EventService = require('../services/eventService');
+const moment = require('moment');
 
 const _=require('lodash');
 const config=global.server_config||require('../config/config');
@@ -120,12 +122,45 @@ async function getIPCIDsSortByPoint(){
 //记录警报
 async function  recordAlert(record) {
     //属性id，hid(主机id),position(报警位置)
+    let result = await EventService.find_one(record.id);
+    if(result){
+        await EventService.edit_event({id:record.id},{position:record.position,hid:record.hid});
+    }else{
+        let event = {};
+        event.id = record.id;
+        event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+        event.position = record.position;
+        event.hid = record.hid;
+
+        await EventService.add_event(event);
+    }
+
 }
 
 //用于事件调用摄像头记录下的路线
 async function recordAlertVideo(record) {
     //属性id(同recordalert中的id，为事件编号)，path,pid(摄像头id),hid(主机id)
+    let result = await EventService.find_one(record.id);
+    if(result){
+        await EventService.edit_event({id:record.id},{path:record.path,pid:record.pid,hid:record.hid});
+    }else{
+        let event = {};
+        event.id = record.id;
+        event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+        event.position = record.position;
+        event.hid = record.hid;
 
+        await EventService.add_event(event);
+    }
+    let event = {};
+    event.id = record.id;
+    event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+    event.pid = record.pid;
+    event.hid = record.hid;
+}
+
+async function eventRecord(){
+    let alert = await recordAlert();
 }
 
 

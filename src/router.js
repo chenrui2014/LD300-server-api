@@ -112,6 +112,7 @@ router.get('/preset', PresetController.find_preset)
 
 //事件路由
 router.get('/event', EventController.find_event)
+    .get('/eventVideo', EventController.find_eventVideo)
     .get('/event/:id',EventController.find_one)
     .post('/event',EventController.add_event)
     .put('/event/:id',EventController.edit_event)
@@ -119,6 +120,7 @@ router.get('/event', EventController.find_event)
 
 //摄像头类型路由
 router.get('/cameraType', CameraTypeController.find_cameraType)
+    .get('/cameraType_noPage',CameraTypeController.find_cameraType_noPage)
     .get('/cameraType/:id',CameraTypeController.find_one)
     .post('/cameraType',CameraTypeController.add_cameraType)
     .put('/cameraType/:id',CameraTypeController.edit_cameraType)

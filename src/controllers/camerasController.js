@@ -4,7 +4,7 @@
 import logger from '../logger';
 
 import CamerasService from '../services/camerasService';
-import HostService from "../services/hostService";
+import CameraTypeService from "../services/cameraTypeService";
 
 class CamerasController {
     static async add_cameras(ctx){
@@ -143,6 +143,18 @@ class CamerasController {
             }
         }
         let result = await CamerasService.find_cameras(null,sortP,null);
+        let camTypes = await CameraTypeService.find_cameraType(null,null,null);
+        result.forEach(function (e) {
+            camTypes.forEach(function (ct) {
+                if(e._doc.type === ct._doc.id) {
+                    if(ct._doc.typeCode === '002'){
+                        e._doc.isDemo = true;
+                    }else{
+                        e._doc.isDemo = false;
+                    }
+                }
+            });
+        });
         if(result) return ctx.body = {msg:'查询摄像头',data:result};
         return ctx.error={msg: '没有找到摄像头!'};
     }

@@ -12,22 +12,20 @@ const EventSchema = new mongoose.Schema({
         index:{unique:true}
     },
 
-    happenTime:{
+    happenTime:{//发生时间
         type:Date,
         isRequired:true
     },
-    position:{
-        type:String,
-        isRequired:true
-    },
-    eventType:{
-        type:String,
-        isRequired:true
-    },
-    eventHandler:{
+    position:{//触警位置
         type:String
     },
-    eventRecord:{
+    pid:{type:Number},//关联摄像头
+    hid:{type:String},//关联主机
+    path:{type:String},//录像存放路径
+    eventType:{//事件类型
+        type:String
+    },
+    eventHandler:{//事件处理人
         type:String
     }
 });

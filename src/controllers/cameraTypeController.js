@@ -4,7 +4,6 @@
 import logger from '../logger';
 
 import CameraTypeService from '../services/cameraTypeService';
-import HostService from "../services/hostService";
 
 class CameraTypeController {
     static async add_cameraType(ctx){
@@ -141,7 +140,7 @@ class CameraTypeController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await CameraTypeService.findAll(sortP);
+        let result = await CameraTypeService.find_cameraType(null,sortP,null);
         if(result) return ctx.body = {msg:'查询摄像头类型',data:result};
         return ctx.error={msg: '没有找到摄像头类型!'};
     }
