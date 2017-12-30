@@ -39,6 +39,7 @@ const CamerasSchema = new mongoose.Schema({
     brand:{//生产厂商
         type:String
     },
+    serial_port:{type:String},
     onvif_port:{type:Number},//协议端口
     onvif_user:{type:String},
     onvif_pwd:{type:String},

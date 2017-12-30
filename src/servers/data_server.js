@@ -68,7 +68,7 @@ function transformIPC(ipc) {
         pwd:ipc.pwd,
         brand:setBrands[ipc.brand],
         ptz:{
-            port:serial_port
+            port:ipc.serial_port
         },
         functions:{
             ptz:ipc.ptz,
