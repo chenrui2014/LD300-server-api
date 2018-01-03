@@ -193,7 +193,7 @@ server.on('request',(req,res)=>{
     let id=paths[1]-0;
     let fun=paths[2];
     let index;
-    if((index=['live','stoparrchive','ptz','freeptz','arrchive','getPoint'].indexOf(_.toLower(fun)))===-1){
+    if((index=['live','stoparrchive','ptz','freeptz','arrchive','getpoint'].indexOf(_.toLower(fun)))===-1){
         res.statusCode = 404;
         return res.end();
     }

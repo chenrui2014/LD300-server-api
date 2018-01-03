@@ -41,7 +41,7 @@ describe('直播子进程http服务测试',()=>{
     let dbInstance=null;
     before(async ()=>{
         //打开注释启动数据库取数据
-        dbInstance=await db();
+        dbInstance=await file();
     });
 
     after(async ()=>{
@@ -89,6 +89,12 @@ describe('直播子进程http服务测试',()=>{
         send('/ipc/5/arrchive/1').then((data)=>{
             expect(data.type).equal('succeed');
             setTimeout(stop,2000);
+        });
+    });
+
+    it('获取球机xyz',(done)=>{
+        send('/ipc/5/getpoint').then((data)=>{
+            done();
         });
     });
 
