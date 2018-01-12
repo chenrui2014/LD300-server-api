@@ -371,23 +371,34 @@ class DHIPC extends IPC{
         dhlib.removeListener('reconnected',this._reConnectFn);
     }
 
-    async _PTZ(cmd,p1,p2,p3=0,param4=null,stopCmd=true,stop=false){
+    async _PTZ(cmdCode,p1,p2,p3=0,param4=null,stop=false){
         if(!this.supportPTZ) return await Promise.reject(this._error('_PTZ','设备不支持PTZ操作'));
         await this.connect();
-        let stopCMD=_.bind(dhlib.functions.CLIENT_DHPTZControlEx2,null,this._loginID,this._channel,cmd,p1,p2,p3,true,ref.NULL);
-        if(dhlib.functions.CLIENT_DHPTZControlEx2(this._loginID,this._channel,cmd,p1,p2,p3,false,(param4?param4.ref():ref.NULL))){
-            if(stopCmd||stop)this._stopCmd=stopCMD;
-            if(stop) setTimeout(this.ptzStop.bind(this),100);
-            this.log(`成功执行PTZ操作,操作：${cmd}`);
+        let cmd=_.bind(dhlib.functions.CLIENT_DHPTZControlEx2,null,_,_,cmdCode.valueOf(),p1,p2,p3,_,(param4?param4.ref():ref.NULL));
+        if(cmd(this._loginID,this._channel,false)){
+            this.log(`成功执行PTZ操作,操作：${cmdCode.toString()}`);
+            if(!stop) this._stopCmd = cmd;
+            else {
+                this._stopCmd=null;
+                return new Promise((resolve,reject)=>{
+                    setTimeout(()=>{
+                        cmd(this._loginID,this._channel,true);
+                        this.disConnect().then(resolve).catch(reject);
+                    },10);
+                });
+            }
             //return;
         }
         else{
             /*let error=*/this._error('ptz操作错误');
             //this.emit(IPC.Events.Error,error);
             //return await Promise.reject(error);
+
         }
         await this.disConnect();
+
     }
+
 
     async ptzStop(){
         if(this._stopCmd===null){
@@ -395,7 +406,10 @@ class DHIPC extends IPC{
         }
         let cmd=this._stopCmd;
         this._stopCmd=null;
-        if(cmd()){
+        await this.connect();
+        let ok=cmd(this._loginID,this._channel,false)&&cmd(this._loginID,this._channel,true);
+        await this.disConnect();
+        if(ok){
             return this.log('成功执行PTZ停止操作');
         }
         let error=this._error('停止ptz操作错误');
@@ -404,27 +418,27 @@ class DHIPC extends IPC{
     }
 
     async zoomAdd(stop) {
-        return await this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,this.zoom_speed,0,null,!stop,stop);
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,this.zoom_speed,0,null,stop);
     }
 
     async zoomDec(stop) {
-        return await this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_DEC,0,this.zoom_speed,0,null,!stop,stop);
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_ZOOM_DEC,0,this.zoom_speed,0,null,stop);
     }
 
     async focusAdd(stop) {
-        return await this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_ADD,0,this.focus_speed,0,null,!stop,stop);
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_ADD,0,this.focus_speed,0,null,stop);
     }
 
     async focusDec(stop) {
-        return await this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_DEC,0,this.focus_speed,0,null,!stop,stop);
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_FOCUS_DEC,0,this.focus_speed,0,null,stop);
     }
 
     async apertureAdd(stop){
-        return await this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_ADD,0,this.aperture_speed,0,null,!stop,stop);
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_ADD,0,this.aperture_speed,0,null,stop);
     }
 
     async apertureDec(stop) {
-        return await this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_DEC,0,this.aperture_speed,0,null,!stop,stop);
+        return await this._PTZ(dhlib.enums.PTZ.PTZ_APERTURE_DEC,0,this.aperture_speed,0,null,stop);
     }
 
     async move(direction,stop){
@@ -456,7 +470,7 @@ class DHIPC extends IPC{
                 direction=-1;break;
             }
         }
-        return await this._PTZ(direction,this.v_speed,this.h_speed,0,null,!stop,stop);
+        return await this._PTZ(direction,this.v_speed,this.h_speed,0,null,stop);
     }
 
     async moveToPoint(x,y,z){
@@ -464,7 +478,7 @@ class DHIPC extends IPC{
             stuPosition:new dhlib.structs.PTZ_SPACE_UNIT({nPositionX:x,nPositionY:y,nZoom:z}),
             stuSpeed:new dhlib.structs.PTZ_SPEED_UNIT({fPositionX:1.0,fPositionY:1.0,fZoom:1.0})
         });
-        return await this._PTZ(dhlib.enums.PTZ.EXTPTZ_MOVE_ABSOLUTELY,0,0,0,pos,false);
+        return await this._PTZ(dhlib.enums.PTZ.EXTPTZ_MOVE_ABSOLUTELY,0,0,0,pos);
     }
 
     async moveToPreset(pt){
@@ -474,7 +488,7 @@ class DHIPC extends IPC{
             return await Promise.reject(error);
         }
         if(pt.preset){
-            return await this._PTZ(dhlib.enums.PTZ.PTZ_POINT_MOVE,0,pt.preset,0,null,false);
+            return await this._PTZ(dhlib.enums.PTZ.PTZ_POINT_MOVE,0,pt.preset,0);
         }
         else{
             return await this.moveToPoint(pt.x,pt.y,pt.z);
@@ -493,7 +507,7 @@ class DHIPC extends IPC{
         assert.ok(!this.existsPreset(caption));
         //let nameBuffer=dhlib.utils.utf82Mbcs(name);
         return Promise.all([this.getPoint(),this._getNextPresets()]).then((values)=>{
-           return this._PTZ(dhlib.enums.PTZ.PTZ_POINT_SET,0,values[1],0,null,false).then(()=>{
+           return this._PTZ(dhlib.enums.PTZ.PTZ_POINT_SET,0,values[1]).then(()=>{
                     //{x,y,z,preset,name}
                 let ret=_.extend(values[0],{preset:values[1]});
                 //IPC.prototype.setPreset.call(this,name,ret);

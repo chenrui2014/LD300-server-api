@@ -2,7 +2,7 @@
  * Created by Luky on 2017/6/30.
  */
 const ffi=require('ffi');
-const dhlib=require('../../app/ipcs/dahua/dhnetsdk');
+const dhlib=require('../../ipcs/dahua/dhnetsdk');
 const ref=require('ref');
 const _=require('lodash');
 const ArrayType=require('ref-array');
@@ -13,7 +13,7 @@ const ip='192.168.1.98',port='37777',name='admin',pwd='admin',channel=0;
 //const ip='192.168.1.200',port='37777',name='admin',pwd='888888',channel=2;
 //const ip='192.168.1.200',port='37777',name='admin',pwd='888888',channel=3;//大华摄像头用onvif连接拉取视频流无效
 const Struct = require('ref-struct');
-const H264unPack=require('../../app/ipcs/dahua/_dh_h264_unpack');
+const H264unPack=require('../../ipcs/dahua/_dh_h264_unpack');
 const PassThrough=require('stream').PassThrough;
 
 const wOption = {
@@ -257,6 +257,12 @@ describe('函数测试', function() {
         let spt=DH_DEV_IPC_INFO.toObject().bSupportTypes;
         for(let i=0;i<ct;i++){
             console.log(dhlib.enums.IPC_TYPE.get(spt[i]).key);
+        }
+    });
+
+    it('zoom-add-stop',async ()=>{
+        if(!dhlib.functions.CLIENT_DHPTZControl(loginID,0,dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,3,0,0)||!dhlib.functions.CLIENT_DHPTZControl(loginID,0,dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,3,0,1)){
+            console.error(dhlib.functions.CLIENT_GetLastError() & (0x7fffffff));
         }
     });
 });

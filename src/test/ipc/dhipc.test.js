@@ -143,44 +143,41 @@ describe('大华IPC直连测试', function() {
         });
     });
 
-    async function move(d,done) {
+    async function move(d,stop) {
         let ipc=await getInstance(5);
-        ipc.move(d).then().catch(done);
-        setTimeout(()=>{
-            ipc.ptzStop().then(done).catch(done);
-        },400);
+        await ipc.move(d,stop);
     }
 
-    it('ptz-move-up',async (done)=>{
-        await move(IPC.Directions.top,done);
+    it('ptz-move-up',async ()=>{
+        await move(IPC.Directions.top,true);
     });
 
-    it('ptz-move-down',async (done)=>{
-        await move(IPC.Directions.down,done);
+    it('ptz-move-down',async ()=>{
+        await move(IPC.Directions.down,true);
     });
 
-    it('ptz-move-left',async (done)=>{
-        await move(IPC.Directions.left,done);
+    it('ptz-move-left',async ()=>{
+        await move(IPC.Directions.left,true);
     });
 
-    it('ptz-move-right',async (done)=>{
-        await move(IPC.Directions.right,done);
+    it('ptz-move-right',async ()=>{
+        await move(IPC.Directions.right,true);
     });
 
-    it('ptz-move-topleft',async (done)=>{
-        await move(IPC.Directions.lefttop,done);
+    it('ptz-move-topleft',async ()=>{
+        await move(IPC.Directions.lefttop,true);
     });
 
-    it('ptz-move-rightdown',async (done)=>{
-        await move(IPC.Directions.rightdown,done);
+    it('ptz-move-rightdown',async ()=>{
+        await move(IPC.Directions.rightdown,true);
     });
 
-    it('ptz-move-righttop',async (done)=>{
-        await move(IPC.Directions.righttop,done);
+    it('ptz-move-righttop',async ()=>{
+        await move(IPC.Directions.righttop,true);
     });
 
-    it('ptz-move-leftdown',async(done)=>{
-        await move(IPC.Directions.leftdown,done);
+    it('ptz-move-leftdown',async()=>{
+        await move(IPC.Directions.leftdown,true);
     });
 
     it('zoomin',async (done)=>{
