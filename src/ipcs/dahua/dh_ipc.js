@@ -134,7 +134,7 @@ class DHIPC extends IPC{
     get inPlay(){return !!this._playID;}
 
     _pushData(buf,cb){
-        console.log(buf.toString('hex'));
+        //console.log(buf.toString('hex'));
 
         if(this._vedioBuffer){
             buf=Buffer.concat([this._vedioBuffer,buf]);
