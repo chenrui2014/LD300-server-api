@@ -48,6 +48,7 @@ class DHIPC extends IPC{
         if(options.onvif)this.onvif=new Onvif(_.extend({},options,options.onvif));
         this._disConnectFn=this._onDisConnected.bind(this);
         this._reConnectFn=this._onReConnected.bind(this);
+        this._vedioBuffer=null;
         Parser(this,'dh_ipc.js',{id:this.options.id,ip:this.options.ip,port:this.options.port});
         //this._keepAlive=0;
     }
@@ -133,22 +134,42 @@ class DHIPC extends IPC{
     get inPlay(){return !!this._playID;}
 
     _pushData(buf,cb){
-        if(buf.length<=48) return;
-        assert.ok(buf.slice(0,4).indexOf(DHAV)===0);
-        assert.ok(buf.slice(-8).indexOf(dhav)===0);
-        if(buf[5]===0xf1) return;
-        buf=buf.slice(40,-8);
-        if(buf.slice(0,4).indexOf(h264Prefix)===0){
-            let index,indexPre=0;
-            while((index=buf.indexOf(h264Prefix,indexPre+4))!==-1){
-                cb(buf.slice(indexPre,index));
-                buf=buf.slice(index);
+        console.log(buf.toString('hex'));
+
+        if(this._vedioBuffer){
+            buf=Buffer.concat([this._vedioBuffer,buf]);
+        }
+
+        const startWithDHAV=buf.slice(0,4).indexOf(DHAV)===0,
+            endWithdhav=buf.slice(-8).indexOf(dhav)===0;
+
+        let slice=function (buf) {
+            if(buf.slice(0,4).indexOf(h264Prefix)===0){
+                let index,indexPre=0;
+                while((index=buf.indexOf(h264Prefix,indexPre+4))!==-1){
+                    cb(buf.slice(indexPre,index));
+                    buf=buf.slice(index);
+                }
+                cb(buf);
             }
-            cb(buf);
+            else if(buf[0]===aacPrefix[0]&&(buf[1]&0xf0)===0xf0){
+                cb(buf);
+            }
+        };
+        if(startWithDHAV&&endWithdhav){
+            if(buf[5]===0xf1) {
+                return;
+            }
+            buf=buf.slice(40,-8);
+            slice(buf);
+            if(this._vedioBuffer){
+                this._vedioBuffer=null;
+            }
         }
-        else if(buf[0]===aacPrefix[0]&&(buf[1]&0xf0)===0xf0){
-            cb(buf);
+        else{
+            this._vedioBuffer=Buffer.from(buf);
         }
+
     }
 
     //有音频设置时同样会返回音频数据
