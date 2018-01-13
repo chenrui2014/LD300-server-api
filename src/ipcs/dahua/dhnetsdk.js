@@ -398,6 +398,7 @@ let fns={
     ,'CLIENT_StopSaveRealData':[BOOL,[LLONG]]
     ,'CLIENT_GetLastError':[DWORD,[]]
     ,'CLIENT_PTZControl':[BOOL,[LLONG,int,DWORD,DWORD,BOOL]]
+    ,'CLIENT_DHPTZControl':[BOOL,[LLONG,int,DWORD,BYTE,BYTE,BYTE,BOOL]]
     ,'CLIENT_DHPTZControlEx2':[BOOL,[LLONG,int,DWORD,long,long,long,BOOL,voidPtr]]
     ,'CLIENT_ControlDevice':[BOOL,[LLONG,ENUM,voidPtr,int]]
     ,'CLIENT_ControlDeviceEx':[BOOL,[LLONG,ENUM,voidPtr,voidPtr,int]]

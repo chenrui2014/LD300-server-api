@@ -2,10 +2,6 @@
  * Created by Luky on 2017/7/5.
  */
 
-const assert=require('assert');
-const _=require('lodash');
-const util = require('util');
-
 function allocIPC(IPC,optionsIPC,ptz,optionsPTZ/*,audio,optionsAudio*/) {
     class IPCIntegration extends IPC{
         constructor(){
@@ -28,63 +24,47 @@ function allocIPC(IPC,optionsIPC,ptz,optionsPTZ/*,audio,optionsAudio*/) {
             //return null!==this._audioHandle&&this._audioHandle.supportAudio;
         }
 
-        zoomIn() {
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.zoomIn();
+        async zoomAdd(stop) {
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.zoomAdd(stop);
         }
-        zoomOut() {
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.zoomOut();
+        async zoomDec(stop) {
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.zoomDec();
         }
-        focusIn() {
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.focusIn();
+        async focusAdd(stop) {
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.focusAdd(stop);
         }
-        focusOut() {
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.focusOut();
+        async focusDec(stop) {
+            if(!this.supportPTZ)return;
+            return this._ptzHandle.focusDec(stop);
         }
-        apertureIn() {
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.apertureIn();
+        async apertureAdd(stop) {
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.apertureAdd(stop);
         }
-        apertureOut() {
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.apertureOut();
+        async apertureDec() {
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.apertureDec(stop);
         }
-        move(direction){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.move(direction);
+        async move(direction,stop){
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.move(direction,stop);
         }
-        ptzStop(){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.ptzStop();
+        async ptzStop(){
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.ptzStop();
         }
-        moveToPreset(preset){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.moveToPreset(preset);
+        async moveToPoint(pt){
+            if(!this.supportPTZ)return;
+            return await this._ptzHandle.moveToPoint(pt);
         }
-        moveToPoint(pt){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.moveToPoint(pt);
+        async getPoint(){
+            if(!this.supportPTZ) return null;
+            return await this._ptzHandle.getPoint();
         }
-        setPoint(index){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.setPoint(index);
-        }
-        getPoints(){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.getPoints();
-        }
-        getPonintXYZ(){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.getPonintXYZ();
-        }
-        removePoint(index){
-            if(!this.supportPTZ)return Promise.resolve();
-            return this._ptzHandle.removePoint(index);
-        }
-
+/*
         setTalkData(data,size){
             if(!this.supportAudio)return Promise.resolve();
             return this._audioHandle.setTalkData(data,size);
@@ -94,7 +74,7 @@ function allocIPC(IPC,optionsIPC,ptz,optionsPTZ/*,audio,optionsAudio*/) {
             if(!this.supportAudio)return Promise.resolve();
             return this._audioHandle.setVolume(pt);
         }
-
+        */
     }
     return new IPCIntegration();
 }
