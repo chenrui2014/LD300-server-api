@@ -6,17 +6,17 @@ import CaremaController from './controllers/cameraController';
 import CaremasController from './controllers/camerasController';
 import HostController from './controllers/hostController';
 import MonitoringAreaController from './controllers/monitoringAreaController';
-import PerimeterController from './controllers/perimeterController';
+//import PerimeterController from './controllers/perimeterController';
 import PerimeterPointController from './controllers/perimeterPointController';
 import EventController from './controllers/eventController';
 import UserController from './controllers/userController';
-import PresetController from './controllers/PresetController';
+import PresetController from './controllers/presetController';
 import CameraTypeController from './controllers/cameraTypeController';
 import ConfigController from './controllers/configController';
 import VendorController from './controllers/vendorController';
 import UnitController from './controllers/unitController';
 import PpController from './controllers/ppController';
-import { isBearerAuthenticated, isLocalAuthenticated } from './lib/auth';
+//import { isBearerAuthenticated, isLocalAuthenticated } from './lib/auth';
 
 import Router from 'koa-router';
 

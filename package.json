@@ -7,7 +7,9 @@
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register",
     "build": "babel src -d dist --source-maps",
     "dev": "npm run build && cross-env NODE_ENV=development node dist/app",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/app"
+    "start": "npm run build && cross-env NODE_ENV=production node dist/app",
+    "pm2":"pm2 start process.yml",
+    "pm2-stop":"pm2 stop all"
   },
   "keywords": [],
   "author": "",
