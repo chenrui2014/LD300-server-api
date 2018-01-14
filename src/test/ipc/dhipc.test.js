@@ -96,7 +96,7 @@ describe('大华IPC直连测试', function() {
         await ipc._realPlay();
         return await new Promise((resolve)=>{
             setTimeout(()=>{
-                ipc._stopRealPlay().catch();
+                ipc._stopRealPlay().catch(e=>e);
                 fw.close();
                 fw2.close();
                 fw3.close();
