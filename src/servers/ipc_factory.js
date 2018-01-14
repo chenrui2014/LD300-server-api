@@ -12,33 +12,23 @@ class IPCFactory{
         Parser(this,'ipc_factory.js');
     }
 
-    releaseIPC(id){
-        let ipc=this._ipcs[id];
-        if(!ipc) return;
-        let ref=--ipc.ref;
-        if(ref>0)return;
-        ipc.last=new Date().getTime();
-    }
-
     async getIPC(id){
-        let ipc=this._ipcs[id];
+        let ipcStore=this._ipcs[id];
         //延迟回收，便于访问后台最新的数据
-        if(ipc&&(ipc.last===0||ipc.last-new Date().getTime()<3000)){
-            ipc.ref++;
-            return ipc.instance;
+        if(ipcStore&&ipcStore.instance&&ipcStore.instance.isConnected){
+            return ipcStore.instance;
         }
 
         let cfg=await Data.getIPC(id).catch((e)=>{
             this.error('摄像头配置数据获取失败',{id:ipc.id,innerError:e});
-            if(ipc) return null;
+            if(ipcStore) return null;
             else return Promise.reject(e);
         });
-        if(!cfg&&ipc){
-            ipc.ref++;
+        if(!cfg&&ipcStore){
             this.warn('远程数据拉取失败，使用使用本地保存实例');
-            return ipc;
+            return ipcStore.instance;
         }
-        ipc=addin.createInstance(cfg);
+        let ipc=addin.createInstance(cfg);
         if(!ipc){
             await Promise.reject(this.log('获取摄像头实例化失败',{config:cfg}));
         }
