@@ -73,9 +73,9 @@ class Live extends EventEmitter{
     async _play(){
         if(this._cache) return true;
         let ipc=this._ipc;
-        await ipc.connect().catch(e=>{
-            throw new Error(this.error('摄像头连接出错',{innerError:e}));
-        });
+        //await ipc.connect().catch(e=>{
+        //    throw new Error(this.error('摄像头连接出错',{innerError:e}));
+        //});
         let cache=new Cache(true,ipc.supportAudio);
         let videoToCache=(data)=>{
             cache.write(data);
