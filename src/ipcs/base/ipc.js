@@ -92,11 +92,13 @@ class IPC extends PTZ{
     setPlaying(){
         assert.ok(!this._realpaly_counter.inReference);
         this._realpaly_counter.addReference();
+        this.log('更新视频播放请求数',{count:this._realpaly_counter.count});
     }
     get isPlaying(){return this._realpaly_counter.inReference;}
     async realPlay() {
         if(this.isPlaying) {
             this._realpaly_counter.addReference();
+            this.log('更新视频播放请求数',{count:this._realpaly_counter.count});
             return;
         }
         await this._realPlay();
@@ -105,6 +107,7 @@ class IPC extends PTZ{
         if(this._realpaly_counter.release()){
             await this._stopRealPlay();
         }
+        this.log('更新视频播放请求数',{count:this._realpaly_counter.count});
     }
     //全部从辅码1流中获取，如果需要高精度请对应设置设备参数
     async _realPlay() {throw new Error('未实现函数_realPlay');}

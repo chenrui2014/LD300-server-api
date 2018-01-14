@@ -17,6 +17,10 @@ class Counter{
         return this.ref===0;
     }
 
+    get count(){
+        return this.ref;
+    }
+
 }
 
 exports=module.exports=Counter;

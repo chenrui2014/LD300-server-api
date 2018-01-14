@@ -5,6 +5,7 @@ const _=require('lodash');
 const EventEmitter=require('events').EventEmitter;
 const assert=require('assert');
 const Counter=require('./counter');
+const {Parser} =require('../../log/log');
 
 const _d={
     'top':1,'down':2,'left':4,'right':8,
@@ -16,6 +17,7 @@ class PTZ extends  EventEmitter{
         super();
         this.options={};
         this._conn_counter=new Counter();
+        Parser(this,'ptz.js',{});
     }
     static get Directions(){
         return _d;
@@ -30,11 +32,13 @@ class PTZ extends  EventEmitter{
     setConnected(){
         assert.ok(!this._conn_counter.inReference);
         this._conn_counter.addReference();
+        this.log('更新设备连接数',{count:this._conn_counter.count});
     }
     get isConnected(){return this._conn_counter.inReference}
     async connect(){
         if(this.isConnected) {
             this._conn_counter.addReference();
+            this.log('更新设备连接数',{count:this._conn_counter.count});
             return;
         }
         await this._connect();
@@ -43,6 +47,7 @@ class PTZ extends  EventEmitter{
         if(this._conn_counter.release()){
           await this._disConnect();
         }
+        this.log('更新设备连接数',{count:this._conn_counter.count});
     }
     async _connect(){throw new Error('未实现函数_connect');}
     async _disConnect(){throw new Error('未实现函数_disConnect');}
