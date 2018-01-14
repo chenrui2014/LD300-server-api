@@ -12,6 +12,7 @@ const getPort=require('get-port');
 const IPCFactory=require('./ipc_factory');
 const crypto=require('crypto');
 const config=global.server_config||require('../config/config');
+const store=_.get(config,'runMode.store','db');
 const ptzLock=_.get(config,'ipc.ptzLock',15000);
 const url=require('url');
 const logger={};
@@ -227,7 +228,7 @@ async function listen() {
 }
 
 server.on('listening',()=>{
-    connect();
+    store==='db'&&connect();
     Parser(logger,'ipc_server_child.js',{port:server.address().port});
     logger.log('摄像头直播流进程启动',{processID:process.pid,port:port});
     send({type:'listening',port:port});
