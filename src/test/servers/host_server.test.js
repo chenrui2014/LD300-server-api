@@ -1,13 +1,14 @@
+const {db,file}=require('../init');
 let {setHostData,setMData,setIpcData}=require('../modify_config');
-let Server=require('../../app/servers/host_server');
+let Server=require('../../servers/host_server');
 let _=require('lodash');
 let expect=require('chai').expect;
 let vHost=require('../host/virtual_host');
-let Host=require('../../app/host/host');
-const SerialPort=require('../../app/serialport/serialport');
-const IPCServer=require('../../app/servers/ipc_server_child').server;
-const M=require('../../app/servers/ipc_mointors');
-const Factory=require('../../app/servers/ipc_factory');
+let Host=require('../../host/host');
+const SerialPort=require('../../serialport/serialport');
+const IPCServer=require('../../servers/ipc_server_child').server;
+//const M=require('../../servers/ipc_mointors');
+const Factory=require('../../servers/ipc_factory');
 
 let port=0;
 async function getUrl(){
@@ -20,6 +21,12 @@ async function getUrl(){
 }
 
 describe('主机服务测试用例',()=>{
+    let dbInstance=null;
+    before(async ()=>{
+        //打开注释启动数据库取数据
+        dbInstance=await file();
+    });
+
     it('启动关闭',(done)=>{
         let server=new Server();
         setHostData([{id:1,port:'\\\\.\\COM2'},{id:1,port:'\\\\.\\COM4'}]);
@@ -96,7 +103,7 @@ describe('主机服务测试用例',()=>{
                 });
                 setHostData([{id:1,port:'\\\\.\\COM2'}]);
                 server.start().then(()=>{
-                    server.hosts[0].m=mt;
+                    //server.hosts[0].m=mt;
                     loopID=setInterval(()=>{
                         port.write(vHost.AlarmCmd(2000));
                     },200);

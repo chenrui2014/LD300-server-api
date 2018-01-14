@@ -1,4 +1,5 @@
-const M=require('../../app/servers/ipc_mointors');
+const {db,file}=require('../init');
+const M=require('../../servers/ipc_mointors');
 const expect=require('chai').expect;
 
 let data=[
@@ -33,6 +34,12 @@ let data=[
 ];
 
 describe('监控测试',()=>{
+    let dbInstance=null;
+    before(async ()=>{
+        //打开注释启动数据库取数据
+        dbInstance=await file();
+    });
+
     let mt=new M(1);
     mt._setMointor(data);
     let m=mt._mointors;
