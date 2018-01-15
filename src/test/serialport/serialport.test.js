@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const Com=require('../../app/serialport/serialport');
+const Com=require('../../serialport/serialport');
 const SerialPort=Com;
 const _=require('lodash');
 console.log('\r测试前通过虚拟串口工具打开端口1和2，并保证无端口13\r');
@@ -69,6 +69,14 @@ describe('串口测试',()=>{
                 expect(e.times).equal(2);
                 com.stopReConnect();
             });
+        });
+    });
+
+    describe('静态功能块测试',()=>{
+        it('',async ()=> {
+            let ports=await SerialPort.GetPortsArrived();
+            expect(ports.length>0).equal(true);
+            expect(ports[0]).equal('COM1');
         });
     });
 
