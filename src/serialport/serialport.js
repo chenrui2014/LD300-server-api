@@ -229,6 +229,13 @@ class Com extends EventEmitter{
     static get Errors() {
         return _Errors;
     }
+
+    static async GetPortsArrived(){
+        let ports=await SerialPort.list().catch(()=>{
+            return Promise.resolve([]);
+        });
+        return _.map(ports,'comName');
+    }
 }
 
 exports=module.exports= Com;
