@@ -10,9 +10,6 @@ const PpSchema = new mongoose.Schema({
     name:{
         type:String
     },
-    hostId:{
-      type:String
-    },
     pp:[{x:{
             type:Number
         },y:{

@@ -28,6 +28,9 @@ const HostSchema = new mongoose.Schema({
     },
     status:{//主机状态，0=正常；1=主机预警；2=未启用；3=主机故障
         type:Number
+    },
+    ppId:{
+        type:String
     }
 });
 

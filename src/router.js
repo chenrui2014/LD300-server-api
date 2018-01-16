@@ -67,6 +67,7 @@ router.get('/cameras',CaremasController.find_cameras)
 
 //主机路由
 router.get('/hosts', HostController.find_host)
+    .get('/ports',HostController.getPort)
     .get('/hosts_noPage',HostController.find_host_noPage)
     .get('/hosts/:id',HostController.find_one)
     .post('/hosts',HostController.add_host)

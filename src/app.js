@@ -96,7 +96,7 @@ vh.start();
 
     await app.listen(config.port, config.ip);
 
-
+    vh.send('alarm',44);
     logger.info('Server start at %s:%s', config.ip, config.port);
 })();
 

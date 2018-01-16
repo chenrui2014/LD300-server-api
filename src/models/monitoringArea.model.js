@@ -27,7 +27,7 @@ const MonitoringAreaSchema = new mongoose.Schema({//一个主机对应多个监�
         isRequired:true,
         index:{unique:true}
     },
-    perimeterId:String,//周界ID
+    hostId:String,//主机ID
     cameraId:Number,//摄像头ID
     num:Number,//序号
     min_dis:Number,//监控距离始(实际单位米）
