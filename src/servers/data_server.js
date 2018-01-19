@@ -151,14 +151,11 @@ async function recordAlertVideo(record) {
         event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
         event.position = record.position;
         event.hid = record.hid;
+        event.path = record.path;
+        event.pid = record.pid;
 
         await EventService.add_event(event);
     }
-    let event = {};
-    event.id = record.id;
-    event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-    event.pid = record.pid;
-    event.hid = record.hid;
 }
 
 async function eventRecord(){
