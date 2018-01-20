@@ -96,6 +96,32 @@ describe('主机服务测试用例',()=>{
                 server.on(Host.Events.StateChanged,(evt)=>{
                     expect(evt.type).equal(Host.Events.StateChanged);
                     expect(evt.stateNew).equal(Host.States.Alarm);
+                    expect(evt.monintors.length).equal(1);
+                    server.stop();
+                    clearInterval(loopID);
+                    done();
+                });
+                setHostData([{id:1,port:'\\\\.\\COM2'}]);
+                server.start().then(()=>{
+                    //server.hosts[0].m=mt;
+                    loopID=setInterval(()=>{//position 82 有摄像头，2000没有
+                        port.write(vHost.AlarmCmd(82));
+                    },200);
+                }).catch(done);
+
+            });
+        });
+
+        it('报警,找不到调摄像头',(done)=>{
+            getUrl().then((httpport)=> {
+                let server = new Server({
+                    ipc_server: {
+                        port: httpport
+                    }
+                });
+                server.on(Host.Events.StateChanged,(evt)=>{
+                    expect(evt.type).equal(Host.Events.StateChanged);
+                    expect(evt.stateNew).equal(Host.States.Alarm);
                     expect(evt.monintors.length).equal(0);
                     server.stop();
                     clearInterval(loopID);
