@@ -7,8 +7,9 @@ describe('无数据监控测试',()=> {
         //打开注释启动数据库取数据
         await dbNoConnect();
     });
-    it('存放日志接口', async () => {
-        await  Data.recordAlert({id: 1, hid: 1, position: 1});
+    it('存放日志接口,不等待返回', (done) => {
+        Data.recordAlert({id: 1, hid: 1, position: 1});
+        setTimeout(done,1000)
     });
 });
 describe('监控测试',()=> {
