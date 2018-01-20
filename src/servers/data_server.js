@@ -11,7 +11,6 @@ const HostService =require('../services/hostService');
 const MonitoringService =require('../services/monitoringService');
 const PresetService =require('../services/PresetService');
 const CamerasService =require('../services/camerasService');
-const PerimeterService = require('../services/ppService');
 const VendorService = require('../services/vendorService');
 const EventService = require('../services/eventService');
 const moment = require('moment');
@@ -44,19 +43,22 @@ async function getHosts()
 async function getMointors(hostID,distance){
     //MonitoringAreaSchema条件 hostid==host && min<=distance&&distance<=max
     let monitorArea = {};
-    const perimeters = await PerimeterService.find_perimeter({hostId:hostID});
-    const monitors = await MonitoringService.find_monitoringArea({perimeterId:{$in:perimeters},min:{$lte:distance},max:{$gte:distance}});//获得监控区域
+    const monitors = await MonitoringService.find_monitoringArea({hostId:hostID,min_dis:{$lte:distance},max_dis:{$gte:distance}});//获得监控区域
+    // let monitorList = [];
+    // monitors.forEach(function (monitor) {
+    //     monitorList.push(monitor._doc);
+    // });
     monitorArea.id = hostID;
-    monitorArea.monitors = monitors;
+    monitorArea.monitors = [];
 
     monitors.forEach(async function (monitor) {
-        const camera = await CamerasService.find_one(monitors.cameraId);//获得关联摄像头
-        const presets = await PresetService.find_preset({monitorId:monitor.id});
-        let m = {id:camera.id,demo:camera.ptz,alarm:camera.alarm,audio:camera.audio,min:monitor.min,max:monitor.max};
-        m.presets = presets;
-        monitorArea.monitors = m;
+        const camera = await CamerasService.find_one(monitor.cameraId);//获得关联摄像头
+        //const presets = await PresetService.find_preset({monitorId:monitor.id});
+        let m = {id:camera.id,demo:camera.ptz,alarm:camera.alarm,audio:camera.audio,min:monitor.min_dis,max:monitor.max_dis,presets:camera.preset};
+        //m.presets = presets;
+        //monitorArea.monitors = m;
+        monitorArea.monitors.push(m);
     });
-
     return monitorArea;
 }
 
@@ -149,14 +151,11 @@ async function recordAlertVideo(record) {
         event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
         event.position = record.position;
         event.hid = record.hid;
+        event.path = record.path;
+        event.pid = record.pid;
 
         await EventService.add_event(event);
     }
-    let event = {};
-    event.id = record.id;
-    event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-    event.pid = record.pid;
-    event.hid = record.hid;
 }
 
 async function eventRecord(){

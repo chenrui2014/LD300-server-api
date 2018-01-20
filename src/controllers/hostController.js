@@ -4,6 +4,7 @@
 import logger from '../logger';
 import HostService from '../services/hostService';
 import PpService from "../services/ppService";
+import Serialport from '../serialport/serialport';
 
 class HostsController {
     static async add_host(ctx){
@@ -68,6 +69,14 @@ class HostsController {
         let result = await HostService.findAll(sortP);
         if(result) return ctx.body = {msg:'查询主机',data:result};
         return ctx.body={msg: '没有找到主机!'};
+    }
+
+    static async getPort(ctx){
+        let ports = await Serialport.GetPortsArrived();
+        let portObj = ports.map((item,i)=>{
+            return {name:item,id:item};
+        });
+        return ctx.body = {msg:'获取本机端口',data:portObj};
     }
 
     static async find_host(ctx){
