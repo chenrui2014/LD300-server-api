@@ -144,7 +144,7 @@ class HostServer extends  EventEmitter{
             this.log('获取监控摄像头',{monitors:ms,innerEvent:evt});
         }
         else{
-            this.error('监测到主机报警，但未找到合适的监控摄像头',{
+            this.warn('监测到主机报警，但未找到合适的监控摄像头',{
                 errorType:_Errors.NoMointor,
                 innerEvent:evt
             });

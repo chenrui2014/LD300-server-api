@@ -9,5 +9,8 @@ exports=module.exports= {
     },
     file:async function(){
         config.runMode.store = 'file';
+    },
+    dbNoConnect:async function(){
+        config.runMode.store = 'db';
     }
 };
