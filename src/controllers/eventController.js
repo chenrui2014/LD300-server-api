@@ -4,6 +4,8 @@
 import logger from '../logger';
 
 import EventService from '../services/eventService';
+import CamerasService from '../services/camerasService';
+import HostsService from '../services/hostService';
 
 class EventController {
     static async add_event(ctx){
@@ -123,6 +125,30 @@ class EventController {
             }else{
                 result = await EventService.find_event(filterObj);
             }
+        }
+
+        const hosts = await HostsService.findAll({port:1});
+        //const cameras = await CamerasService.findAll({id:1});
+        if(result && result.length > 0){
+            result.map((item,i) =>{
+
+                if(hosts && hosts.length > 0){
+                    hosts.forEach(function (host,index,arr) {
+                        if(item.hid === host.id){
+                            item._doc.port = host.port;
+                        }
+                    });
+                }
+                // if(cameras && cameras.length > 0){
+                //     hosts.forEach(function (camera,index,arr) {
+                //         if(item.pid === camera.id){
+                //             item.ip = host.ip;
+                //         }
+                //    });
+                // }
+
+                return item;
+            });
         }
         // let result = await EventService.find_event(filterObj,sortP,pagination);
         if(result) return ctx.body = {msg:'查询事件',data:result,total:total};
