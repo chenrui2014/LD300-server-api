@@ -13,7 +13,7 @@ const EventSchema = new mongoose.Schema({
     },
 
     happenTime:{//发生时间
-        type:Date,
+        type:String,
         isRequired:true
     },
     position:{//触警位置

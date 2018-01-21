@@ -14,6 +14,8 @@ const {Parser}=require('../log/log');
 const IPCMointor=require('./ipc_mointors');
 const runModeOne=_.get(config,'runMode.type','one')==='one';
 const Data=require('./data_server');
+const EventService = require('../services/eventService');
+const moment = require('moment');
 
 const _Errors={
     LinkFault:'linkFault',
@@ -86,7 +88,24 @@ class HostServer extends  EventEmitter{
     async _arrchive(id,hid,evtID){
         let data=await this._IPCRequest(`/ipc/${id}/arrchive/${hid}?t=${new Date().getTime()})}`);
         if(data.type==='fault') await Promise.reject(this.error('录制视频失败',{innerError:data}));
-        Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});
+
+        //*******将录制视频的摄像头以及录像地址存入数据库*******//
+        let result = await EventService.find_one(evtID);
+        if(result){
+            await EventService.edit_event({id:evtID},{pid:id,path:data.path});
+        }else{
+            let event = {};
+            event.id = evtID;
+            event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+            event.hid = hid;
+            evebt.path = data.path
+            event.pid = id;
+
+            await EventService.add_event(event);
+        }
+        //********************************//
+
+        //await Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});
         return this.log('启用视频录制',{id,hid,evtID});
     }
 
@@ -99,8 +118,21 @@ class HostServer extends  EventEmitter{
     async _OnIntrusionAlert(evt){
         this.log('收到主机报警指令',{innerEvent:evt});
         const hostID=evt.hid;
-        let host=this._getHost(hostID);
-        Data.recordAlert({hid:hostID,id:evt.id,position:evt.position});
+        let host=this._getHost(hostID)._doc;
+
+        //*******将报警事件添加到数据库*******//
+        let event = {};
+        event.id = evt.id;
+        event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+        event.position = evt.position;
+        event.hid = hostID;
+
+        await EventService.add_event(event);
+        //********************************//
+
+        //await Data.recordAlert({hid:hostID,id:evt.id,position:evt.position});
+        
+        
         host.monintors=[];
         let ms=await host.mointorHandle.getMointors(evt.position).catch(()=>{
             return Promise.resolve([]);
