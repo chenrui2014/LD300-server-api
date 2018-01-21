@@ -16,6 +16,7 @@ const runModeOne=_.get(config,'runMode.type','one')==='one';
 const Data=require('./data_server');
 const EventService = require('../services/eventService');
 const moment = require('moment');
+const path=require('path');
 
 const _Errors={
     LinkFault:'linkFault',
@@ -89,6 +90,7 @@ class HostServer extends  EventEmitter{
         let data=await this._IPCRequest(`/ipc/${id}/arrchive/${hid}?t=${new Date().getTime()})}`);
         if(data.type==='fault') await Promise.reject(this.error('录制视频失败',{innerError:data}));
 
+        data.path=path.relative(config.root,data.path);
         //*******将录制视频的摄像头以及录像地址存入数据库*******//
         let result = await EventService.find_one(evtID);
         if(result){
