@@ -24,7 +24,7 @@ describe('主机服务测试用例',()=>{
     let dbInstance=null;
     before(async ()=>{
         //打开注释启动数据库取数据
-        dbInstance=await file();
+        dbInstance=await db();
     });
 
     it('启动关闭',(done)=>{
