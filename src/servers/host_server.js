@@ -213,8 +213,11 @@ class HostServer extends  EventEmitter{
         this.stop();
         this._states={};
         this.__hosts=await Data.getHosts();
+        if(!this.hosts||!this.hosts.length) {
+            this.warn('请配置主机');
+            return ;
+        }
         return new Promise((resolve,reject)=>{
-            if(!this.hosts||!this.hosts.length) return reject();
             let i=0,ok=0;
             let addone=()=>{
                 if(++i===this.hosts.length){
