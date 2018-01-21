@@ -118,7 +118,7 @@ class HostServer extends  EventEmitter{
     async _OnIntrusionAlert(evt){
         this.log('收到主机报警指令',{innerEvent:evt});
         const hostID=evt.hid;
-        let host=this._getHost(hostID)._doc;
+        let host=this._getHost(hostID);
 
         //*******将报警事件添加到数据库*******//
         let event = {};

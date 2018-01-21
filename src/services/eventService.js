@@ -4,6 +4,7 @@
  */
 import logger from '../logger';
 import EventModel from '../models/event.model';
+import uuidv1 from 'uuid/v1';
 import ConfigModel from "../models/config.model";
 // const logger=require('../logger');
 // const EventModel=require('../models/event.model');
@@ -16,9 +17,14 @@ class EventService {
      * @returns {Promise.<boolean>} 添加成功返回true，否则返回false；
      */
     static async add_event(data){
-        const id = await EventService.findMaxId();
-        data.id = Number(id) + 1;
+        // const id = await EventService.findMaxId();
+        // data.id = Number(id) + 1;
         // let event = new EventModel(data);
+        if(!data.id){
+            data.id = uuidv1();
+        }
+
+
         let success = false;
         await EventModel.create(data,function (err,event) {
             if(!err) {

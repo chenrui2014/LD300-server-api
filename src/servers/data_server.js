@@ -43,6 +43,7 @@ async function getHosts()
 async function getMointors(hostID,distance){
     //MonitoringAreaSchema条件 hostid==host && min<=distance&&distance<=max
     let monitorArea = {};
+    const cams = await CamerasService.findAll({id:1});
     const monitors = await MonitoringService.find_monitoringArea({hostId:hostID,min_dis:{$lte:distance},max_dis:{$gte:distance}});//获得监控区域
     // let monitorList = [];
     // monitors.forEach(function (monitor) {
@@ -51,10 +52,18 @@ async function getMointors(hostID,distance){
     monitorArea.id = hostID;
     monitorArea.monitors = [];
 
-    monitors.forEach(async function (monitor) {
-        const camera = await CamerasService.find_one(monitor.cameraId);//获得关联摄像头
+    monitors.forEach(function (monitor) {
+        //const camera = await CamerasService.find_one(monitor.cameraId);//获得关联摄像头
         //const presets = await PresetService.find_preset({monitorId:monitor.id});
-        let m = {id:camera.id,demo:camera.ptz,alarm:camera.alarm,audio:camera.audio,min:monitor.min_dis,max:monitor.max_dis,presets:camera.preset};
+        let camera = {};
+        if(cams && cams.length > 0){
+            cams.forEach(function(item,index,arr){
+                if(monitor.cameraId ===item.id){
+                    camera = item;
+                }
+            });
+        }
+        let m = {id:camera.id,demo:camera.ptz,alarm:camera.alarm,audio:camera.audio,screenShot:camera.screenShot,min:monitor.min_dis,max:monitor.max_dis,presets:camera.preset};
         //m.presets = presets;
         //monitorArea.monitors = m;
         monitorArea.monitors.push(m);
