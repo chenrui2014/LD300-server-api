@@ -184,6 +184,31 @@ class EventController {
             }
         }
         let result = await EventService.find_event(null,sortP,null);
+
+        const hosts = await HostsService.findAll({port:1});
+        //const cameras = await CamerasService.findAll({id:1});
+        if(result && result.length > 0){
+            result.map((item,i) =>{
+
+                if(hosts && hosts.length > 0){
+                hosts.forEach(function (host,index,arr) {
+                    if(item.hid === host.id){
+                        item._doc.port = host.port;
+                    }
+                });
+            }
+            // if(cameras && cameras.length > 0){
+            //     hosts.forEach(function (camera,index,arr) {
+            //         if(item.pid === camera.id){
+            //             item.ip = host.ip;
+            //         }
+            //    });
+            // }
+
+            return item;
+        });
+        }
+
         if(result) return ctx.body = {msg:'查询事件',data:result};
         return ctx.error={msg: '没有找到事件!'};
     }
@@ -191,6 +216,18 @@ class EventController {
     static async find_one(ctx){
         const { id } = ctx.params;
         const result = await EventService.find_one(id);
+
+        const hosts = await HostsService.findAll({port:1});
+        if(result ){
+            if(hosts && hosts.length > 0){
+                hosts.forEach(function (host,index,arr) {
+                    if(result.hid === host.id){
+                        result._doc.port = host.port;
+                    }
+                });
+            }
+        }
+
         if(result) ctx.body = {msg:'查询事件',data:result};
         return ctx.error = {msg: '没有找到事件!'};
     }
