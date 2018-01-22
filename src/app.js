@@ -95,10 +95,10 @@ vh.start();
     // await server.listen(3000, config.ip);
 
     await app.listen(config.port, config.ip);
-
-    setTimeout(()=>{
-        vh.send('alarm',44);
-    },6000);
+    vh.send('alarm',44);
+    // setTimeout(()=>{
+    //     vh.send('alarm',44);
+    // },6000);
 
     logger.info('Server start at %s:%s', config.ip, config.port);
 })();
