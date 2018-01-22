@@ -5,21 +5,18 @@ import path from 'path';
 import Koa from 'koa';
 import passport from 'koa-passport';
 import session from 'koa-session2';
-import bodyParser from 'koa-bodyparser';
 import koaBody from 'koa-body';
 import logger from './logger';
 import connect from './db';
-import babelPolyfill from 'babel-polyfill';
 import config from './config';
 import router from './router';
 import cors from 'koa2-cors';
-//import HostService from './services/HostService';
 import StartUp from './servers/startup';
 import vHost from './test/host/virtual_host';
 
 const app = new Koa();
 
- app.use(cors())
+app.use(cors())
 
 app.use((ctx, next) => {
     // if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
@@ -57,6 +54,12 @@ app.use(passport.session());
 app.use(router.routes())
     .use(router.allowedMethods());
 
+
+// const koaStatic = require('koa-static');
+//
+// app.use(koaStatic(
+//     path.join( __dirname,  './logs/monitors')
+// ))
 
 // app.use((ctx) => {
 //
