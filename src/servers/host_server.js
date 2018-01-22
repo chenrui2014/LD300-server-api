@@ -171,7 +171,7 @@ class HostServer extends  EventEmitter{
                         actions.push(ipc.moveToPreset(msi));
                     }
                     Promise.all(actions).then(()=>{
-                        ipc.disconnect().catch(e=>e);
+                        ipc.disConnect().catch(e=>e);
                     }).catch((e)=>{
                         this.warn('移动摄像头到报警位置或启动警报错误时发生错误',{
                             errorType:_Errors.LinkFault,
@@ -179,7 +179,7 @@ class HostServer extends  EventEmitter{
                             innerError:e,
                             innerEvent:evt
                         });
-                        ipc.disconnect().catch(e=>e);
+                        ipc.disConnect().catch(e=>e);
                     });
                 }).catch(e=>{
                     this.error('摄像头连接出错',{
