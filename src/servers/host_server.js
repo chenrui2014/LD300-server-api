@@ -94,17 +94,14 @@ class HostServer extends  EventEmitter{
         //*******将录制视频的摄像头以及录像地址存入数据库*******//
         let result = await EventService.find_one(evtID);
         if(result){
-            let video = result.video;
-            video.push({pid:id,path:data.path});
-            await EventService.edit_event({id:evtID},{video:video});
+            await EventService.edit_event({id:evtID},{pid:id,path:data.path});
         }else{
             let event = {};
             event.id = evtID;
             event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
             event.hid = hid;
-            event.video = [{pid:id,path:data.path}];
-            //event.path = data.path
-            //event.pid = id;
+            evebt.path = data.path
+            event.pid = id;
 
             await EventService.add_event(event);
         }
@@ -174,7 +171,7 @@ class HostServer extends  EventEmitter{
                         actions.push(ipc.moveToPreset(msi));
                     }
                     Promise.all(actions).then(()=>{
-                        ipc._disConnect().catch(e=>e);
+                        ipc.disConnect().catch(e=>e);
                     }).catch((e)=>{
                         this.warn('移动摄像头到报警位置或启动警报错误时发生错误',{
                             errorType:_Errors.LinkFault,
@@ -182,7 +179,7 @@ class HostServer extends  EventEmitter{
                             innerError:e,
                             innerEvent:evt
                         });
-                        ipc.disconnect().catch(e=>e);
+                        ipc.disConnect().catch(e=>e);
                     });
                 }).catch(e=>{
                     this.error('摄像头连接出错',{
@@ -194,7 +191,6 @@ class HostServer extends  EventEmitter{
                 });
             }).catch(()=>{this.error('摄像头实例化失败');});
         });
-
     }
 
     _OnDeactivateAlert(evt){
