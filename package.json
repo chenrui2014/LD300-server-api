@@ -9,6 +9,7 @@
     "dev": "npm run build && cross-env NODE_ENV=development node dist/app",
     "start": "npm run build && cross-env NODE_ENV=production node dist/app",
     "pm2": "pm2 start process.yml",
+    "koaStatic":"node src/app2.js",
     "pm2-stop": "pm2 stop all"
   },
   "keywords": [],
@@ -62,6 +63,7 @@
     "koa-passport": "^4.0.1",
     "koa-router": "^7.2.1",
     "koa-session2": "^2.2.5",
+    "koa-static": "^4.0.2",
     "koa-views": "^6.0.2",
     "koa2-cors": "^2.0.3",
     "legacy-encoding": "^3.0.0",

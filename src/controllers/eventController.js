@@ -167,8 +167,21 @@ class EventController {
             }
         }
 
-        let result = await EventService.find_event(filterObj);
-        if(result) return ctx.body = {msg:'查询事件',data:result};
+        let result = await EventService.find_event({id:filterObj.eventId});
+        let videos=[];
+        if(result && result.length > 0){
+            result.forEach(function (event) {
+                event.video.map((item,i) =>{
+                    item._doc.eventId = event.id;
+                    return item;
+                });
+                event.video.forEach(function (video) {
+                    videos.push(video);
+                });
+            });
+        }
+
+        if(videos) return ctx.body = {msg:'事件关联摄像头',data:videos};
 
     }
 
