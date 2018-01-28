@@ -137,7 +137,9 @@ class IPC extends PTZ{
     async setVolume(pt){throw new Error('未实现函数setVolume');}
     _listen(){throw new Error('未实现函数listen');}
     _stopListen(){throw new Error('未实现函数stopListen');}
-    alarm(){throw new Error('未实现函数alarm');}
-    stopAlarm(){throw new Error('未实现函数stopAlarm');}
+    async alarm(){throw new Error('未实现函数alarm');}
+    async stopAlarm(){throw new Error('未实现函数stopAlarm');}
+    async discovery(cb){throw new Error('未实现函数discovery');}
+    async stopDiscovery(){throw new Error('未实现函数stopDiscovery');}
 }
 exports=module.exports=IPC;

@@ -19,6 +19,7 @@ const header = new Buffer.from([0x00,0x00,0x00,0x01]);
 const {Parser} =require('../../log/log');
 const Writable=require('stream').Writable;
 const EventEmitter=require('events').EventEmitter;
+const url=require('url');
 
 class ONVIF_IPC extends  IPC{
     constructor(options){
@@ -119,7 +120,7 @@ class ONVIF_IPC extends  IPC{
     }
 
     async getRtspUriWithAuth(){
-        let url=await this._getRtspUri();
+        let uri=await this._getRtspUri();
         return respURI(uri,this.options.user,this.options.pwd);
     }
 
@@ -345,12 +346,25 @@ class ONVIF_IPC extends  IPC{
         return await this._PTZ({zoom:0,x:x,y:y,speed:{x:this.h_speed,y:this.v_speed}});
     }
 
+    async getPoint(){
+        throw new Error('未实现函数getPoint');
+        //getStatus
+        /*{
+            position: {
+                x: 'pan position'
+                    , y: 'tilt position'
+                    , zoom: 'zoom'
+            }
+        , moveStatus: {} // camera moving
+        , utcTime: 'current camera datetime'
+        }*/
+    }
     async moveToPoint(x,y,z){throw new Error('未实现函数moveToPoint');}
-
+/*
     async moveToPreset(pt)
     {
         throw new Error('未实现函数moveToPreset');
-        await this.connect();
+/*        await this.connect();
         return new Promise((resolve,reject)=>{
             this._camera_handle.gotoPreset({profileToken:this._profileToken,preset:''+pt},(err)=>{
                 this.disConnect().catch();
@@ -369,21 +383,6 @@ class ONVIF_IPC extends  IPC{
     {
         throw new Error('未实现函数setPreset');
     }
-
-    getPoint(){
-        throw new Error('未实现函数getPoint');
-        //getStatus
-        /*{
-            position: {
-                x: 'pan position'
-                    , y: 'tilt position'
-                    , zoom: 'zoom'
-            }
-        , moveStatus: {} // camera moving
-        , utcTime: 'current camera datetime'
-        }*/
-    }
-
     async removePreset(preset){
         throw new Error('未实现函数removePreset');
     }
@@ -391,7 +390,22 @@ class ONVIF_IPC extends  IPC{
     async getPresets(){
         throw new Error('未实现函数getPresets');
     }
+*/
+    async discovery(cb){
+        onvif.Discovery.removeAllListeners();
+        onvif.Discovery.on('device', (data/*, rinfo, xml*/)=> {
+            let camUri = url.parse(data.probeMatches.probeMatch.XAddrs);
+            cb({ip: camUri.hostname, port: camUri.port, path: camUri.path});
+            onvif.Discovery.on('error', () => {
+                onvif.Discovery.removeAllListeners();
+            })
+        });
+        onvif.Discovery.probe({timeout:5000,resolve:false});
+    }
 
+    async stopDiscovery(){
+        onvif.Discovery.removeAllListeners();
+    }
 }
 
 function respURI(uri,user,pwd){
