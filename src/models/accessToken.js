@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+//import mongoose from 'mongoose';
+const mongoose=require('mongoose');
 const Schema = mongoose.Schema;
 const duration = 60 * 60 * 24 * 7 // 7days
 const ObjectId = Schema.Types.ObjectId

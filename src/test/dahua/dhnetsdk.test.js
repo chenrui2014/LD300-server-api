@@ -261,7 +261,7 @@ describe('函数测试', function() {
     });
 
     it('zoom-add-stop',async ()=>{
-        if(!dhlib.functions.CLIENT_DHPTZControl(loginID,0,dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,3,0,0)||!dhlib.functions.CLIENT_DHPTZControl(loginID,0,dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,3,0,1)){
+         if(!dhlib.functions.CLIENT_DHPTZControl(loginID,0,dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,3,0,0)||!dhlib.functions.CLIENT_DHPTZControl(loginID,0,dhlib.enums.PTZ.PTZ_ZOOM_ADD,0,3,0,1)){
             console.error(dhlib.functions.CLIENT_GetLastError() & (0x7fffffff));
         }
     });

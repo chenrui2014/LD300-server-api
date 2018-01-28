@@ -1,11 +1,13 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import HostModel from '../models/host.model';
-import uuidv1 from 'uuid/v1';
-// const logger =require('../logger');
-// const HostModel =require('../models/host.model');
+//import logger from '../logger';
+//import HostModel from '../models/host.model';
+//import uuidv1 from 'uuid/v1';
+
+const logger =require('../logger');
+const HostModel =require('../models/host.model');
+const uuidv1=require('uuid/v1');
 
 class HostService {
     /**

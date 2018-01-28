@@ -1,11 +1,13 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import PerimeterPointModel from '../models/perimeterPoint.model';
-import uuidv1 from 'uuid/v1';
-// const logger=require('../logger');
-// const PerimeterPointModel=require('../models/perimeterPoint.model');
+//import logger from '../logger';
+//import PerimeterPointModel from '../models/perimeterPoint.model';
+//import uuidv1 from 'uuid/v1';
+
+const logger=require('../logger');
+const PerimeterPointModel=require('../models/perimeterPoint.model');
+const uuidv1=require('uuid/v1');
 
 class PerimeterPointService {
     /**

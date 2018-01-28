@@ -2,11 +2,13 @@
  * 操作厂商数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import VendorModel from '../models/vendor.model';
-import uuidv1 from 'uuid/v1';
-// const logger=require('../logger');
-// const VendorModel=require('../models/vendor.model');
+//import logger from '../logger';
+//import VendorModel from '../models/vendor.model';
+//import uuidv1 from 'uuid/v1';
+
+const logger=require('../logger');
+const VendorModel=require('../models/vendor.model');
+const uuidv1=require('uuid/v1');
 
 class VendorService {
 

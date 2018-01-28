@@ -2,11 +2,12 @@
  * 操作系统配置数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import ConfigModel from '../models/config.model';
-import uuidv1 from 'uuid/v1';
-// const logger=require('../logger');
-// const ConfigModel=require('../models/config.model');
+//import logger from '../logger';
+//import ConfigModel from '../models/config.model';
+//import uuidv1 from 'uuid/v1';
+const logger=require('../logger');
+const ConfigModel=require('../models/config.model');
+const uuidv1=require('uuid/v1');
 
 class ConfigService {
 

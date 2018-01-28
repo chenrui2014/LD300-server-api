@@ -1,11 +1,11 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import {Monitoring as MonitoringAreaModel} from '../models/monitoringArea.model';
-import HostModel from "../models/host.model";
-// const logger=require('../logger');
-// const {MonitoringAreaModel}=require('../models/monitoringArea.model');
+//import logger from '../logger';
+//import {Monitoring as MonitoringAreaModel} from '../models/monitoringArea.model';
+
+const logger=require('../logger');
+const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;
 
 class MonitoringAreaService {
     /**

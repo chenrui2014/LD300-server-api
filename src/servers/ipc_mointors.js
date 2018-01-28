@@ -40,15 +40,27 @@ class IPCMointor{
                 let index=_.findIndex(_.sortBy(ipc.presets,'distance'),(rangei)=>{
                     return rangei.distance>=distance;
                 });
-                let cams=[null,ipc.presets[index]/*,null*/];
-                if(index>0) cams[0]=ipc.presets[index-1];
-                //if(index+1<mi.range.length)cams[2]=mi.range[index+1];
-                ret.push(_.extend({
-                    id:ipc.id,
-                    alarm:ipc.alarm,
-                    talk:ipc.audio,
-                    screenshot:ipc.screenshot,
-                    demo:true},calcXYZ(cams,distance)));
+                if(-1===index){
+                    ret.push({
+                        id:ipc.id,
+                        alarm:ipc.alarm,
+                        talk:ipc.audio,
+                        screenshot:ipc.screenshot,
+                        preset:null,x:0,y:0,z:0,
+                        demo:true
+                    });
+                }
+                else{
+                    let cams=[null,ipc.presets[index]/*,null*/];
+                    if(index>0) cams[0]=ipc.presets[index-1];
+                    //if(index+1<mi.range.length)cams[2]=mi.range[index+1];
+                    ret.push(_.extend({
+                        id:ipc.id,
+                        alarm:ipc.alarm,
+                        talk:ipc.audio,
+                        screenshot:ipc.screenshot,
+                        demo:true},calcXYZ(cams,distance)));
+                }
             }
             else{
                 ret.push({

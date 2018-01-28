@@ -1,9 +1,10 @@
-import logger from '../logger';
-import PerimeterModel from '../models/perimeter.model';
-import uuidv1 from 'uuid/v1';
-import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
-// const logger=require('../logger');
-// const PerimeterModel=require('../models/perimeter.model');
+//import logger from '../logger';
+//import PerimeterModel from '../models/perimeter.model';
+//import uuidv1 from 'uuid/v1';
+
+const logger=require('../logger');
+const PerimeterModel=require('../models/perimeter.model');
+const uuidv1=require('uuid/v1');
 
 class PerimeterService {
     /**
