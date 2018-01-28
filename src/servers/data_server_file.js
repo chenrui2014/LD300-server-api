@@ -32,16 +32,10 @@ async  function  recordAlertVideo() {
     return true;
 }
 
-//根据摄像头第一个监控位置来排序，多个主机独立布线，独立排序
 async function getIPCIDsSortByPoint(){
     let ret=[];
-    let test={};
-    _.each(mointors,(m)=>{
-        let ms=_.sortBy(m,['point']);
-        if(!(ms.id in test)){
-            ret.push(ms.id);
-            test[ms.id]=true;
-        }
+    _.each(ipcs,(ipc)=>{
+        ret.push(ipc.id);
     });
     return ret;
 }
