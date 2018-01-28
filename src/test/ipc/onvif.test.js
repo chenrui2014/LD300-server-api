@@ -70,7 +70,6 @@ describe('onvif 大华测试',function(){
            console.log(JSON.stringify(data));
        });
        setTimeout(()=>{
-           ONVIF.stopDiscovery();
            done();
        },10000);
    });
