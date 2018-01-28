@@ -151,7 +151,6 @@ class HostServer extends  EventEmitter{
                 innerEvent:evt
             });
         }
-
         if(!runModeOne) return;
 
         _.forEach(ms,(msi)=>{
