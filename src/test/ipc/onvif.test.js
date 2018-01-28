@@ -1,8 +1,10 @@
 /**
  * Created by Luky on 2017/7/3.
  */
+const {db,file}=require('../init');
+const Data=require('../../servers/data_server');
 const ONVIF=require('../../ipcs/onvif/onvif_ipc');
-const cfg=require('../data/dhipc_onvif.json');
+const IPCF=require('../../servers/ipc_factory');
 const expect = require('chai').expect;
 //const ffmpeg=require('ffmpeg');
 //const rtsp=require('rtsp-ffmpeg');
@@ -11,6 +13,7 @@ const expect = require('chai').expect;
 //const Recorder = require('rtsp-recorder');
 const fs = require('fs');
 const http = require('http');
+const path=require('path');
 
 const wOption = {
     flags: 'a',
@@ -20,7 +23,17 @@ const wOption = {
     autoClose: true
 };
 
+async function getInstance(id) {
+    return await IPCF.getIPC(id);
+}
+
 describe('onvif 大华测试',function(){
+
+    let dbInstance=null;
+    before(async ()=>{
+        //打开注释启动数据库取数据
+        dbInstance=await file();
+    });
 
    it('连接测试',(done)=>{
        let ipc=new ONVIF(cfg);
@@ -31,19 +44,35 @@ describe('onvif 大华测试',function(){
        }).catch(done);
    });
 
-   it('直播流存储文件',(done)=>{
-       let o=new ONVIF(cfg);
-       o.on('data',(buf)=>{
-           console.log(buf.length);
+   async function save(ipc,sign) {
+       let name=ipc.options.ip.split('.').join('_');
+       const file=path.resolve(__dirname,`../data/${name}_onvif_${sign}.h264`);
+       let fw=fs.createWriteStream(file,wOption);
+       ipc.on('video',(data)=>{
+           fw.write(data);
        });
-       let fw=fs.createWriteStream('d:/onvif.txt',wOption);
-       o.on('data',(data)=>{
-           fw.write(data.toString('hex')+'\r\n');
+       await ipc.realPlay();
+       return new Promise((resolve,reject)=>{
+          setTimeout(()=>{
+              ipc.stopRealPlay().catch(reject);
+              resolve();
+          },6000);
        });
-       o._realPlay().then(()=>{
-           o.pipe(fs.createWriteStream('d:/onvif.flv',wOption));
-           setTimeout(done,20000);
-       }).catch(done);
+   }
+
+   it('海康威视',async ()=>{
+       let ipc=await getInstance(6);
+       await save(ipc,'hkws',64);
+   });
+
+   it('discovery',(done)=>{
+       ONVIF.discovery((data)=>{
+           console.log(JSON.stringify(data));
+       });
+       setTimeout(()=>{
+           ONVIF.stopDiscovery();
+           done();
+       },10000);
    });
 
    /*it('直播地址测试',(done)=>{

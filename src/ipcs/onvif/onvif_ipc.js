@@ -391,19 +391,23 @@ class ONVIF_IPC extends  IPC{
         throw new Error('未实现函数getPresets');
     }
 */
-    async discovery(cb){
+    static discovery(cb,timeout=10000){
         onvif.Discovery.removeAllListeners();
         onvif.Discovery.on('device', (data/*, rinfo, xml*/)=> {
-            let camUri = url.parse(data.probeMatches.probeMatch.XAddrs);
-            cb({ip: camUri.hostname, port: camUri.port, path: camUri.path});
+            let uri=data.probeMatches.probeMatch.XAddrs;
+            //海康威视给两个地址，需要用空格截取下
+            //http://192.168.1.64/onvif/device_service%20http://[fe80::1a68:cbff:febc:6c54]/onvif/device_service
+            uri=decodeURI(uri).split(' ')[0];
+            let camUri = url.parse(uri);
+            cb({ip: camUri.hostname, port: camUri.port||80, path: camUri.path});
             onvif.Discovery.on('error', () => {
                 onvif.Discovery.removeAllListeners();
-            })
+            });
         });
-        onvif.Discovery.probe({timeout:5000,resolve:false});
+        onvif.Discovery.probe({timeout:timeout,resolve:false});
     }
 
-    async stopDiscovery(){
+    static stopDiscovery(){
         onvif.Discovery.removeAllListeners();
     }
 }
