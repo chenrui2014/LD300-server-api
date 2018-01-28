@@ -78,8 +78,9 @@ class IPCServer extends EventEmitter{
             listenState&&_.forEach(ipcs,(id)=>{
                 this._addIpcListener(id);
             });
-            this._ipcs=_.transform(ipcs,(result,id)=>{
-                result[id]={};
+            this._ipcs={};
+            _.each(ipcs,(id)=>{
+                this._ipcs[id]={};
             });
 
             for (let i = 0; i < numCP; i++) {
