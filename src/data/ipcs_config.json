@@ -94,5 +94,25 @@
       "pwd": "admin",
       "path": ""
     }
+  },
+  {
+    "id":6,
+    "ip":"192.168.1.64",
+    "port":"80",
+    "path":"",
+    "user":"admin",
+    "pwd":"admin123",
+    "brand":"hikvision",
+    "functions":{
+      "ptz": false,
+      "alarm": false,
+      "audio": false
+    },
+    "onvif":{
+      "port": 80,
+      "user": "admin",
+      "pwd": "admin",
+      "path": ""
+    }
   }
 ]

@@ -30,6 +30,14 @@ async function getOnvifInstance(id) {
     return await new Onvif(data);
 }
 
+describe('大华设备发现',()=>{
+    it('设备发现',async ()=>{
+        await DHIPC.discovery((data)=>{
+            console.log(JSON.stringify(data));
+        });
+    });
+});
+
 describe('大华IPC直连测试', function() {
 
     let dbInstance=null;

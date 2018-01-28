@@ -65,13 +65,10 @@ describe('onvif 大华测试',function(){
        await save(ipc,'hkws',64);
    });
 
-   it('discovery',(done)=>{
-       ONVIF.discovery((data)=>{
+   it('discovery',async ()=>{
+       await ONVIF.discovery((data)=>{
            console.log(JSON.stringify(data));
        });
-       setTimeout(()=>{
-           done();
-       },10000);
    });
 
    /*it('直播地址测试',(done)=>{

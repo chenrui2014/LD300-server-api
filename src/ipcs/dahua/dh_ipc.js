@@ -650,11 +650,84 @@ class DHIPC extends IPC{
         return await Promise.reject(error);
     }
 
-    async discovery(){
 
+
+    static async discovery(cb,timeout=10000){
+        let callback=dhlib.callbacks.fSearchDevicesCB((data/*,userData*/)=>{
+            let buf=dhlib.utils.readBuffer(data,dhlib.structs.DEVICE_NET_INFO_EX.size);
+            let dataClone=Buffer.from(buf);
+            let ipcData=new dhlib.structs.DEVICE_NET_INFO_EX(dataClone);
+            let ipcInfo=dhlib.utils.structParser(dhlib.structs.DEVICE_NET_INFO_EX,ipcData);
+            if(ipcInfo.szDetailType.indexOf("IPC")!==0) return;
+            if(ipcInfo.iIPVersion-0!==4)return;
+            cb({ip:ipcInfo.szIP,port:ipcInfo.nPort});
+        });
+        let handle=dhlib.functions.CLIENT_StartSearchDevices(callback,ref.NULL,ref.NULL);
+        return new Promise((resolve,reject)=>{
+            if(0===handle) return reject(`启用搜索异常，内部错误码：${DHIPC.lastError}`);
+            setTimeout(()=>{
+                dhlib.functions.CLIENT_StopSearchDevices(handle);
+                cb(null);
+                resolve();
+            },timeout||10000);
+        });
     }
-
-
 }
 
 exports=module.exports=DHIPC;
+
+/*
+iIPVersion:4
+szIP:192.168.1.92
+nPort:37777
+szSubmask:255.255.255.0
+szGateway:192.168.1.1
+szMac:4c:11:bf:a9:41:a9
+szDeviceType:IPC-HDW4125C
+byManuFactory:0
+byDefinition:0
+bDhcpEn:false
+byReserved1:0
+verifyData:
+szSerialNo:1E00400PAX01524
+szDevSoftVersion:
+szDetailType:IPC-HDW4125C
+szVendor:
+szDevName:
+szUserName:
+szPassWord:
+nHttpPort:80
+wVideoInputCh:0
+wRemoteVideoInputCh:0
+wVideoOutputCh:0
+wAlarmInputCh:0
+wAlarmOutputCh:0
+cReserved:
+
+iIPVersion:4
+szIP:192.168.1.100
+nPort:37777
+szSubmask:255.255.255.0
+szGateway:192.168.1.1
+szMac:4c:11:bf:01:cf:dc
+szDeviceType:NVR
+byManuFactory:0
+byDefinition:0
+bDhcpEn:false
+byReserved1:0
+verifyData:2302
+szSerialNo:PZA4MM155WCEO4N
+szDevSoftVersion:
+szDetailType:NVR
+szVendor:
+szDevName:
+szUserName:
+szPassWord:
+nHttpPort:80
+wVideoInputCh:0
+wRemoteVideoInputCh:0
+wVideoOutputCh:0
+wAlarmInputCh:0
+wAlarmOutputCh:0
+cReserved:
+ */

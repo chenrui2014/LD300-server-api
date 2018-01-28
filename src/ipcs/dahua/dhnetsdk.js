@@ -453,9 +453,9 @@ let fns={
     ,'CLIENT_QueryDevState':[BOOL,[LLONG,int,charPtr,int,intPtr,int]]
     //QueryDecEncoderInfo的第二个参数为nvr中的通道号减一
     ,'CLIENT_QueryDecEncoderInfo':[BOOL,[LLONG,int,'pointer',int]]
-/*    ,'CLIENT_OpenSound':[BOOL,[LLONG]]
-    ,'CLIENT_CloseSound':[BOOL,[]]*/
-    ,'CLIENT_StartSearchDevices':[LLONG,['pointer',voidPtr,charPtr]]
+    //,'CLIENT_OpenSound':[BOOL,[LLONG]]
+    //,'CLIENT_CloseSound':[BOOL,[]]*/
+    ,'CLIENT_StartSearchDevices':[LLONG,['pointer',voidPtr,string]]
     ,'CLIENT_StopSearchDevices':[BOOL,[LLONG]]
 };
 //CFG_ENCODE_INFO
@@ -479,6 +479,19 @@ utils.mbcs2Utf8=function(buf) {
 
 utils.utf82Mbcs=function(buf){
     return legacy.encode(buf,'gb2312');
+};
+
+utils.structParser=function (_struct,data) {
+    let ret={};
+    _.each(data.toObject(),(val,key)=>{
+        if(_struct.fields[key].type.name==='ArrayType'
+            &&_struct.fields[key].type.type.name==='char'){
+            ret[key]=val.buffer.readCString(0);
+            return;
+        }
+        ret[key]=val;
+    });
+    return ret;
 };
 
 exports=module.exports= (function(){
