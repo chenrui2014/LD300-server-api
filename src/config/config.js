@@ -53,7 +53,7 @@ let config={
         return new Date().getTime()-config.begin;
     },
     getAbsolutePath(name){
-        console.log(name + " path:" +path.resolve(config.root,name));
+        //console.log(name + " path:" +path.resolve(config.root,name));
         return path.resolve(config.root,name);
     },
     getConfig(name){
