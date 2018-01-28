@@ -406,10 +406,6 @@ class ONVIF_IPC extends  IPC{
         });
         onvif.Discovery.probe({timeout:timeout,resolve:false});
     }
-
-    static stopDiscovery(){
-        onvif.Discovery.removeAllListeners();
-    }
 }
 
 function respURI(uri,user,pwd){
