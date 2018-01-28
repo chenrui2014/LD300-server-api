@@ -11,8 +11,14 @@ const Live=require('./ipc_live_server');
 const getPort=require('get-port');
 const IPCFactory=require('./ipc_factory');
 const crypto=require('crypto');
-const config=global.server_config||require('../config/config');
-const store=_.get(config,'runMode.store','db');
+let config=global.server_config||require('../config/config');
+let store=_.get(config,'runMode.store','db');
+if(process.env.NODE_ENV==='development'||process.env.NODE_ENV==='test'){
+    let _store=process.argv.pop();
+    if(_store==='file'||_store==='db'){
+        config.runMode.store=_store;
+    }
+}
 const ptzLock=_.get(config,'ipc.ptzLock',15000);
 const url=require('url');
 const logger={};
@@ -75,9 +81,9 @@ async function  play(res,id) {
         }
         l.on('close',()=>{
             lives[id]=null;
-            send({type:'countChanged',count:--lives.length});
+            send({type:'countChanged',count:--lives.length,id});
         });
-        send({type:'countChanged',count:++lives.length});
+        send({type:'countChanged',count:++lives.length,id});
         return succeed(res,'live',{port:port,path:l.path,id});
     })
 }
@@ -87,6 +93,7 @@ async function arrchive(res,id,hid) {
     let l=await getLive(id);
     if(!l) return fault(res,'arrchive','请求的摄像头不存在',{id,hid});
     l.arrchive(hid).then((path)=>{
+        send({type:'countChanged',count:++lives.length,id});
         return path?succeed(res,'arrchive',{id,hid,path}):fault(res,'arrchive','发生内部错误，无法存档视频流或无法打开视频流',{id,hid},false);
     });
 }
@@ -96,6 +103,7 @@ function stopArrchive(res,id) {
     let l= lives[id];
     if(!l) return fault(res,'stopArrchive','请求的摄像头不存在',{id});
     l.stopArrchive(id);
+    send({type:'countChanged',count:--lives.length,id});
     return succeed(res,'stopArrchive',{id});
 }
 

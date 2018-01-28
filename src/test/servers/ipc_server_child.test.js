@@ -33,7 +33,6 @@ async function send(path) {
         });
         req.end();
     });
-
 }
 
 describe('直播子进程http服务测试',()=>{

@@ -51,7 +51,6 @@ class IPCServer extends EventEmitter{
             worker.port=event.port;
         }
         else if(event.type==='countChanged'){
-            console.log('===='+JSON.stringify(this._workers.length));
             const ct=worker.payload=event.count;
             if(0===ct) this._ipcs[event.id].worker=null;
             else this._ipcs[event.id].worker=worker;
@@ -82,7 +81,6 @@ class IPCServer extends EventEmitter{
             this._ipcs=_.transform(ipcs,(result,id)=>{
                 result[id]={};
             });
-            console.log(JSON.stringify(this._ipcs));
 
             for (let i = 0; i < numCP; i++) {
                 let args=[];

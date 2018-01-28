@@ -100,7 +100,7 @@ class HostServer extends  EventEmitter{
             event.id = evtID;
             event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
             event.hid = hid;
-            evebt.path = data.path
+            evebt.path = data.path;
             event.pid = id;
 
             await EventService.add_event(event);
