@@ -94,14 +94,15 @@ class HostServer extends  EventEmitter{
         //*******将录制视频的摄像头以及录像地址存入数据库*******//
         let result = await EventService.find_one(evtID);
         if(result){
-            await EventService.edit_event({id:evtID},{pid:id,path:data.path});
+            await EventService.edit_event({id:evtID},{video:[{pid:id,path:data.path}]});
         }else{
             let event = {};
             event.id = evtID;
             event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
             event.hid = hid;
-            evebt.path = data.path
-            event.pid = id;
+            let videoItem = {pid:id,path:data.path};
+            event.video = [];
+            event.video.push(videoItem);
 
             await EventService.add_event(event);
         }
