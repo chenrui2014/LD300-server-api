@@ -391,7 +391,7 @@ class ONVIF_IPC extends  IPC{
         throw new Error('未实现函数getPresets');
     }
 */
-    static discovery(cb,timeout=10000){
+    static async discovery(cb,timeout=10000){
         onvif.Discovery.removeAllListeners();
         onvif.Discovery.on('device', (data/*, rinfo, xml*/)=> {
             let uri=data.probeMatches.probeMatch.XAddrs;
@@ -400,11 +400,17 @@ class ONVIF_IPC extends  IPC{
             uri=decodeURI(uri).split(' ')[0];
             let camUri = url.parse(uri);
             cb({ip: camUri.hostname, port: camUri.port||80, path: camUri.path});
-            onvif.Discovery.on('error', () => {
+        });
+        return  new Promise((resolve,reject)=>{
+            onvif.Discovery.on('error', (err) => {
                 onvif.Discovery.removeAllListeners();
+                reject(err);
+            });
+            onvif.Discovery.probe({timeout:timeout||10000,resolve:false},()=>{
+                cb(null);
+                resolve();
             });
         });
-        onvif.Discovery.probe({timeout:timeout,resolve:false});
     }
 }
 
