@@ -494,7 +494,7 @@ class DHIPC extends IPC{
             return await this.moveToPoint(pt.x,pt.y,pt.z);
         }
     }
-
+/*暂时不启用
     //标记当前位置未新的预置点，标题如示，删除预置点通过返回的参数对象进行操作
     async setPreset(caption){
         throw new Error('未实现函数setPreset');
@@ -570,7 +570,7 @@ class DHIPC extends IPC{
         }
         return _.sortBy(presets,['nIndex']);
     }
-
+*/
     //获得当前球机坐标xyz
     async getPoint(){
         if(!this.supportPTZ) {
@@ -649,6 +649,12 @@ class DHIPC extends IPC{
         //this.emit(IPC.Events.Error,error);
         return await Promise.reject(error);
     }
+
+    async discovery(){
+
+    }
+
+
 }
 
 exports=module.exports=DHIPC;

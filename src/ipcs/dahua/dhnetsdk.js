@@ -63,27 +63,38 @@ consts.DH_DEVSTATE_PTZ_LOCATION=0x36;
 consts.DH_DEVSTATE_PTZ_PRESET_LIST=0x57;
 consts.CFG_CMD_ENCODE='Encode';
 consts.DEVSTATE_TALK_ECTYPE=9;
+consts.DH_MACADDR_LEN=40;
+consts.DH_DEV_TYPE_LEN=32;
+consts.DH_DEV_SERIALNO_LEN=48;
+consts.DH_MAX_URL_LEN=128;
+consts.DH_DEV_TYPE_LEN=32;
+consts.DH_MAX_STRING_LEN=128;
+consts.DH_MACHINE_NAME_NUM=64;
+consts.DH_USER_NAME_LENGTH_EX=16;
 
-
-callbacks.fDisConnect=function(fn){
+callbacks.fDisConnect=(fn)=>{
     return ffi.Callback.apply(ffi,['void',[longlong,string,long,LDWORD]].concat(fn));
 };
-callbacks.fRealDataCallBackEx=function(fn){
+callbacks.fRealDataCallBackEx=(fn)=>{
     return ffi.Callback.apply(ffi,['void',[LLONG,DWORD,BYTEPtr,DWORD,LONG,LDWORD]].concat(fn));
 };
-callbacks.pfAudioDataCallBack=function (fn) {
+callbacks.pfAudioDataCallBack=(fn)=> {
     return ffi.Callback.apply(ffi,['void',[LLONG,BYTEPtr,DWORD,BYTE,LDWORD]].concat(fn));
 };
-callbacks.fRealPlayDisConnect=function (fn) {
+callbacks.fRealPlayDisConnect=(fn)=> {
     return ffi.Callback.apply(ffi,['void',[LLONG,ENUM,voidPtr,LDWORD]].concat(fn));
 };
 
-callbacks.fHaveReConnect=function (fn) {
+callbacks.fHaveReConnect=(fn)=> {
     return ffi.Callback.apply(ffi,['void',[LLONG,string,LONG,LDWORD]].concat(fn));
 };
 
-callbacks.fDecCallBack=function (fn) {
+callbacks.fDecCallBack=(fn)=>{
     return ffi.Callback.apply(ffi,['void',[LLONG,string,LONG,LDWORD]].concat(fn));
+};
+
+callbacks.fSearchDevicesCB= (fn)=> {
+    return ffi.Callback.apply(ffi,['void',['pointer',voidPtr]].concat(fn));
 };
 
 enums.loginType= new Enum({"TCP":0}, { 'freez': true });
@@ -380,6 +391,35 @@ structs.AUDIO_FORMAT=struct({
     nSamplesPerSec:DWORD
 });
 
+structs.DEVICE_NET_INFO_EX=struct({
+    iIPVersion:int,
+    szIP:ArrayType(char,64),
+    nPort:int,
+    szSubmask:ArrayType(char,64),
+    szGateway:ArrayType(char,64),
+    szMac:ArrayType(char,consts.DH_MACADDR_LEN),
+    szDeviceType:ArrayType(char,consts.DH_DEV_TYPE_LEN),
+    byManuFactory:BYTE,
+    byDefinition:BYTE,
+    bDhcpEn:bool,
+    byReserved1:BYTE,
+    verifyData:ArrayType(char,88),
+    szSerialNo:ArrayType(char,consts.DH_DEV_SERIALNO_LEN),
+    szDevSoftVersion:ArrayType(char,consts.DH_MAX_URL_LEN),
+    szDetailType:ArrayType(char,consts.DH_DEV_TYPE_LEN),
+    szVendor:ArrayType(char,consts.DH_MAX_STRING_LEN),
+    szDevName:ArrayType(char,consts.DH_MACHINE_NAME_NUM),
+    szUserName:ArrayType(char,consts.DH_USER_NAME_LENGTH_EX),
+    szPassWord:ArrayType(char,consts.DH_USER_NAME_LENGTH_EX),
+    nHttpPort:ushort,
+    wVideoInputCh:BYTE,
+    wRemoteVideoInputCh:BYTE,
+    wVideoOutputCh:BYTE,
+    wAlarmInputCh:BYTE,
+    wAlarmOutputCh:BYTE,
+    cReserved:ArrayType(char,244)
+});
+
 //CLIENT_GetDevConfig,CLIENT_SetDevConfig,CLIENT_GetDevConfig 设置视频流特性
 let fns={
     'CLIENT_Init':[BOOL,['pointer',LDWORD]]
@@ -415,6 +455,8 @@ let fns={
     ,'CLIENT_QueryDecEncoderInfo':[BOOL,[LLONG,int,'pointer',int]]
 /*    ,'CLIENT_OpenSound':[BOOL,[LLONG]]
     ,'CLIENT_CloseSound':[BOOL,[]]*/
+    ,'CLIENT_StartSearchDevices':[LLONG,['pointer',voidPtr,charPtr]]
+    ,'CLIENT_StopSearchDevices':[BOOL,[LLONG]]
 };
 //CFG_ENCODE_INFO
 //CFG_AUDIO_ENCODE_FORMAT
