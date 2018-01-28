@@ -1,9 +1,13 @@
 /**
  * Created by chen on 17-8-22.
  */
-import mongoose from 'mongoose';
-import validate from 'mongoose-validator';
-import validator from 'validator';
+//import mongoose from 'mongoose';
+//import validate from 'mongoose-validator';
+//import validator from 'validator';
+
+const mongoose =require('mongoose');
+const validate=require('mongoose-validator');
+const validator=require('validator');
 
 const UserSchema = new mongoose.Schema({
     id:{

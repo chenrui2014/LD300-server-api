@@ -1,9 +1,12 @@
-import logger from '../logger';
-import PpModel from '../models/pp.model';
-import uuidv1 from 'uuid/v1';
-import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
-// const logger=require('../logger');
-// const PpModel=require('../models/pp.model');
+//import logger from '../logger';
+//import PpModel from '../models/pp.model';
+//import uuidv1 from 'uuid/v1';
+//import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
+
+const logger=require('../logger');
+const PpModel=require('../models/pp.model');
+const uuidv1=require('uuid/v1');
+const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;
 
 class PpService {
     /**

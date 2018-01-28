@@ -2,11 +2,11 @@
  * 操作单位数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import UnitModel from '../models/unit.model';
-import {Preset as PresetModel} from "../models/monitoringArea.model";
-// const logger=require('../logger');
-// const UnitModel=require('../models/unit.model');
+//import logger from '../logger';
+//import UnitModel from '../models/unit.model';
+
+const logger=require('../logger');
+const UnitModel=require('../models/unit.model');
 
 class UnitService {
 

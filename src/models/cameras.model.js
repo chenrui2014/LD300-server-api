@@ -1,8 +1,8 @@
 /**
  * Created by chen on 17-8-23.
  */
-// const mongoose =require('mongoose');
-import mongoose from 'mongoose';
+const mongoose =require('mongoose');
+// import mongoose from 'mongoose';
 
 const CamerasSchema = new mongoose.Schema({
 

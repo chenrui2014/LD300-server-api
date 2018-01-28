@@ -2,12 +2,13 @@
  * 操作事件数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import EventModel from '../models/event.model';
-import uuidv1 from 'uuid/v1';
-import ConfigModel from "../models/config.model";
-// const logger=require('../logger');
-// const EventModel=require('../models/event.model');
+//import logger from '../logger';
+//import EventModel from '../models/event.model';
+//import uuidv1 from 'uuid/v1';
+
+const logger=require('../logger');
+const EventModel=require('../models/event.model');
+const uuidv1=require('uuid/v1');
 
 class EventService {
 

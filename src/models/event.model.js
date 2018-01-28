@@ -1,8 +1,8 @@
 /**
  * Created by chen on 17-8-23.
  */
-import mongoose from 'mongoose';
-
+//import mongoose from 'mongoose';
+const mongoose =require('mongoose');
 const EventSchema = new mongoose.Schema({
 
     id:{

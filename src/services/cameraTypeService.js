@@ -2,11 +2,12 @@
  * 操作摄像头类型数据对象
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-import CameraTypeModel from '../models/cameraType.model';
-import uuidv1 from 'uuid/v1';
-// const logger=require('../logger');
-// const CameraTypeModel=require('../models/cameraType.model');
+//import logger from '../logger';
+//import CameraTypeModel from '../models/cameraType.model';
+//import uuidv1 from 'uuid/v1';
+const logger=require('../logger');
+const CameraTypeModel=require('../models/cameraType.model');
+const uuidv1=require('uuid/v1');
 
 class CameraTypeService {
 

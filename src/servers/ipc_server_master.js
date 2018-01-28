@@ -5,12 +5,13 @@
 const _=require('lodash');
 const IPC=require('../ipcs/base/ipc');
 const Data=require('./data_server');
-const IPCFactory=require('./ipc_factory');
 const EventEmitter = require('events').EventEmitter;
 const config=global.server_config||require('../config/config');
+const store=_.get(config,'runMode.store');
 const listenState=false;//_.get(config,'ipc.listen',false);
 const http = require('http');
 const numCPUs = require('os').cpus().length;
+const numCP=Math.round(numCPUs*5/8);
 const cp = require('child_process');
 const url=require('url');
 const path = require('path');
@@ -50,11 +51,11 @@ class IPCServer extends EventEmitter{
             worker.port=event.port;
         }
         else if(event.type==='countChanged'){
-            worker.payload=event.count;
+            console.log('===='+JSON.stringify(this._workers.length));
+            const ct=worker.payload=event.count;
+            if(0===ct) this._ipcs[event.id].worker=null;
+            else this._ipcs[event.id].worker=worker;
             this._workers=_.orderBy(this._workers,['payload']);
-        }
-        else if(event.type==='close'){
-            this._ipcs[event.id].worker=null;
         }
         this.log('收到子进程消息',{innerEvent:event,port:worker.port});
     }
@@ -67,6 +68,7 @@ class IPCServer extends EventEmitter{
         let ipcs=await Data.getIPCIDsSortByPoint().catch(()=>{
             return Promise.resolve([]);
         });
+
         if(!ipcs||!ipcs.length) return Promise.reject('没有可连接摄像头');
         this.stop();
 
@@ -78,20 +80,19 @@ class IPCServer extends EventEmitter{
                 this._addIpcListener(id);
             });
             this._ipcs=_.transform(ipcs,(result,id)=>{
-                result.push({id:id});
+                result[id]={};
             });
+            console.log(JSON.stringify(this._ipcs));
 
-            for (let i = 0; i < numCPUs; i++) {
-                let args={};
-                let worker = worker=cp.fork(childjs, ['normal']);
-                if(process.env.NODE_ENV==='development'){
-                    // args={
-                    //     execPath:'C:\\Program Files\\nodejs\\node.exe',
-                    //     execArgv: [ '--inspect-brk='+(process.debugPort+i+1) ]
-                    // };
-                    worker=cp.fork(childjs, {execArgv: [ '--inspect='+(process.debugPort+i+1)]});
+            for (let i = 0; i < numCP; i++) {
+                let args=[];
+                let worker=null;
+                if(process.env.NODE_ENV==='development'||process.env.NODE_ENV==='test'){
+                    worker=cp.fork(childjs, args.concat([store]),{execArgv: [ '--inspect='+(process.debugPort+i+1)]});
                 }
-                //let worker=cp.fork(childjs,['normal'], args);
+                else{
+                    cp.fork(childjs, args);
+                }
                 let wobj={worker:worker,payload:0,start:new Date()};
 
                 wobj.lsn=worker.on('message',this._onProcessMessage.bind(this,wobj));
@@ -110,9 +111,9 @@ class IPCServer extends EventEmitter{
                 }
                 let id=parseInt(uri.pathname.slice(5));
                 let worker = this.findWorker(id);
-                let find=!!worker;
-                worker=worker||this._workers.shift();
-                if(!find)this._workers.unshift(worker);
+                if(!worker){
+                    this._workers.push(worker=this._workers.shift());
+                }
                 this.log('请求转发',{'Location': `http://localhost:${worker.port}` + req.url});
                 //res.writeHead(302, {'Location': `http://localhost:${worker.port}`});
                 //res.end();
@@ -136,7 +137,14 @@ class IPCServer extends EventEmitter{
                 _startWorker();
                 this._hServer=httpServer;
                 this.log('摄像头分发服务启动');
-                resolve();
+                let x=setInterval(()=>{
+                    if(!_.some(this._workers,(worker)=>{
+                        return !('port' in worker);
+                    })){
+                        clearInterval(x);
+                        resolve();
+                    }
+                },500);
             };
             httpServer.on('error',errorBind);
             httpServer.on('listening',onListen);
