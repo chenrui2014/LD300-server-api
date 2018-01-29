@@ -1,9 +1,9 @@
 const {db,file}=require('../init');
 let {setHostData,setMData,setIpcData}=require('../modify_config');
+let _=require('lodash');
 const config=require('../../config/config');
 const port=_.get(config,'ipc_server.port');
 let Server=require('../../servers/host_server');
-let _=require('lodash');
 let expect=require('chai').expect;
 let vHost=require('../host/virtual_host');
 let Host=require('../../host/host');
