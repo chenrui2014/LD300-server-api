@@ -1,16 +1,19 @@
 const {db,file}=require('../init');
 let {setHostData,setMData,setIpcData}=require('../modify_config');
+const config=require('../../config/config');
+const port=_.get(config,'ipc_server.port');
 let Server=require('../../servers/host_server');
 let _=require('lodash');
 let expect=require('chai').expect;
 let vHost=require('../host/virtual_host');
 let Host=require('../../host/host');
 const SerialPort=require('../../serialport/serialport');
-const IPCServer=require('../../servers/ipc_server_child').server;
+//const IPCServer=require('../../servers/ipc_server_child').server;
 //const M=require('../../servers/ipc_mointors');
+const IPCServer=new require('../../servers/ipc_server_master');
 const Factory=require('../../servers/ipc_factory');
 
-let port=0;
+/*let port=0;
 async function getUrl(){
     if(port) return port;
     let a=IPCServer.address();
@@ -18,6 +21,10 @@ async function getUrl(){
     IPCServer.on('listening',()=>{
         return port=IPCServer.address().port;
     });
+}*/
+
+async function getUrl() {
+    return port;
 }
 
 describe('主机服务测试用例',()=>{
@@ -25,6 +32,7 @@ describe('主机服务测试用例',()=>{
     before(async ()=>{
         //打开注释启动数据库取数据
         dbInstance=await file();
+        await IPCServer.start();
     });
 
     it('启动关闭',(done)=>{
