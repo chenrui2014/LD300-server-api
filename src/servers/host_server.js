@@ -42,7 +42,7 @@ class HostServer extends  EventEmitter{
         if(data.stateNew===Host.States.Alarm){
             this._OnIntrusionAlert(data);
         }
-        else if(data.state===Host.States.Normal){
+        else if(data.stateNew===Host.States.Normal){
             this._OnDeactivateAlert(data);
         }
         else this.emit(Host.Events.StateChanged,data);
