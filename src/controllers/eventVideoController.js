@@ -3,22 +3,22 @@
  */
 import logger from '../logger';
 
-import EventService from '../services/eventService';
+import EventVideoService from '../services/eventVideoService';
 import HostsService from '../services/hostService';
 const uuidv1=require('uuid/v1');
 
-class EventController {
-    static async add_event(ctx){
+class EventVideoController {
+    static async add_eventVideo(ctx){
         const data = ctx.request.body;
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await EventService.isExist({typeCode:data.typeCode})
-        //const isExist = await EventModel.findOne({ip:data.ip});
+        const isExist = await EventVideoService.isExist({typeCode:data.typeCode})
+        //const isExist = await EventVideoModel.findOne({ip:data.ip});
 
         if(isExist) return ctx.error={ msg: '类型编码为[' + data.typeCode + ']的事件已存在!' };
 
-        const result = await EventService.add_event(data)
+        const result = await EventVideoService.add_eventVideo(data)
 
         let msg = '';
         if(result) {
@@ -31,9 +31,9 @@ class EventController {
 
     }
 
-    static async delete_event(ctx) {
+    static async delete_eventVideo(ctx) {
         const { id } = ctx.params;
-        const result = await EventService.delete_event({id:id})
+        const result = await EventVideoService.delete_eventVideo({id:id})
         let msg = '';
         if(result) {
             msg = '删除事件成功';
@@ -45,17 +45,17 @@ class EventController {
 
     }
 
-    static async edit_event(ctx){
+    static async edit_eventVideo(ctx){
         const data = ctx.request.body;
         logger.info(data);
         let _id = data._id;
         delete data._id;
-        const result = await EventService.edit_event({_id:_id},data);
+        const result = await EventVideoService.edit_eventVideo({_id:_id},data);
         if(result) return ctx.body = {msg:'修改事件成功',data:result};
         return ctx.error={msg: '修改事件失败!'};
     }
 
-    static async find_event(ctx){
+    static async find_eventVideo(ctx){
         const { sort,range,filter } = ctx.query;
         let sortObj = null;
         if(sort){
@@ -91,7 +91,7 @@ class EventController {
             pageEnd = rangeObj[1];
         }
 
-        const total = await EventService.getTotal();
+        const total = await EventVideoService.getTotal();
 
         const pagination = {};
         pagination.pageStart = pageStart;
@@ -107,9 +107,9 @@ class EventController {
                 const pagination = {};
                 pagination.pageStart = pageStart;
                 pagination.pageSize = pageEnd-pageStart+25;
-                result = await EventService.find_event(filterObj,sortP,pagination);
+                result = await EventVideoService.find_eventVideo(filterObj,sortP,pagination);
             }else{
-                result = await EventService.find_event(filterObj,sortP);
+                result = await EventVideoService.find_eventVideo(filterObj,sortP);
             }
         }else{
             if(rangeObj){
@@ -121,9 +121,9 @@ class EventController {
                 const pagination = {};
                 pagination.pageStart = pageStart;
                 pagination.pageSize = pageEnd-pageStart+25;
-                result = await EventService.find_event(filterObj,null,pagination);
+                result = await EventVideoService.find_eventVideo(filterObj,null,pagination);
             }else{
-                result = await EventService.find_event(filterObj);
+                result = await EventVideoService.find_eventVideo(filterObj);
             }
         }
 
@@ -150,58 +150,12 @@ class EventController {
                 return item;
             });
         }
-        // let result = await EventService.find_event(filterObj,sortP,pagination);
+        // let result = await EventVideoService.find_eventVideo(filterObj,sortP,pagination);
         if(result) return ctx.body = {msg:'查询事件',data:result,total:total};
         return ctx.error={msg: '没有找到事件!'};
     }
 
-    static async find_eventVideo(ctx){
-        const {filter } = ctx.query;
-        let filterObj = null;
-        if(filter && "{}" !==filter){
-            let obj = JSON.parse(filter);
-            if(obj && Array.isArray(obj.id)){
-                filterObj = {id:{$in:obj.id}};
-            }else{
-                filterObj = obj;
-            }
-        }
-
-        let result = await EventService.find_event({id:filterObj.eventId});
-        let videos=[];
-        if(result && result.length > 0){
-            result.forEach(function (event) {
-                event.video.map((item,i) =>{
-                    item._doc.eventId = event.id;
-                    //item._doc.id = uuidv1();
-                    return item;
-                });
-                event.video.forEach(function (video) {
-                    videos.push(video);
-                });
-            });
-        }
-
-        if(videos) return ctx.body = {msg:'事件关联摄像头',total:videos.length,data:videos};
-
-    }
-
-    static async findVideo_one(ctx){
-        const { id } = ctx.params;
-        let result = await EventService.find_event({video:[{id:id}]},null,null);
-        let video=null;
-        if(result && result.length > 0){
-            video = result[0].video.filter(function (item) {
-                return item.id ==id;
-            })
-        }
-
-        if(video) return ctx.body = {msg:'查询事件',data:video};
-        return ctx.error = {msg: '调取录像失败!'};
-
-    }
-
-    static async find_event_noPage(ctx){
+    static async find_eventVideo_noPage(ctx){
         const { sort} = ctx.query;
         let sortObj = JSON.parse(sort);
         let sortP = {};
@@ -212,7 +166,7 @@ class EventController {
                 sortP[sortObj[0]] = -1
             }
         }
-        let result = await EventService.find_event(null,sortP,null);
+        let result = await EventVideoService.find_eventVideo(null,sortP,null);
 
         const hosts = await HostsService.findAll({port:1});
         //const cameras = await CamerasService.findAll({id:1});
@@ -244,7 +198,7 @@ class EventController {
 
     static async find_one(ctx){
         const { id } = ctx.params;
-        const result = await EventService.find_one(id);
+        const result = await EventVideoService.find_one(id);
 
         const hosts = await HostsService.findAll({port:1});
         if(result ){
@@ -263,4 +217,4 @@ class EventController {
 
 }
 
-export default EventController;
+export default EventVideoController;

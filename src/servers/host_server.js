@@ -15,8 +15,10 @@ const IPCMointor=require('./ipc_mointors');
 const runModeOne=_.get(config,'runMode.type','one')==='one';
 const Data=require('./data_server');
 const EventService = require('../services/eventService');
+const EventVideoService = require('../services/eventVideoService');
 const moment = require('moment');
 const path=require('path');
+const uuidv1=require('uuid/v1');
 
 const _Errors={
     LinkFault:'linkFault',
@@ -92,20 +94,27 @@ class HostServer extends  EventEmitter{
 
         data.path=path.relative(config.root,data.path);
         //*******将录制视频的摄像头以及录像地址存入数据库*******//
-        let result = await EventService.find_one(evtID);
-        if(result){
-            await EventService.edit_event({id:evtID},{video:[{pid:id,path:data.path}]});
-        }else{
-            let event = {};
-            event.id = evtID;
-            event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-            event.hid = hid;
-            let videoItem = {pid:id,path:data.path};
-            event.video = [];
-            event.video.push(videoItem);
+        let eventVideo = {};
+        eventVideo.eventId = evtID;
+        eventVideo.pid=id;
+        eventVideo.path = data.path;
 
-            await EventService.add_event(event);
-        }
+        await EventVideoService.add_eventVideo(event);
+
+        // let result = await EventService.find_one(evtID);
+        // if(result){
+        //     await EventService.edit_event({id:evtID},{video:[{id:uuidv1(),pid:id,path:data.path}]});
+        // }else{
+        //     let event = {};
+        //     event.id = evtID;
+        //     event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+        //     event.hid = hid;
+        //     let videoItem = {id:uuidv1(),pid:id,path:data.path};
+        //     event.video = [];
+        //     event.video.push(videoItem);
+        //
+        //     await EventService.add_event(event);
+        // }
         //********************************//
 
         //await Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});

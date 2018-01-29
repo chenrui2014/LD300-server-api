@@ -16,6 +16,7 @@ import ConfigController from './controllers/configController';
 import VendorController from './controllers/vendorController';
 import UnitController from './controllers/unitController';
 import PpController from './controllers/ppController';
+import EventVideoController from './controllers/eventVideoController';
 //import { isBearerAuthenticated, isLocalAuthenticated } from './lib/auth';
 
 import Router from 'koa-router';
@@ -113,12 +114,16 @@ router.get('/preset', PresetController.find_preset)
 
 //事件路由
 router.get('/event', EventController.find_event)
-    .get('/eventVideo', EventController.find_eventVideo)
     .get('/event/:id',EventController.find_one)
     .post('/event',EventController.add_event)
     .put('/event/:id',EventController.edit_event)
     .delete('/event/:id',EventController.delete_event);
-
+//事件录像路由
+router.get('/eventVideo', EventVideoController.find_eventVideo)
+    .get('/eventVideo/:id',EventVideoController.find_one)
+    .post('/eventVideo',EventVideoController.add_eventVideo)
+    .put('/eventVideo/:id',EventVideoController.edit_eventVideo)
+    .delete('/eventVideo/:id',EventVideoController.delete_eventVideo);
 //摄像头类型路由
 router.get('/cameraType', CameraTypeController.find_cameraType)
     .get('/cameraType_noPage',CameraTypeController.find_cameraType_noPage)

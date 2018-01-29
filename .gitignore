@@ -7,3 +7,4 @@ logger-error.log
 logger-info.log
 src/logs/
 package-lock.json
+yarn.lock
