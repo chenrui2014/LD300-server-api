@@ -46,7 +46,7 @@ class IPCMointor{
                         alarm:ipc.alarm,
                         talk:ipc.audio,
                         screenshot:ipc.screenshot,
-                        preset:null,x:0,y:0,z:0,
+                        preset:null,x:-1,y:-1,z:-1,
                         demo:true
                     });
                 }
