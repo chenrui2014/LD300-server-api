@@ -24,7 +24,7 @@ describe('主机服务测试用例',()=>{
     let dbInstance=null;
     before(async ()=>{
         //打开注释启动数据库取数据
-        dbInstance=await db();
+        dbInstance=await file();
     });
 
     it('启动关闭',(done)=>{
@@ -40,6 +40,20 @@ describe('主机服务测试用例',()=>{
             };
             setTimeout(testHostStart,200);
         }).catch(done);
+    });
+
+
+    it('报警，启动并停止视频录像',(done)=>{
+        getUrl().then((port)=>{
+            let server=new Server({ipc_server:{
+                port:port
+            }});
+            server._arrchive(6,1).then(()=>{
+                setTimeout(()=>{
+                    server._stopArrchive(6,1).then(done).catch(done);
+                },1800);
+            }).catch(done);
+        });
     });
 
     describe('服务状态事件测试',()=>{
@@ -71,19 +85,6 @@ describe('主机服务测试用例',()=>{
                     port.write(vHost.nomalCmd);
                 },200);
             }).catch(done);
-        });
-
-        it('报警，启动并停止视频录像',(done)=>{
-            getUrl().then((port)=>{
-                let server=new Server({ipc_server:{
-                    port:port
-                }});
-                server._arrchive(1,1).then(()=>{
-                    setTimeout(()=>{
-                        server._stopArrchive(1,1).then(done).catch(done);
-                    },1800);
-                }).catch(done);
-            });
         });
 
         it('报警,调摄像头',(done)=>{
