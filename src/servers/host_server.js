@@ -158,18 +158,15 @@ class HostServer extends  EventEmitter{
             factory.getIPC(msi.id).then((ipc)=>{
                 host.monintors.push(ipc);
                 this._arrchive(ipc.id,hostID,evt.id).catch(e=>e);
-                if(!ipc.supportAlarm&&!ipc.supportPTZ){
+                let supportPTZ=ipc.supportPTZ&&msi.x!==-1;
+                if(!ipc.supportAlarm&&!supportPTZ){
                     return;
                 }
 
                 ipc.connect().then(()=>{
                     let actions=[];
-                    if(ipc.supportAlarm){
-                        actions.push(ipc.alarm());
-                    }
-                    if(ipc.supportPTZ){
-                        actions.push(ipc.moveToPreset(msi));
-                    }
+                    if(ipc.supportAlarm)actions.push(ipc.alarm());
+                    if(supportPTZ)actions.push(ipc.moveToPreset(msi));
                     Promise.all(actions).then(()=>{
                         ipc.disConnect().catch(e=>e);
                     }).catch((e)=>{
@@ -208,6 +205,7 @@ class HostServer extends  EventEmitter{
         if(!runModeOne) return;
         _.forEach(ms,(ipc)=>{
             this._stopArrchive(ipc.id,hostID).catch(e=>e);
+            ipc.stopAlarm().catch(e=>e);
         });
     }
 
