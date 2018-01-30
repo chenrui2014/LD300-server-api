@@ -1,12 +1,14 @@
-const P=require('../../app/servers/ipc_video_persistence');
+const P=require('../../servers/ipc_video_persistence');
 const fs=require('fs');
 const _=require('lodash');
 const expect=require('chai').expect;
+const path=require('path');
+const config=require('../../config/config')
 
 describe('测试持久化地址生成类',()=>{
     it('imagefile',(done)=>{
         let p=new P({
-            pathTempl:'logs/monitors/{yyyy}{mm}',
+            pathTempl:'../assets/monitors/{yyyy}{mm}',
             imageTempl:'{dd}-{prefix}',
             videoTempl:'{dd}-{prefix}',
         });
@@ -25,7 +27,7 @@ describe('测试持久化地址生成类',()=>{
     });
     it('videofile',(done)=>{
         let p=new P({
-            pathTempl:'logs/monitors/{yyyy}{mm}',
+            pathTempl:'../assets/monitors/{yyyy}{mm}',
             imageTempl:'{dd}-{prefix}',
             videoTempl:'{dd}-{prefix}',
         });
@@ -41,5 +43,14 @@ describe('测试持久化地址生成类',()=>{
             expect(exists).equal(true);
             done();
         });
+    });
+    it('videopath',()=>{
+        let p=new P({
+            imageTempl:'{dd}-{prefix}',
+            videoTempl:'{dd}-{prefix}',
+        });
+        let image=p.videoPath('abc','flv');
+        let ap=path.relative(config.getVideoPath(),image);
+        console.log(ap);
     });
 });

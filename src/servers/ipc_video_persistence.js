@@ -12,7 +12,7 @@ const stringFormat=require('string-template');
 class Persistence{
     constructor(options){
         this.options={
-            pathTempl:'logs/monitors/{yyyy}{mm}',
+            pathTempl:'../assets/monitors/{yyyy}{mm}',
             imageTempl:'{dd}-{hh}{mi}{ss}-{iter}-{prefix}',
             videoTempl:'{dd}-{hh}{mi}{ss}-{prefix}',
         };

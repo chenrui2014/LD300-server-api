@@ -42,7 +42,7 @@ let config={
         deDuplication:false
     },
     persistence:{//存档配置
-        pathTempl:'logs/monitors/{yyyy}{mm}',
+        pathTempl:'../assets/monitors/{yyyy}{mm}',
         imageTempl:'{dd}-{hh}{mi}{ss}-{iter}-{prefix}',
         videoTempl:'{dd}-{hh}{mi}{ss}-{prefix}',
         captureSpan:3
@@ -70,6 +70,9 @@ let config={
     },
     getData(name){
         return require('../data/'+name);
+    },
+    getVideoPath(){
+      return config.getAbsolutePath('../assets/monitors');
     },
     ipc:{//摄像头工作配置
         /*
