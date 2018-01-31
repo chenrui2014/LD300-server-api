@@ -52,6 +52,7 @@ class IPCServer extends EventEmitter{
         }
         else if(event.type==='countChanged'){
             const ct=worker.payload=event.count;
+            this._ipcs[event.id]=this._ipcs[event.id]||{};
             if(0===ct) this._ipcs[event.id].worker=null;
             else this._ipcs[event.id].worker=worker;
             this._workers=_.orderBy(this._workers,['payload']);
@@ -64,13 +65,7 @@ class IPCServer extends EventEmitter{
     }
 
     async start(){
-        let ipcs=await Data.getIPCIDsSortByPoint().catch(()=>{
-            return Promise.resolve([]);
-        });
-
-        if(!ipcs||!ipcs.length) return Promise.reject('没有可连接摄像头');
         this.stop();
-
         let _startWorker=()=>{
             proxy.on('error',(err)=>{
                 this.error('http代理返回错误',{innerError:err});
@@ -78,11 +73,6 @@ class IPCServer extends EventEmitter{
             listenState&&_.forEach(ipcs,(id)=>{
                 this._addIpcListener(id);
             });
-            this._ipcs={};
-            _.each(ipcs,(id)=>{
-                this._ipcs[id]={};
-            });
-
             for (let i = 0; i < numCP; i++) {
                 let args=[];
                 let worker=null;
@@ -156,6 +146,7 @@ class IPCServer extends EventEmitter{
         listenState&&_.forEach(this._ipcs,(ipc)=>{
             this._removeIpcListener(ipc.id);
         });
+        this._ipcs={};
         this._workers.length&&_.forEach(this._workers,(worker)=>{
             worker.worker.kill();
         });
