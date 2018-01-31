@@ -136,7 +136,7 @@ async function ptz(res,id,fun,params){
         succeed(res,'ptz',{handle,id,op:fun,limit:ptzLock})
     }).catch(e=>{
         ipc.ptz.handle=null;
-        return fault(res,'ptz','内部处理异常',{id,op:fun,innerError:e},false);
+        return fault(res,'ptz','内部处理异常',{id,op:fun,innerError:(e||'').toString()},false);
     });
 }
 
@@ -171,7 +171,7 @@ async function getPoint(res,id){
     });
     if(!ipc)return fault(res,'getPoint','请求的摄像头不存在',{id});
     let xyz=await ipc.getPoint().catch((e)=>{
-        return Promise.resolve({innerError:e});
+        return Promise.resolve({innerError:(e||'').toString()});
     });
     if('innerError' in xyz){
         return fault(res,'getPoint','getPoint方法内部发生错误',{id,innerError:xyz.innerError});
@@ -190,7 +190,7 @@ async function moveToPoint(res,id,params){
     ipc.moveToPoint(point.x,point.y,point.z).then(()=>{
         return succeed(res,'moveToPoint');
     }).catch((e)=>{
-        return fault(res,'moveToPoint','moveToPoint方法内部发生错误',{id,innerError:e});
+        return fault(res,'moveToPoint','moveToPoint方法内部发生错误',{id,innerError:(e||'').toString()});
     });
 }
 
@@ -203,7 +203,7 @@ async function alarm(res,id){
     ipc.alarm().then(()=>{
         return succeed(res,'alarm');
     }).catch((e)=>{
-        return fault(res,'alarm','alarm方法内部发生错误',{id,innerError:e});
+        return fault(res,'alarm','alarm方法内部发生错误',{id,innerError:(e||'').toString()});
     });
 }
 
@@ -216,7 +216,7 @@ async function stopAlarm(res,id){
     ipc.stopAlarm().then(()=>{
         return succeed(res,'stopAlarm');
     }).catch((e)=>{
-        return fault(res,'stopAlarm','stopAlarm方法内部发生错误',{id,innerError:e});
+        return fault(res,'stopAlarm','stopAlarm方法内部发生错误',{id,innerError:(e||'').toString()});
     });
 }
 
@@ -295,7 +295,7 @@ server.on('error',(err)=>{
     if(err.code==='EACCES'||err.code==='EADDRINUSE'){
         listen();
     }
-    console.error({source:'ipc_server_child.js',desc:err.toString()});
+    console.error({source:'ipc_server_child.js',desc:(err||'').toString()});
 });
 
 listen().catch();
