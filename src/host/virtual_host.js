@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const SerialPort = require('../../serialport/serialport');
+const SerialPort = require('../serialport/serialport');
 const EventEmitter = require('events').EventEmitter;
 
 const _options={
