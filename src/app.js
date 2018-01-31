@@ -11,7 +11,7 @@ const {Parser}=require('./log/log');
 const logger ={};
 Parser(logger,'app.js',{});
 //const connect=require('./db');
-let config =require('./config');
+let config =require('./config/index');
 const router=require('./router');
 const cors=require('koa2-cors');
 //const StartUp =require('./servers/startup');

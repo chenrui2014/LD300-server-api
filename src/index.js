@@ -1,6 +1,6 @@
 require('./init');
 const _=require('lodash');
-const config=require('./config/config');
+const config=server_config||require('./config/config');
 const store=_.get(config,"runMode.store","db");
 const type=_.get(config,"runMode.type","BS");
 const connect=require('./db');
@@ -14,7 +14,7 @@ Parser(logger,'index.js',{store,type});
     try {
         if(store==='db') {
             const connection = await connect();
-            logger.log('MongoDB已连接%s:%s/%s', connection.host, connection.port, connection.name);
+            logger.log('MongoDB已连接', {host:connection.host, port:connection.port, name:connection.name});
         }
         await (new startUp()).start();
         if(type==='BS'){

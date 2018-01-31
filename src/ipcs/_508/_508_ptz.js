@@ -5,7 +5,7 @@
 const PTZ=require('../base/ptz');
 const _=require('lodash');
 const globalConfig=global.server_config||require('../../config/config');
-const config=globalConfig.getConfig('_508_config');
+const config=globalConfig.getConfig('_508_config.json');
 const SerialPort = require('serialport');
 //const ByteLength = SerialPort.parsers.ByteLength;
 //const Delimiter = SerialPort.parsers.Delimiter;

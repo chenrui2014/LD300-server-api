@@ -3,7 +3,7 @@
  */
 const mongoose=require('mongoose');
 const logger=require('../logger');
-const config=require('../config');
+const config=require('../config/index');
 //import mongoose from 'mongoose';
 //import logger from '../logger';
 //import config from '../config';

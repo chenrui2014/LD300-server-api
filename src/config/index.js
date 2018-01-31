@@ -5,7 +5,7 @@
 //import _ from 'lodash';
 const path=require('path');
 const _=require('lodash');
-const config=require('./config');
+const config=global.server_config||require('.config');
 
 const env=process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 

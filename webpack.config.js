@@ -34,8 +34,11 @@ module.exports = {
     externals:[function(context, request, callback) {
         //console.log(request);
         //console.log(externals[request]);
+
         if(externals[request]) return callback(null, 'commonjs ' + request);
         if (/config$/.test(request)){
+            //console.log(context);
+            //console.log(request);
             return callback(null, 'commonjs ' + request);
         }
         callback();
@@ -48,10 +51,10 @@ module.exports = {
         __filename: true,
         __dirname: true,
         setImmediate: true
-    },
+    }/*,
     plugins: [
         new webpack.optimize.UglifyJsPlugin()
-    ]
+    ]*/
 };
 
 function _externals() {

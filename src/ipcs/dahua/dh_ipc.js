@@ -7,7 +7,7 @@ const _=require('lodash');
 const dhok=require('./dh_init');
 const dhlib=require('./dhnetsdk');
 const globalConfig=global.server_config||require('../../config/config');
-const config=globalConfig.getConfig('dh_config');
+const config=globalConfig.getConfig('dh_config.json');
 const ref=require('ref');
 //const isLinux=process.platform.indexOf('win')===-1;
 const assert=require('assert');
