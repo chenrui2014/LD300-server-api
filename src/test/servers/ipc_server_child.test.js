@@ -97,6 +97,29 @@ describe('直播子进程http服务测试',()=>{
         });
     });
 
+
+    it('拉响警报',(done)=>{
+        send('/ipc/5/alarm/1').then((data)=>{
+            expect(data.type).equal('succeed');
+            done();
+        });
+    });
+
+    it('关闭警报',(done)=>{
+        send('/ipc/5/stopAlarm/1').then((data)=>{
+            expect(data.type).equal('succeed');
+            done();
+        });
+    });
+
+    it('移动到point',(done)=>{
+        let x=encodeURI(JSON.stringify({x:1,y:1,z:1,preset:null}))
+        send(`/ipc/5/moveToPoint/1?point=${x}`).then((data)=>{
+            expect(data.type).equal('succeed');
+            done();
+        });
+    });
+
     describe('ptz测试',()=>{
         it('无人占用时申请',(done)=>{
             send('/ipc/5/ptz/zoomAdd').then((data)=>{
@@ -147,6 +170,7 @@ describe('直播子进程http服务测试',()=>{
                     });
                 },timeout+1);
             });
+
         });
     });
 
