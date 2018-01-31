@@ -82,7 +82,7 @@ function warn(fileLogger,source,_params,desc,params){
 
 function Parser(classOrObject,source,params){
     let name=source.split('.')[0];
-    let p=path.resolve(config.root,`logs/log/${name}`);
+    let p=path.resolve(config.getLogDir(),`log/${name}`);
     mkdirp.sync(p);
     log4js.addAppender(log4js.appenderMakers['dateFile']({
         category:name,
