@@ -1,15 +1,16 @@
-//import logger from "../logger/index";
-
 const path=require('path');
 
 let config={
     runMode:{
-        //integration 整合方式，提供完整服务
-        //one 一体服务方式,通过socket提供对外服务
-        type:'one',
+        //S 仅服务端，通过socket提供接口
+        //BS 服务端浏览器端模式
+        type:'BS',
         project:'RongFei-YiLiPrison',
         interfaces:'RongFei/i_rong_fei.js',
         store:'db'//file数据由文件方式存储，db由数据库方式存储
+    },
+    web:{
+        port:3002
     },
     state_server:{//状态广播服务配置
         type:'socket',//暂时不解析，socket用于作为代理模式，其他厂商提供客户端，http-socket则使用集成平台
@@ -60,7 +61,7 @@ let config={
         return require('./'+name);
     },
     getLogDir(){
-      return config.getAbsolutePath('logs');
+      return config.getAbsolutePath('../logs');
     },
     getDataDir(name){
       return config.getAbsolutePath('data/'+name);
