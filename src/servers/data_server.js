@@ -9,10 +9,11 @@
 
 const HostService =require('../services/hostService');
 const MonitoringService =require('../services/monitoringService');
-const PresetService =require('../services/PresetService');
+//const PresetService =require('../services/PresetService');
 const CamerasService =require('../services/camerasService');
 const VendorService = require('../services/vendorService');
 const EventService = require('../services/eventService');
+const EventVideoService = require('../services/eventVideoService');
 const moment = require('moment');
 
 const _=require('lodash');
@@ -68,7 +69,7 @@ async function getMointors(hostID,distance){
         //monitorArea.monitors = m;
         monitorArea.monitors.push(m);
     });
-    return monitorArea;
+    return monitorArea.monitors;
 }
 
 function transformIPC(ipc) {
@@ -133,38 +134,28 @@ async function getIPCIDsSortByPoint(){
 //记录警报
 async function  recordAlert(record) {
     //属性id，hid(主机id),position(报警位置)
-    let result = await EventService.find_one(record.id);
-    if(result){
-        await EventService.edit_event({id:record.id},{position:record.position,hid:record.hid});
-    }else{
-        let event = {};
-        event.id = record.id;
-        event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-        event.position = record.position;
-        event.hid = record.hid;
+    //*******将报警事件添加到数据库*******//
+    let event = {};
+    event.id = record.id;
+    event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
+    event.position = record.position;
+    event.hid = record.hid;
 
-        await EventService.add_event(event);
-    }
+    await EventService.add_event(event);
+    //********************************//
 
 }
 
 //用于事件调用摄像头记录下的路线
 async function recordAlertVideo(record) {
     //属性id(同recordalert中的id，为事件编号)，path,pid(摄像头id),hid(主机id)
-    let result = await EventService.find_one(record.id);
-    if(result){
-        await EventService.edit_event({id:record.id},{path:record.path,pid:record.pid,hid:record.hid});
-    }else{
-        let event = {};
-        event.id = record.id;
-        event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-        event.position = record.position;
-        event.hid = record.hid;
-        event.path = record.path;
-        event.pid = record.pid;
+    //*******将录制视频的摄像头以及录像地址存入数据库*******//
+    let eventVideo = {};
+    eventVideo.eventId = record.id;
+    eventVideo.pid=record.pid;
+    eventVideo.path = data.path;
 
-        await EventService.add_event(event);
-    }
+    await EventVideoService.add_eventVideo(event);
 }
 
 async function eventRecord(){

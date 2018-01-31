@@ -33,7 +33,7 @@ class IPCMointor{
     async getMointors(distance){
         let ipcs=await Data.getMointors(this._hid,distance);
         let ret=[];
-        _.each(ipcs.monitors,(ipc)=>{
+        _.each(ipcs,(ipc)=>{
             let isDemo=!!ipc.demo;
             if(isDemo)
             {

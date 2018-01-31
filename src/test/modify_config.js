@@ -1,5 +1,5 @@
 let config=require('../config/config');
-config.runMode.type='one';
+config.runMode.type='BS';
 config.runMode.store='file';
 let hostData=require('../data/hosts_config.json');
 let mData=require('../data/mointors_config.json');

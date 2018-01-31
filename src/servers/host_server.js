@@ -14,9 +14,7 @@ const {Parser}=require('../log/log');
 const IPCMointor=require('./ipc_mointors');
 const runModeBS=_.get(config,'runMode.type','BS')==='BS';
 const Data=require('./data_server');
-const EventService = require('../services/eventService');
-const EventVideoService = require('../services/eventVideoService');
-const moment = require('moment');
+//const moment = require('moment');
 const path=require('path');
 //const uuidv1=require('uuid/v1');
 
@@ -93,31 +91,7 @@ class HostServer extends  EventEmitter{
         if(data.type==='fault') await Promise.reject(this.error('录制视频失败',{innerError:data}));
 
         data.path=path.relative(config.getVideoPath(),data.path);
-        //*******将录制视频的摄像头以及录像地址存入数据库*******//
-        let eventVideo = {};
-        eventVideo.eventId = evtID;
-        eventVideo.pid=id;
-        eventVideo.path = data.path;
-
-        await EventVideoService.add_eventVideo(event);
-
-        // let result = await EventService.find_one(evtID);
-        // if(result){
-        //     await EventService.edit_event({id:evtID},{video:[{id:uuidv1(),pid:id,path:data.path}]});
-        // }else{
-        //     let event = {};
-        //     event.id = evtID;
-        //     event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-        //     event.hid = hid;
-        //     let videoItem = {id:uuidv1(),pid:id,path:data.path};
-        //     event.video = [];
-        //     event.video.push(videoItem);
-        //
-        //     await EventService.add_event(event);
-        // }
-        //********************************//
-
-        //await Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});
+        await Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});
         return this.log('启用视频录制',{id,hid,evtID});
     }
 
@@ -150,19 +124,8 @@ class HostServer extends  EventEmitter{
         const hostID=evt.hid;
         let host=this._getHost(hostID);
 
-        //*******将报警事件添加到数据库*******//
-        let event = {};
-        event.id = evt.id;
-        event.happenTime = moment().format('YYYY年MM月DD日 HH:mm:ss');
-        event.position = evt.position;
-        event.hid = hostID;
+        await Data.recordAlert({hid:hostID,id:evt.id,position:evt.position});
 
-        await EventService.add_event(event);
-        //********************************//
-
-        //await Data.recordAlert({hid:hostID,id:evt.id,position:evt.position});
-        
-        
         host.monintors=[];
         let ms=await host.mointorHandle.getMointors(evt.position).catch(()=>{
             return Promise.resolve([]);
