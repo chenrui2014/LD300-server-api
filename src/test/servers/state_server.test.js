@@ -2,7 +2,7 @@ const StateServer=require('../../app/servers/host_state_server');
 const Server=require('../../app/servers/host_server');
 const http=require('http');
 const expect=require('chai').expect;
-const vHost=require('../host/virtual_host');
+const vHost=require('../../host/virtual_host');
 
 describe('状态服务测试',()=>{
     let server;

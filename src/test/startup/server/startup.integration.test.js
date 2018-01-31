@@ -1,7 +1,7 @@
 let config=require('../../../app/config/config');
 config.runMode.type='integration';
 const StartUp=require('../../../app/servers/startup');
-const vHost=require('../../host/virtual_host');
+const vHost=require('../../../host/virtual_host');
 const Client=require('./client_socket');
 
 let s=null,vh=null,vh2=null,c=null;

@@ -1,4 +1,4 @@
-const VirtualHost=require('./virtual_host');
+const VirtualHost=require('../../host/virtual_host');
 const _=require('lodash');
 
 function run(ports,done) {

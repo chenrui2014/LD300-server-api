@@ -1,6 +1,6 @@
 const {db,file}=require('../../init');
 const StartUp=require('../../../servers/startup');
-const vHost=require('../../host/virtual_host');
+const vHost=require('../../../host/virtual_host');
 const _=require('lodash');
 process.debugPort=9600;
 

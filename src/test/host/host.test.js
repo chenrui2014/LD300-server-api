@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 const SerialPort=require('../../app/serialport/serialport');
 const Host=require('../../app/host/host');
 const util=require('util');
-const vHost=require('./virtual_host');
+const vHost=require('../../host/virtual_host');
 //真实测试中使用的端口
 
 let vHostPort='\\\\.\\COM1';
