@@ -8,7 +8,7 @@ const {Parser}=require('../log/log');
 const config=global.server_config||require('../config/config');
 const _=require('lodash');
 const projectName=_.get(config,'runMode.project','');
-const runModeOne=_.get(config,'runMode.type','one')==='one';
+const runModeBS=_.get(config,'runMode.type','BS')==='BS';
 const MessengerServer=require('./messenger_server_http_socket');
 const MessengerServerSocket=require('./messenger_server_socket');
 const MessengerServerBase=require('./messenger_server');
@@ -40,7 +40,7 @@ class StartUp{
             return Promise.reject(e);
         });
         this._hostServer=hostServer;
-        let messengerServer = runModeOne?
+        let messengerServer = runModeBS?
             new MessengerServer(hostServer):
             new MessengerServerSocket(hostServer,null,getInterface(projectName));
         hostServer.on(Host.Events.StateChanged, this._host_state_changed);
@@ -53,7 +53,7 @@ class StartUp{
             return Promise.reject(e);
         });
         this._messengerServer=messengerServer;
-        if(runModeOne){
+        if(runModeBS){
             this._ipcServer=new IPCServer();
             await this._ipcServer.start().catch();
         }

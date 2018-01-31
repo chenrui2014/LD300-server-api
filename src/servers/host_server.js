@@ -12,7 +12,7 @@ const ipcPort=_.get(config,'ipc_server.port',3000);
 const http = require('http');
 const {Parser}=require('../log/log');
 const IPCMointor=require('./ipc_mointors');
-const runModeOne=_.get(config,'runMode.type','one')==='one';
+const runModeBS=_.get(config,'runMode.type','BS')==='BS';
 const Data=require('./data_server');
 const EventService = require('../services/eventService');
 const EventVideoService = require('../services/eventVideoService');
@@ -161,7 +161,7 @@ class HostServer extends  EventEmitter{
                 innerEvent:evt
             });
         }
-        if(!runModeOne) return;
+        if(!runModeBS) return;
 
         _.forEach(ms,(msi)=>{
             factory.getIPC(msi.id).then((ipc)=>{
@@ -211,7 +211,7 @@ class HostServer extends  EventEmitter{
         if(ms.length===0){
             return;
         }
-        if(!runModeOne) return;
+        if(!runModeBS) return;
         _.forEach(ms,(ipc)=>{
             this._stopArrchive(ipc.id,hostID).catch(e=>e);
             ipc.stopAlarm().catch(e=>e);
