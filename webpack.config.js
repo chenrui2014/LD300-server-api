@@ -51,10 +51,10 @@ module.exports = {
         __filename: true,
         __dirname: true,
         setImmediate: true
-    }/*,
+    },
     plugins: [
         new webpack.optimize.UglifyJsPlugin()
-    ]*/
+    ]
 };
 
 function _externals() {
