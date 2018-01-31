@@ -96,7 +96,7 @@ function Parser(classOrObject,source,params){
         level:'info'
     }),name);
     const fileLogger=log4js.getLogger(name);
-    classOrObject.log=log.bind(null,fileLogger,source,params);
+    classOrObject.info=classOrObject.log=log.bind(null,fileLogger,source,params);
     classOrObject.error=error.bind(null,fileLogger,source,params);
     classOrObject.warn=warn.bind(null,fileLogger,source,params);
 }
