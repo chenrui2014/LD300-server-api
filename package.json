@@ -6,10 +6,10 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register",
     "build": "babel src -d dist --source-maps",
-    "dev": "npm run build && cross-env NODE_ENV=development node dist/app",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/app",
+    "dev": "npm run build && cross-env NODE_ENV=development node dist/index",
+    "start": "npm run build && cross-env NODE_ENV=production node dist/index",
     "pm2": "pm2 start process.yml",
-    "koaStatic":"node src/app2.js",
+    "koaStatic": "node src/app2.js",
     "pm2-stop": "pm2 stop all"
   },
   "keywords": [],
@@ -19,6 +19,8 @@
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "chai": "^3.5.0",
     "co": "^4.6.0",
@@ -36,7 +38,7 @@
     "sdp-transform": "^2.3.0",
     "stream-parser": "^0.3.1",
     "supertest": "^2.0.1",
-    "webpack": "^3.8.1"
+    "webpack": "^3.10.0"
   },
   "dependencies": {
     "amf": "^0.1.0",
