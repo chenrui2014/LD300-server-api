@@ -12,7 +12,6 @@ const expect=require('chai').expect;
 const _=require('lodash');
 const cp=require('child_process');
 
-console.log('config.port=' + config.port);
 
 /**
  * describe 测试套件 test suite 表示一组相关的测试
@@ -260,6 +259,17 @@ describe('async测试',()=>{
             },10);
         })
     }
+    it('map-async',(done)=>{
+       let x=[1,2,3,4];
+       x.map(async (xi)=>{
+           if(xi===1) {
+               await abc();
+               console.log(xi);
+               done();
+           }
+           else console.log(xi);
+       });
+    });
     it('1',async ()=>{
         let x=await abc();
         console.log('x');
