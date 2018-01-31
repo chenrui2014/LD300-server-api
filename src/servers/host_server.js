@@ -4,9 +4,9 @@
 const Host=require('../host/host');
 const _ = require('lodash');
 const EventEmitter = require('events').EventEmitter;
-const util = require('util');
-const assert=require('assert');
-const factory=require('./ipc_factory');
+//const util = require('util');
+//const assert=require('assert');
+//const factory=require('./ipc_factory');
 const config=global.server_config||require('../config/config');
 const ipcPort=_.get(config,'ipc_server.port',3000);
 const http = require('http');
@@ -18,7 +18,7 @@ const EventService = require('../services/eventService');
 const EventVideoService = require('../services/eventVideoService');
 const moment = require('moment');
 const path=require('path');
-const uuidv1=require('uuid/v1');
+//const uuidv1=require('uuid/v1');
 
 const _Errors={
     LinkFault:'linkFault',
@@ -127,6 +127,24 @@ class HostServer extends  EventEmitter{
         this.log('停止视频录制成功',{id,hid});
     }
 
+    async _moveToPoint(id,point,hid){
+        let data= await this._IPCRequest(`/ipc/${id}/moveToPoint/${hid}?point=${encodeURI(JSON.stringify(point))}&t=${new Date().getTime()})}`);
+        if(data.type==='fault') await Promise.reject(this.error('ptz移动失败',{innerError:data}));
+        this.log('成功移动到报警位置',{id,hid});
+    }
+
+    async _alarm(id,hid){
+        let data= await this._IPCRequest(`/ipc/${id}/alarm/${hid}?t=${new Date().getTime()})}`);
+        if(data.type==='fault') await Promise.reject(this.error('拉响警报失败',{innerError:data}));
+        this.log('成功拉响警报',{id,hid});
+    }
+
+    async _stopAlarm(id,hid){
+        let data= await this._IPCRequest(`/ipc/${id}/stopAlarm/${hid}?t=${new Date().getTime()})}`);
+        if(data.type==='fault') await Promise.reject(this.error('关闭警报失败',{innerError:data}));
+        this.log('成功关闭警报',{id,hid});
+    }
+
     async _OnIntrusionAlert(evt){
         this.log('收到主机报警指令',{innerEvent:evt});
         const hostID=evt.hid;
@@ -163,39 +181,12 @@ class HostServer extends  EventEmitter{
         }
         if(!runModeBS) return;
 
-        _.forEach(ms,(msi)=>{
-            factory.getIPC(msi.id).then((ipc)=>{
-                host.monintors.push(ipc);
-                this._arrchive(ipc.id,hostID,evt.id).catch(e=>e);
-                let supportPTZ=ipc.supportPTZ&&msi.x!==-1;
-                if(!ipc.supportAlarm&&!supportPTZ){
-                    return;
-                }
+        host.monintors=ms;
 
-                ipc.connect().then(()=>{
-                    let actions=[];
-                    if(ipc.supportAlarm)actions.push(ipc.alarm());
-                    if(supportPTZ)actions.push(ipc.moveToPreset(msi));
-                    Promise.all(actions).then(()=>{
-                        ipc.disConnect().catch(e=>e);
-                    }).catch((e)=>{
-                        this.warn('移动摄像头到报警位置或启动警报错误时发生错误',{
-                            errorType:_Errors.LinkFault,
-                            id:ipc.id,
-                            innerError:e,
-                            innerEvent:evt
-                        });
-                        ipc.disConnect().catch(e=>e);
-                    });
-                }).catch(e=>{
-                    this.error('摄像头连接出错',{
-                        errorType:_Errors.IPCConnectError,
-                        id:msi.id,
-                        innerError:e,
-                        innerEvent:evt
-                    });
-                });
-            }).catch(()=>{this.error('摄像头实例化失败');});
+        ms.map(async(ipc)=>{
+            if(ipc.supportPTZ&&ipc.x!==-1)this._moveToPoint(ipc.id,ipc,hostID).catch(e=>e);
+            if(true||ipc.screenshot)this._arrchive(ipc.id,hostID,evt.id).catch(e=>e);
+            if(ipc.supportAlarm) this._alarm(ipc.id,hostID).catch(e=>e);
         });
     }
 
@@ -214,7 +205,7 @@ class HostServer extends  EventEmitter{
         if(!runModeBS) return;
         _.forEach(ms,(ipc)=>{
             this._stopArrchive(ipc.id,hostID).catch(e=>e);
-            ipc.stopAlarm().catch(e=>e);
+            this._stopAlarm(ipc.id,hostID).catch(e=>e);
         });
     }
 

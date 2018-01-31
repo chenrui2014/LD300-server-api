@@ -10,7 +10,8 @@ let Host=require('../../host/host');
 const SerialPort=require('../../serialport/serialport');
 //const IPCServer=require('../../servers/ipc_server_child').server;
 //const M=require('../../servers/ipc_mointors');
-const IPCServer=new require('../../servers/ipc_server_master');
+const master=require('../../servers/ipc_server_master');
+const IPCServer=new master();
 const Factory=require('../../servers/ipc_factory');
 
 /*let port=0;
@@ -54,13 +55,35 @@ describe('主机服务测试用例',()=>{
     it('报警，启动并停止视频录像',(done)=>{
         getUrl().then((port)=>{
             let server=new Server({ipc_server:{
-                port:port
-            }});
+                    port:port
+                }});
             server._arrchive(6,1).then(()=>{
                 setTimeout(()=>{
                     server._stopArrchive(6,1).then(done).catch(done);
                 },1800);
             }).catch(done);
+        });
+    });
+
+    it('拉起警报再关闭',(done)=>{
+        getUrl().then((port)=>{
+            let server=new Server({ipc_server:{
+                    port:port
+                }});
+            server._alarm(1,1).then(()=>{
+                setTimeout(()=>{
+                    server._stopAlarm(1,1).then(done).catch(done);
+                },1800);
+            }).catch(done);
+        });
+    });
+
+    it('移动ptz到xyz',(done)=>{
+        getUrl().then((port)=>{
+            let server=new Server({ipc_server:{
+                    port:port
+                }});
+            server._moveToPoint(1,{x:1,y:1,z:1,preset:null},1).then(done).catch(done);
         });
     });
 
