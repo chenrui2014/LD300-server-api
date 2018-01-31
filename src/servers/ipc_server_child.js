@@ -179,6 +179,47 @@ async function getPoint(res,id){
     return succeed(res,'getPoint',xyz);
 }
 
+async function moveToPoint(res,id,params){
+    logger.log('收到获取球机移动到指定点申请',{id});
+    let ipc=await IPCFactory.getIPC(id).catch(()=>{
+        return Promise.resolve(null);
+    });
+    if(!ipc)return fault(res,'moveToPoint','请求的摄像头不存在',{id});
+    let point=JSON.parse(params.point||"{x:-1}");
+    if(point.x===-1) return fault(res,'错误的坐标');
+    ipc.moveToPoint(point.x,point.y,point.z).then(()=>{
+        return succeed(res,'moveToPoint');
+    }).catch((e)=>{
+        return fault(res,'moveToPoint','moveToPoint方法内部发生错误',{id,innerError:e});
+    });
+}
+
+async function alarm(res,id){
+    logger.log('收到到拉起报警申请',{id});
+    let ipc=await IPCFactory.getIPC(id).catch(()=>{
+        return Promise.resolve(null);
+    });
+    if(!ipc)return fault(res,'alarm','请求的摄像头不存在',{id});
+    ipc.alarm().then(()=>{
+        return succeed(res,'alarm');
+    }).catch((e)=>{
+        return fault(res,'alarm','alarm方法内部发生错误',{id,innerError:e});
+    });
+}
+
+async function stopAlarm(res,id){
+    logger.log('收到消除警报申请',{id});
+    let ipc=await IPCFactory.getIPC(id).catch(()=>{
+        return Promise.resolve(null);
+    });
+    if(!ipc)return fault(res,'stopAlarm','请求的摄像头不存在',{id});
+    ipc.stopAlarm().then(()=>{
+        return succeed(res,'stopAlarm');
+    }).catch((e)=>{
+        return fault(res,'stopAlarm','stopAlarm方法内部发生错误',{id,innerError:e});
+    });
+}
+
 const server=http.createServer();
 /*server.on('upgrade', (req, socket, head) => {
     console.log('upgrade');
@@ -202,7 +243,7 @@ server.on('request',(req,res)=>{
     let id=paths[1]-0;
     let fun=paths[2];
     let index;
-    if((index=['live','stoparrchive','ptz','freeptz','arrchive','getpoint'].indexOf(_.toLower(fun)))===-1){
+    if((index=['live','stoparrchive','ptz','freeptz','arrchive','getpoint','movetopoint','alarm', 'stopalarm'].indexOf(_.toLower(fun)))===-1){
         res.statusCode = 404;
         return res.end();
     }
@@ -225,7 +266,15 @@ server.on('request',(req,res)=>{
     if(index===5){
         return getPoint(res,id);
     }
-
+    if(index===6){
+        return moveToPoint(res,id,uri.query);
+    }
+    if(index===7){
+        return alarm(res,id)
+    }
+    if(index===8){
+        return stopAlarm(res,id);
+    }
     logger.warn('未知的方法请求',{fun,uri});
 });
 
