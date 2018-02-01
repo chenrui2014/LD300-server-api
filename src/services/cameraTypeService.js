@@ -5,7 +5,9 @@
 //import logger from '../logger';
 //import CameraTypeModel from '../models/cameraType.model';
 //import uuidv1 from 'uuid/v1';
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','CameraTypeService.js');
 const CameraTypeModel=require('../models/cameraType.model');
 const uuidv1=require('uuid/v1');
 
@@ -41,7 +43,7 @@ class CameraTypeService {
      */
     static async delete_cameraType(conditions) {
         let success = false;
-        const result = await CameraTypeModel.remove(conditions,function (err,cameraType) {
+        /*const result = */await CameraTypeModel.remove(conditions,function (err,cameraType) {
             if(!err) {
                 success = true;
                 logger.info('删除摄像头类型['+ cameraType.ip +']成功');
@@ -132,9 +134,8 @@ class CameraTypeService {
         const result = await CameraTypeModel.find().sort({id:-1}).limit(1);
         if(result && result.length > 0){
             return result[0]._doc.id;
-        }else{
-            return 0
         }
+        return 0
     }
 
 
@@ -145,11 +146,7 @@ class CameraTypeService {
      */
     static async isExist(conditions){
         const result = await CameraTypeModel.find(conditions);
-        if(result && result.length > 0){
-            return true;
-        }else{
-            return false;
-        }
+        return result && result.length > 0;
     }
 
 }

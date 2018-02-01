@@ -1,11 +1,12 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','EventVideoController.js');
 import EventVideoService from '../services/eventVideoService';
 import HostsService from '../services/hostService';
-const uuidv1=require('uuid/v1');
+//const uuidv1=require('uuid/v1');
 
 class EventVideoController {
     static async add_eventVideo(ctx){
@@ -13,12 +14,12 @@ class EventVideoController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await EventVideoService.isExist({typeCode:data.typeCode})
+        const isExist = await EventVideoService.isExist({typeCode:data.typeCode});
         //const isExist = await EventVideoModel.findOne({ip:data.ip});
 
         if(isExist) return ctx.error={ msg: '类型编码为[' + data.typeCode + ']的事件已存在!' };
 
-        const result = await EventVideoService.add_eventVideo(data)
+        const result = await EventVideoService.add_eventVideo(data);
 
         let msg = '';
         if(result) {
@@ -33,7 +34,7 @@ class EventVideoController {
 
     static async delete_eventVideo(ctx) {
         const { id } = ctx.params;
-        const result = await EventVideoService.delete_eventVideo({id:id})
+        const result = await EventVideoService.delete_eventVideo({id:id});
         let msg = '';
         if(result) {
             msg = '删除事件成功';
@@ -85,7 +86,7 @@ class EventVideoController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -99,7 +100,7 @@ class EventVideoController {
         let result = null;
         if(sortP){
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -113,7 +114,7 @@ class EventVideoController {
             }
         }else{
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -130,10 +131,10 @@ class EventVideoController {
         const hosts = await HostsService.findAll({port:1});
         //const cameras = await CamerasService.findAll({id:1});
         if(result && result.length > 0){
-            result.map((item,i) =>{
+            result.map((item/*,i*/) =>{
 
                 if(hosts && hosts.length > 0){
-                    hosts.forEach(function (host,index,arr) {
+                    hosts.forEach(function (host/*,index,arr*/) {
                         if(item.hid === host.id){
                             item._doc.port = host.port;
                         }
@@ -161,9 +162,9 @@ class EventVideoController {
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
-                sortP[sortObj[0]] = 1
+                sortP[sortObj[0]] = 1;
             }else{
-                sortP[sortObj[0]] = -1
+                sortP[sortObj[0]] = -1;
             }
         }
         let result = await EventVideoService.find_eventVideo(null,sortP,null);
@@ -171,10 +172,10 @@ class EventVideoController {
         const hosts = await HostsService.findAll({port:1});
         //const cameras = await CamerasService.findAll({id:1});
         if(result && result.length > 0){
-            result.map((item,i) =>{
+            result.map((item/*,i*/) =>{
 
                 if(hosts && hosts.length > 0){
-                hosts.forEach(function (host,index,arr) {
+                hosts.forEach(function (host/*,index,arr*/) {
                     if(item.hid === host.id){
                         item._doc.port = host.port;
                     }
@@ -203,7 +204,7 @@ class EventVideoController {
         const hosts = await HostsService.findAll({port:1});
         if(result ){
             if(hosts && hosts.length > 0){
-                hosts.forEach(function (host,index,arr) {
+                hosts.forEach(function (host/*,index,arr*/) {
                     if(result.hid === host.id){
                         result._doc.port = host.port;
                     }

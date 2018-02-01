@@ -1,10 +1,11 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','VendorController.js');
 import VendorService from '../services/vendorService';
-import HostService from "../services/hostService";
+//mport HostService from "../services/hostService";
 
 class VendorController {
     static async add_vendor(ctx){
@@ -12,12 +13,12 @@ class VendorController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await VendorService.isExist({vendorCode:data.vendorCode})
+        const isExist = await VendorService.isExist({vendorCode:data.vendorCode});
         //const isExist = await VendorModel.findOne({ip:data.ip});
 
         if(isExist) return ctx.error={ msg: '厂商编码为[' + data.vendorCode + ']的厂商已存在!' };
 
-        const result = await VendorService.add_vendor(data)
+        const result = await VendorService.add_vendor(data);
 
         let msg = '';
         if(result) {
@@ -32,7 +33,7 @@ class VendorController {
 
     static async delete_vendor(ctx) {
         const { id } = ctx.params;
-        const result = await VendorService.delete_vendor({id:id})
+        const result = await VendorService.delete_vendor({id:id});
         let msg = '';
         if(result) {
             msg = '删除厂商成功';
@@ -85,7 +86,7 @@ class VendorController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -99,7 +100,7 @@ class VendorController {
         let result = null;
         if(sortP){
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -113,7 +114,7 @@ class VendorController {
             }
         }else{
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];

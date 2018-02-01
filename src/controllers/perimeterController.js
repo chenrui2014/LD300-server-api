@@ -1,7 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PerimeterController.js');
 import PerimeterModel from '../models/perimeter.model';
 
 class PerimeterController {

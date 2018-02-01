@@ -6,9 +6,11 @@
 //import CamerasModel from '../models/cameras.model';
 //import uuidv1 from 'uuid/v1';
 
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','CamerasService.js');
 const CamerasModel=require('../models/cameras.model');
-const uuidv1=require('uuid/v1');
+//const uuidv1=require('uuid/v1');
 
 class CamerasService {
 
@@ -51,7 +53,7 @@ class CamerasService {
      */
     static async delete_cameras(conditions) {
         let success = false;
-        const result = await CamerasModel.remove(conditions,function (err,cameras) {
+        /*const result = */await CamerasModel.remove(conditions,function (err,cameras) {
             if(!err) {
                 success = true;
                 logger.info(cameras);
@@ -71,8 +73,7 @@ class CamerasService {
      */
     static async edit_cameras(conditions,data){
         let result = null;
-        result = await CamerasModel.update(conditions,data).exec();
-        return result;
+        return (result = await CamerasModel.update(conditions,data).exec());
     }
 
     /**
@@ -154,11 +155,7 @@ class CamerasService {
      */
     static async isExist(conditions){
         const result = await CamerasModel.find(conditions);
-        if(result && result.length > 0){
-            return true;
-        }else{
-            return false;
-        }
+        return result && result.length > 0;
     }
 
 }

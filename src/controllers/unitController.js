@@ -1,7 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','UnitController.js');
 
 import UnitService from '../services/unitService';
 
@@ -11,12 +13,12 @@ class UnitController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await UnitService.isExist({ip:data.ip})
+        const isExist = await UnitService.isExist({ip:data.ip});
         //const isExist = await UnitModel.findOne({ip:data.ip});
 
         if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的单位ip已存在!' };
 
-        const result = await UnitService.add_unit(data)
+        const result = await UnitService.add_unit(data);
 
         let msg = '';
         if(result) {
@@ -31,7 +33,7 @@ class UnitController {
 
     static async delete_unit(ctx) {
         const { id } = ctx.params;
-        const result = await UnitService.delete_unit({id:id})
+        const result = await UnitService.delete_unit({id:id});
         let msg = '';
         if(result) {
             msg = '删除单位成功';
@@ -67,7 +69,7 @@ class UnitController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];

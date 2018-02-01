@@ -1,8 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','CameraTypeController.js');
 import CameraTypeService from '../services/cameraTypeService';
 
 class CameraTypeController {
@@ -11,12 +12,12 @@ class CameraTypeController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await CameraTypeService.isExist({typeCode:data.typeCode})
+        const isExist = await CameraTypeService.isExist({typeCode:data.typeCode});
         //const isExist = await CameraTypeModel.findOne({ip:data.ip});
 
         if(isExist) return ctx.error={ msg: '类型编码为[' + data.typeCode + ']的摄像头类型已存在!' };
 
-        const result = await CameraTypeService.add_cameraType(data)
+        const result = await CameraTypeService.add_cameraType(data);
 
         let msg = '';
         if(result) {
@@ -31,7 +32,7 @@ class CameraTypeController {
 
     static async delete_cameraType(ctx) {
         const { id } = ctx.params;
-        const result = await CameraTypeService.delete_cameraType({id:id})
+        const result = await CameraTypeService.delete_cameraType({id:id});
         let msg = '';
         if(result) {
             msg = '删除摄像头类型成功';
@@ -83,7 +84,7 @@ class CameraTypeController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -97,7 +98,7 @@ class CameraTypeController {
         let result = null;
         if(sortP){
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -111,7 +112,7 @@ class CameraTypeController {
             }
         }else{
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];

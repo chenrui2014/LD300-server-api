@@ -6,7 +6,9 @@
 //import EventVideoModel from '../models/eventVideo.model';
 //import uuidv1 from 'uuid/v1';
 
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','EventVideoService.js');
 const EventVideoModel=require('../models/eventVideo.model');
 const uuidv1=require('uuid/v1');
 

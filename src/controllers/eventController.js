@@ -1,11 +1,12 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','EventController.js');
 import EventService from '../services/eventService';
 import HostsService from '../services/hostService';
-const uuidv1=require('uuid/v1');
+//const uuidv1=require('uuid/v1');
 
 class EventController {
     static async add_event(ctx){
@@ -13,12 +14,12 @@ class EventController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await EventService.isExist({typeCode:data.typeCode})
+        const isExist = await EventService.isExist({typeCode:data.typeCode});
         //const isExist = await EventModel.findOne({ip:data.ip});
 
         if(isExist) return ctx.error={ msg: '类型编码为[' + data.typeCode + ']的事件已存在!' };
 
-        const result = await EventService.add_event(data)
+        const result = await EventService.add_event(data);
 
         let msg = '';
         if(result) {
@@ -33,7 +34,7 @@ class EventController {
 
     static async delete_event(ctx) {
         const { id } = ctx.params;
-        const result = await EventService.delete_event({id:id})
+        const result = await EventService.delete_event({id:id});
         let msg = '';
         if(result) {
             msg = '删除事件成功';
@@ -85,7 +86,7 @@ class EventController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -99,7 +100,7 @@ class EventController {
         let result = null;
         if(sortP){
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -113,7 +114,7 @@ class EventController {
             }
         }else{
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -133,7 +134,7 @@ class EventController {
             result.map((item,i) =>{
 
                 if(hosts && hosts.length > 0){
-                    hosts.forEach(function (host,index,arr) {
+                    hosts.forEach(function (host/*,index,arr*/) {
                         if(item.hid === host.id){
                             item._doc.port = host.port;
                         }
@@ -220,7 +221,7 @@ class EventController {
             result.map((item,i) =>{
 
                 if(hosts && hosts.length > 0){
-                hosts.forEach(function (host,index,arr) {
+                hosts.forEach(function (host/*,index,arr*/) {
                     if(item.hid === host.id){
                         item._doc.port = host.port;
                     }
@@ -249,7 +250,7 @@ class EventController {
         const hosts = await HostsService.findAll({port:1});
         if(result ){
             if(hosts && hosts.length > 0){
-                hosts.forEach(function (host,index,arr) {
+                hosts.forEach(function (host/*,index,arr*/) {
                     if(result.hid === host.id){
                         result._doc.port = host.port;
                     }

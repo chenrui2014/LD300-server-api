@@ -1,7 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PpController.js');
 import PpService from '../services/ppService';
 
 class PpController {
@@ -13,7 +15,7 @@ class PpController {
         logger.info(isExit);
         if(isExit) return ctx.body={ msg: '周界已存在!' };
 
-        const result = await PpService.add_pp(data)
+        const result = await PpService.add_pp(data);
 
         let msg = '';
         if(result) {

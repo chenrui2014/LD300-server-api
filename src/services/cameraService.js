@@ -5,9 +5,11 @@
 //import logger from '../logger';
 //import CameraModel from '../models/camera.model';
 //import CameraTypeModel from "../models/cameraType.model";
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','CameraService.js');
 const CameraModel=require('../models/camera.model');
-const CameraTypeModel=require('../models/cameraType.model');
+//const CameraTypeModel=require('../models/cameraType.model');
 
 class CameraService {
 

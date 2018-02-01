@@ -1,7 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PresetController.js');
 
 import PresetService from '../services/PresetService';
 import HostService from '../services/hostService';
@@ -16,7 +18,7 @@ class PresetController {
         //
         // if(isExist) return ctx.error={ msg: 'ip为[' + data.ip + ']的预置点ip已存在!' };
 
-        const result = await PresetService.add_preset(data)
+        const result = await PresetService.add_preset(data);
 
         let msg = '';
         if(result) {
@@ -31,7 +33,7 @@ class PresetController {
 
     static async delete_preset(ctx) {
         const { id } = ctx.params;
-        const result = await PresetService.delete_preset({id:id})
+        const result = await PresetService.delete_preset({id:id});
         let msg = '';
         if(result) {
             msg = '删除预置点成功';
@@ -67,7 +69,7 @@ class PresetController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -85,7 +87,7 @@ class PresetController {
         result.forEach(function (e) {
             hosts.forEach(function (host) {
                 if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
-                return;
+                //return;
             });
         });
         if(result) return ctx.body = {msg:'查询预置点',data:result,total:total};

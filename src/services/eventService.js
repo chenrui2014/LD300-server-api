@@ -6,7 +6,9 @@
 //import EventModel from '../models/event.model';
 //import uuidv1 from 'uuid/v1';
 
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','EventService.js');
 const EventModel=require('../models/event.model');
 const uuidv1=require('uuid/v1');
 

@@ -1,8 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
-
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','CamerasController.js');
 import CamerasService from '../services/camerasService';
 import CameraTypeService from "../services/cameraTypeService";
 

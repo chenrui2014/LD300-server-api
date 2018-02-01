@@ -3,10 +3,12 @@
 //import uuidv1 from 'uuid/v1';
 //import {Monitoring as MonitoringAreaModel} from "../models/monitoringArea.model";
 
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PpService.js');
 const PpModel=require('../models/pp.model');
 const uuidv1=require('uuid/v1');
-const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;
+//const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;
 
 class PpService {
     /**

@@ -4,7 +4,9 @@
 //import logger from '../logger';
 //import {Monitoring as MonitoringAreaModel} from '../models/monitoringArea.model';
 
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','MonitoringAreaService.js');
 const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;
 
 class MonitoringAreaService {

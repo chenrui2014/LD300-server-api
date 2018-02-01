@@ -1,7 +1,9 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PerimeterPointController.js');
 import PerimeterPointService from "../services/perimeterPointService";
 import PerimeterService from '../services/perimeterService';
 import HostService from '../services/hostService';
@@ -16,7 +18,7 @@ class PerimeterPointController {
         // if(isExit) return ctx.error={ msg: '该实际距离的周界点已存在!' };
 
         let perimeter = {name:data.name,status:1};
-        let perimeterId = await PerimeterService.add_perimeter(perimeter)
+        let perimeterId = await PerimeterService.add_perimeter(perimeter);
         if(perimeterId != null){
             return ctx.error={ msg: '添加周界失败!' };
         }
@@ -74,7 +76,7 @@ class PerimeterPointController {
     }
 
     static async find_perimeterPoint(ctx){
-        const { sort,range,filter } = ctx.query;
+        const { sort/*,range,filter */} = ctx.query;
         let sortObj = JSON.parse(sort);
         let sortP = {};
         if(sortObj && sortObj.length >=2){
@@ -93,7 +95,7 @@ class PerimeterPointController {
         result.forEach(function (e) {
             hosts.forEach(function (host) {
                 if(e._doc.perimeterId === host._doc.id) e._doc.host = host._doc;
-                return;
+                //return;
             });
         });
         //const result = await PerimeterPointModel.find().exec();
@@ -108,7 +110,7 @@ class PerimeterPointController {
         result.forEach(function (e) {
             hosts.forEach(function (host) {
                 if(e._doc.perimeterId === host._doc.id) e._doc.host = host._doc;
-                return;
+                //return;
             });
         });
         if(result) ctx.body = {msg:'查询周界点',data:result};

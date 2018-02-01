@@ -5,8 +5,10 @@
 //import logger from '../logger';
 //import {Monitoring as MonitoringAreaModel, Preset as PresetModel} from '../models/monitoringArea.model';
 
-const logger=require('../logger');
-const Preset=require('../models/monitoringArea.model').PresetModel;
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PresetService.js');
+//const Preset=require('../models/monitoringArea.model').PresetModel;
 
 
 class PresetService {

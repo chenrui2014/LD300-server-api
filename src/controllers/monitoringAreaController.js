@@ -1,11 +1,13 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','MonitoringAreaController.js');
 import MonitoringService from '../services/monitoringService';
 import HostService from '../services/hostService';
 import CameraService from '../services/cameraService';
-import CameraTypeService from "../services/cameraTypeService";
+//import CameraTypeService from "../services/cameraTypeService";
 
 class MonitoringAreaController {
     static async add_monitoringArea(ctx){
@@ -78,13 +80,13 @@ class MonitoringAreaController {
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
-                sortP[sortObj[0]] = 1
+                sortP[sortObj[0]] = 1;
             }else{
-                sortP[sortObj[0]] = -1
+                sortP[sortObj[0]] = -1;
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -100,7 +102,7 @@ class MonitoringAreaController {
         let result = null;
         if(sortP){
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -114,7 +116,7 @@ class MonitoringAreaController {
             }
         }else{
             if(rangeObj){
-                let pageStart = 0,pageEnd = 0
+                let pageStart = 0,pageEnd = 0;
                 if(rangeObj && rangeObj.length >=2){
                     pageStart = rangeObj[0];
                     pageEnd = rangeObj[1];
@@ -166,7 +168,7 @@ class MonitoringAreaController {
         result.forEach(function (e) {
             hosts.forEach(function (host) {
                 if(e._doc.hostId === host._doc.id) e._doc.hostName = host._doc.hostName;
-                return;
+                //return;
             });
         });
         const cameras = await CameraService.findAll();
@@ -174,7 +176,7 @@ class MonitoringAreaController {
         result.forEach(function (e) {
             cameras.forEach(function (camera) {
                 if(e._doc.cameraId === camera._doc.id) e._doc.cameraName = camera._doc.name;
-                return;
+                //return;
             });
         });
         if(result) return ctx.body = {msg:'查询监控区域',data:result};
@@ -187,14 +189,14 @@ class MonitoringAreaController {
 
         hosts.forEach(function (host) {
                 if(result._doc.hostId === host._doc.id) result._doc.hostName = host._doc.hostName;
-                return;
+                //return;
         });
 
         const cameras = await CameraService.findAll();
 
         cameras.forEach(function (camera) {
                 if(result._doc.cameraId === camera._doc.id) result._doc.cameraName = camera._doc.name;
-                return;
+                //return;
         });
 
         if(result) return ctx.body = {msg:'查询监控区域',data:result};

@@ -3,8 +3,9 @@
  */
 // import mongoose from 'mongoose';
 import md5 from 'md5';
-import logger from '../logger';
-
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','UserController.js');
 import UserModel from '../models/user.model';
 import TokenModel from '../models/accessToken';
 
@@ -14,14 +15,14 @@ import admin from '../config/admin';
 
 class UserController {
     static async signToken (ctx, next) {
-        const { user } = ctx.req
-        await TokenModel.findOneAndRemove({user: user._id})
+        const { user } = ctx.req;
+        await TokenModel.findOneAndRemove({user: user._id});
         const result = await TokenModel.create({
             token: genHash(user.username + Date.now()),
             user: user._id
-        })
+        });
 
-        ctx.status = 200
+        ctx.status = 200;
         ctx.body = {
             success: true,
             data: result
@@ -29,7 +30,7 @@ class UserController {
     }
 
     static async getUserByToken (ctx, next) {
-        ctx.status = 200
+        ctx.status = 200;
         ctx.body = {
             success: true,
             data: ctx.req.user
@@ -38,10 +39,10 @@ class UserController {
 
     // 当数据库中user表示空的时候，创建超级管理员
     static async seed (ctx, next) {
-        const users = await UserModel.find({})
+        const users = await UserModel.find({});
         if (users.length === 0) {
-            const _admin = new UserModel(admin)
-            const adminUser = await _admin.save()
+            const _admin = new UserModel(admin);
+            /*const adminUser = */await _admin.save()
         }
     }
 
@@ -58,7 +59,7 @@ class UserController {
             message: '该用户已存在!',
             error: { status:400 }
         });
-        const result = await AdminUserModel.create({name,email,password: md5(password)});
+        /*const result = */await AdminUserModel.create({name,email,password: md5(password)});
         ctx.redirect('/');
     }
 
@@ -72,7 +73,7 @@ class UserController {
                 return ctx.body={status:"success",data:user}
             }
         } catch (err){
-            logger.error("登录失败")
+            logger.error("登录失败");
             return ctx.body={status:"failed",err:err}
         }
     }
@@ -84,11 +85,11 @@ class UserController {
             logger.info(user);
             ctx.body = JSON.stringify({status:"success",data:user});
         }catch(err) {
-            logger.error('err', err)
-            ctx.status = 500  //状态 500
+            logger.error('err', err);
+            ctx.status = 500;  //状态 500
             ctx.body =  JSON.stringify({status: 'failed'}) //返回错误状态
         }
-        return ;
+        //return ;
     }
 }
 

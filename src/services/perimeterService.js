@@ -2,7 +2,9 @@
 //import PerimeterModel from '../models/perimeter.model';
 //import uuidv1 from 'uuid/v1';
 
-const logger=require('../logger');
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','PerimeterService.js');
 const PerimeterModel=require('../models/perimeter.model');
 const uuidv1=require('uuid/v1');
 

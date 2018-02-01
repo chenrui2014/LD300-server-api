@@ -1,9 +1,11 @@
 /**
  * Created by chen on 17-8-23.
  */
-import logger from '../logger';
+const {Parser}=require('../log/log');
+const logger={};
+Parser('logger','HostsController.js');
 import HostService from '../services/hostService';
-import PpService from "../services/ppService";
+//import PpService from "../services/ppService";
 import Serialport from '../serialport/serialport';
 
 class HostsController {
@@ -61,9 +63,9 @@ class HostsController {
         let sortP = {};
         if(sortObj && sortObj.length >=2){
             if('ASC' ===sortObj[1]){
-                sortP[sortObj[0]] = 1
+                sortP[sortObj[0]] = 1;
             }else{
-                sortP[sortObj[0]] = -1
+                sortP[sortObj[0]] = -1;
             }
         }
         let result = await HostService.findAll(sortP);
@@ -73,7 +75,7 @@ class HostsController {
 
     static async getPort(ctx){
         let ports = await Serialport.GetPortsArrived();
-        let portObj = ports.map((item,i)=>{
+        let portObj = ports.map((item/*,i*/)=>{
             return {name:item,id:item};
         });
         return ctx.body = {msg:'获取本机端口',data:portObj};
@@ -111,7 +113,7 @@ class HostsController {
             }
         }
 
-        let pageStart = 0,pageEnd = 0
+        let pageStart = 0,pageEnd = 0;
         if(rangeObj && rangeObj.length >=2){
             pageStart = rangeObj[0];
             pageEnd = rangeObj[1];
@@ -126,7 +128,7 @@ class HostsController {
             let result = null;
             if(sortP){
                 if(rangeObj){
-                    let pageStart = 0,pageEnd = 0
+                    let pageStart = 0,pageEnd = 0;
                     if(rangeObj && rangeObj.length >=2){
                         pageStart = rangeObj[0];
                         pageEnd = rangeObj[1];
@@ -140,7 +142,7 @@ class HostsController {
                 }
             }else{
                 if(rangeObj){
-                    let pageStart = 0,pageEnd = 0
+                    let pageStart = 0,pageEnd = 0;
                     if(rangeObj && rangeObj.length >=2){
                         pageStart = rangeObj[0];
                         pageEnd = rangeObj[1];
