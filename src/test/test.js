@@ -278,6 +278,33 @@ describe('async测试',()=>{
         expect(x).equal(1);
     });
 
+    async function applyTest(num1,num2) {
+        return new Promise((resolve)=>{
+            setTimeout(()=>{resolve(num1+num2)},10);
+        });
+    }
+
+    it('promise-function.apply',(done)=>{
+        applyTest.apply(this,[1,2]).then((sum)=>{
+            expect(sum).equal(3);
+            done();
+        });
+    });
+
+    it('async-function.apply',async ()=>{
+        let sum=await applyTest.apply(this,[1,2]);
+        expect(sum).equal(3);
+    });
+
+    it('async-function.apply-_.partial',(done)=>{
+        let fun=_.partial(applyTest,1);
+        fun(2).then((sum)=>{
+            expect(sum).equal(3)
+            done();
+        });
+    });
+
+
     async function Throw() {
         await Promise.reject(1);
     }
