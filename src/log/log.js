@@ -7,6 +7,8 @@ const logs_dirs=config.getLogDir();
 const logDir=path.resolve(logs_dirs,'log');
 const errorDir=path.resolve(logs_dirs,'error');
 const warnDir=path.resolve(logs_dirs,'error');
+const process=require('process');
+const productionsEnv = (process.env.NODE_ENV || 'production')==='production';
 mkdirp.sync(logDir);
 mkdirp.sync(errorDir);
 mkdirp.sync(warnDir);
@@ -51,7 +53,7 @@ function log(fileLogger,source,_params,desc,params){
     },_params,params,{source:source});
     let logStr=JSON.stringify(log);
     logger.info(logStr);
-    consoleLogger.info(logStr);
+    !productionsEnv&&consoleLogger.info(logStr);
     fileLogger.info(logStr);
     return log;
 }
@@ -63,7 +65,7 @@ function error(fileLogger,source,_params,desc,params){
     let logStr=JSON.stringify(log);
     logger.error(logStr);
     errorLogger.error(logStr);
-    consoleLogger.error(logStr);
+    !productionsEnv&&consoleLogger.error(logStr);
     fileLogger.error(logStr);
     return log;
 }
@@ -75,7 +77,7 @@ function warn(fileLogger,source,_params,desc,params){
     let logStr=JSON.stringify(log);
     logger.warn(logStr);
     errorLogger.warn(logStr);
-    consoleLogger.warn(logStr);
+    !productionsEnv&&consoleLogger.warn(logStr);
     fileLogger.warn(logStr);
     return log;
 }
