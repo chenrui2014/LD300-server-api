@@ -173,7 +173,7 @@ class Host extends EventEmitter{
         return new Promise((resolve,reject)=>{
             if(this.state!==_hostState.Alarm) return resolve(this.warn('客户端发来无效清除指令，已忽略'));
             this._serialport.write(reset).then(()=>{
-                this._bSendSysRdy=true;
+                //this._bSendSysRdy=true;
                 resolve(this._log('清除指令已发出'));
             }).catch((err)=>{
                 reject(this._error(_Errors.writeError,'清除报警指令发送失败',{innerError:err}));
