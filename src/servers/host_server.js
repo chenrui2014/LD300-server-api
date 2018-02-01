@@ -91,7 +91,7 @@ class HostServer extends  EventEmitter{
         if(data.type==='fault') await Promise.reject(this.error('录制视频失败',{innerError:data}));
 
         data.path=path.relative(config.getVideoPath(),data.path);
-        await Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path});
+        Data.recordAlertVideo({pid:id,hid,id:evtID,path:data.path}).catch(e=>e);
         return this.log('启用视频录制',{id,hid,evtID});
     }
 
@@ -124,7 +124,7 @@ class HostServer extends  EventEmitter{
         const hostID=evt.hid;
         let host=this._getHost(hostID);
 
-        await Data.recordAlert({hid:hostID,id:evt.id,position:evt.position});
+        Data.recordAlert({hid:hostID,id:evt.id,position:evt.position}).catch(e=>e);
 
         host.monintors=[];
         let ms=await host.mointorHandle.getMointors(evt.position).catch(()=>{

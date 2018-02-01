@@ -120,6 +120,7 @@ async function getAllIPC(){
     return ipcList;
 }
 
+/*
 //数据格式[1,2,3,4,5]
 async function getIPCIDsSortByPoint(){
     //查询出所有摄像头的编号返回即可，根据摄像头的编号排序基本没问题
@@ -130,6 +131,7 @@ async function getIPCIDsSortByPoint(){
     });
     return ipcIds;
 }
+*/
 
 //记录警报
 async function  recordAlert(record) {
@@ -168,7 +170,7 @@ const exp={
     getMointors,
     getIPC,
     getAllIPC,
-    getIPCIDsSortByPoint,
+    //getIPCIDsSortByPoint,
     transformIPC,
     recordAlert,
     recordAlertVideo
@@ -177,15 +179,16 @@ const exp={
 function proxy(name) {
     let store=_.get(config,'runMode.store','db');
     logger.log('调用数据服务',{store,name});
-    return (store==='db'?exp:fileServer)[name].apply(null,Array.prototype.slice.call(arguments,1));
+    let fun=(store==='db'?exp:fileServer)[name];
+    return fun.apply(null,Array.prototype.slice.call(arguments,1));
 }
 
 exports=module.exports={
-    getHosts:_.partial(proxy,'getHosts'),
     getMointors:_.partial(proxy,'getMointors'),
+    getHosts:_.partial(proxy,'getHosts'),
     getIPC:_.partial(proxy,'getIPC'),
     getAllIPC:_.partial(proxy,'getAllIPC'),
-    getIPCIDsSortByPoint:_.partial(proxy,'getIPCIDsSortByPoint'),
+    //getIPCIDsSortByPoint:_.partial(proxy,'getIPCIDsSortByPoint'),
     transformIPC:_.partial(proxy,'transformIPC'),
     recordAlert:_.partial(proxy,'recordAlert'),
     recordAlertVideo:_.partial(proxy,'recordAlertVideo'),

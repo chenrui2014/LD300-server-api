@@ -32,19 +32,30 @@ async  function  recordAlertVideo() {
     return true;
 }
 
+async function getAllIPC() {
+    return ipcs;
+}
+
+async  function transformIPC(ipc) {
+    return ipc;
+}
+
+/*
 async function getIPCIDsSortByPoint(){
     let ret=[];
     _.each(ipcs,(ipc)=>{
         ret.push(ipc.id);
     });
     return ret;
-}
+}*/
 
 exports=module.exports={
     getHosts,
     getMointors,
     getIPC,
-    getIPCIDsSortByPoint,
+    getAllIPC,
+    transformIPC,
+    //getIPCIDsSortByPoint,
     recordAlert,
     recordAlertVideo
 };
