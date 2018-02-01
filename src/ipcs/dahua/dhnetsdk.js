@@ -504,6 +504,17 @@ exports=module.exports= (function(){
             'consts':consts,
             'utils':utils
         });
+        this.asyncFunctions={};
+        _.each(this.functions,(fun,name)=>{
+            this.asyncFunctions[name]=async (...argus)=>{
+                return new Promise((resolve,reject)=>{
+                    fun.async.apply(this,[].concat(argus,(err,ret)=>{
+                        if(err) return reject(err);
+                        resolve(ret);
+                    }));
+                });
+            }
+        });
     }
     util.inherits(DHLib, EventEmitter);
     return new DHLib();

@@ -72,12 +72,12 @@ class DHIPC extends IPC{
         return dhlib.functions.CLIENT_GetLastError()&(0x7fffffff);
     }
 
-    _getAbility(){
+    async _getAbility(){
         assert.ok(this._loginID);
         let st=dhlib.structs.DH_DEV_ENABLE_INFO;
         let DH_DEV_ENABLE_INFO=new st();
         let nLenRet=ref.alloc('int');
-        let ok=dhlib.functions.CLIENT_QuerySystemInfo(this._loginID,dhlib.enums.DH_SYS_ABILITY.DEVALL_INFO,DH_DEV_ENABLE_INFO.ref(),st.size,nLenRet,1000);
+        let ok=await dhlib.asyncFunctions.CLIENT_QuerySystemInfo(this._loginID,dhlib.enums.DH_SYS_ABILITY.DEVALL_INFO,DH_DEV_ENABLE_INFO.ref(),st.size,nLenRet,1000);
         if(!ok){
             return null;
             //console.error(dhlib.functions.CLIENT_GetLastError() & (0x7fffffff));
@@ -99,7 +99,7 @@ class DHIPC extends IPC{
         const loginType=dhlib.enums.loginType.TCP;
         let NET_DEVICEINFO_Ex=new dhlib.structs.NET_DEVICEINFO_Ex();
         let err=ref.alloc('int');
-        this._loginID=dhlib.functions.CLIENT_LoginEx2(this.options.ip,this.options.port,this.options.user,this.options.pwd,loginType,ref.NULL,NET_DEVICEINFO_Ex.ref(),err)
+        this._loginID=await dhlib.asyncFunctions.CLIENT_LoginEx2(this.options.ip,this.options.port,this.options.user,this.options.pwd,loginType,ref.NULL,NET_DEVICEINFO_Ex.ref(),err)
         //err=err.deref();
         if(!this._loginID){
             let error=this._error('设备登入错误');
@@ -107,7 +107,7 @@ class DHIPC extends IPC{
             return await Promise.reject(error);
         }
         if(false){
-            let ab=this._getAbility();
+            let ab=await this._getAbility();
             this.options.fn_ptz=ab.fn_ptz||false;
             this.options.b3g_protocol=ab.json||NET_DEVICEINFO_Ex.toObject().nChanNum>32||false;
         }
@@ -116,15 +116,13 @@ class DHIPC extends IPC{
     }
     async _disConnect() {
         if(!this._loginID)return await Promise.resolve();
-        let dis=async ()=>{
-            if(dhlib.functions.CLIENT_Logout(this._loginID)){
-                this._loginID=0;
-                this.emit(IPC.Events.DisConnected,this.log('设备已断开连接'));
-                return;
-            }
-            return await Promise.reject(this._error('大华设备登出错误'));
-        };
-        await Promise.all([this.stopRealPlay(),this.stopTalk()]).then(dis).catch(dis);
+        await Promise.all([this.stopRealPlay(),this.stopTalk()]).catch(e=>e);
+        let logID=this._loginID;this._loginID=0;
+        if(await dhlib.asyncFunctions.CLIENT_Logout(logID)){
+            this.emit(IPC.Events.DisConnected,this.log('设备已断开连接'));
+            return;
+        }
+        return Promise.reject(this._error('大华设备登出错误'));
     }
 
 /*    _transform(buf,enc,next){
@@ -175,7 +173,7 @@ class DHIPC extends IPC{
     //有音频设置时同样会返回音频数据
     async _realPlay() {
         await this.connect();
-        this._playID=dhlib.functions.CLIENT_RealPlayEx(this._loginID,this._channel,ref.NULL,dhlib.enums.playType.Realplay_1);
+        this._playID=await dhlib.asyncFunctions.CLIENT_RealPlayEx(this._loginID,this._channel,ref.NULL,dhlib.enums.playType.Realplay_1);
         if(!this._playID){
             let error=this._error('获取设备的播放句柄错误');
             this.emit(IPC.Events.Error,error);
@@ -190,7 +188,7 @@ class DHIPC extends IPC{
                 EventEmitter.prototype.emit.call(this,'video',data);
             });
         });
-        if(!dhlib.functions.CLIENT_SetRealDataCallBackEx(this._playID,cb,0,1)){
+        if(!await dhlib.asyncFunctions.CLIENT_SetRealDataCallBackEx(this._playID,cb,0,1)){
             delete this._playcb;
             let error=this._error('直播数据回调函数绑定异常');
             //this.emit(IPC.Events.Error,error);
@@ -202,14 +200,14 @@ class DHIPC extends IPC{
 
     async _stopRealPlay() {
         if(!this._playID) return;
-        if(dhlib.functions.CLIENT_StopRealPlayEx(this._playID)){
+        let playID=this._playID;this._playID=0;
+        if(await dhlib.asyncFunctions.CLIENT_StopRealPlayEx(playID)){
             this.emit(IPC.Events.StopRealPlay,this.log('直播端口关闭'));
         }
         else{
             this._error('直播端口关闭异常')
             //this.emit(IPC.Events.Error,this._error('直播端口关闭异常'));
         }
-        this._playID=0;
         delete this._playcb;
         await this.disConnect();
     }
@@ -224,7 +222,7 @@ class DHIPC extends IPC{
                 EventEmitter.prototype.emit.call(this,'audio',data);
             });
         });
-        this._talkID=dhlib.functions.CLIENT_StartTalkEx(this._loginID,cb,0);
+        this._talkID=await dhlib.asyncFunctions.CLIENT_StartTalkEx(this._loginID,cb,0);
         if(!this._talkID) {
             delete this._talkcb;
             //_this.options.fn_audio=false;
@@ -245,7 +243,7 @@ class DHIPC extends IPC{
         if(!this._loginID) return await Promise.reject('请先连接设备');
         let lst=new dhlib.structs.TALKFORMAT_LIST();
         let nLenRet=ref.alloc('int');
-        let ok=dhlib.functions.CLIENT_QueryDevState(this._loginID,dhlib.consts.DEVSTATE_TALK_ECTYPE,lst.ref(),dhlib.structs.TALKFORMAT_LIST.size,nLenRet,1000);
+        let ok=await dhlib.asyncFunctions.CLIENT_QueryDevState(this._loginID,dhlib.consts.DEVSTATE_TALK_ECTYPE,lst.ref(),dhlib.structs.TALKFORMAT_LIST.size,nLenRet,1000);
         if(!ok/*nLenRet.deref()!==dhlib.structs.TALKFORMAT_LIST.size*/){
             let error=this._error('无法查找到设备支持的音频编码格式');
             this.emit(IPC.Events.Error,error);
@@ -254,11 +252,11 @@ class DHIPC extends IPC{
         for(let i=0;i<lst.nSupportNum;i++){
             let lsti=lst.type[i];
             if(lsti.encodeType===dhlib.enums.TALK_CODING_TYPE.AAC.value/*||lsti.encodeType===dhlib.enums.TALK_CODING_TYPE.mp3*/){
-                return resolve(this._audio_config={
+                return this._audio_config={
                     dwSampleRate:lsti.dwSampleRate,
                     encodeType:lsti.encodeType,
                     nAudioBit:lsti.nAudioBit
-                });
+                };
             }
         }
         let error=this._error('设备不支持AAC音频编码');
@@ -269,7 +267,7 @@ class DHIPC extends IPC{
     async _talkInit()
     {
         let type=await this._getAudioEncodeType();
-        let ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SERVER_MODE,ref.NULL);
+        let ok=await dhlib.asyncFunctions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SERVER_MODE,ref.NULL);
         if(!ok){
             let error=this._error('设置音频为服务端模式错误');
             //this.emit(IPC.Events.Error,error);
@@ -282,7 +280,7 @@ class DHIPC extends IPC{
             nPacketPeriod:25
         });
 
-        ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_ENCODE_TYPE,en.ref());
+        ok=await dhlib.asyncFunctions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_ENCODE_TYPE,en.ref());
         if(!ok){
             let error=this._error('设置音频格式错误');
             //this.emit(IPC.Events.Error,error);
@@ -294,7 +292,7 @@ class DHIPC extends IPC{
             nSpeakerChannel:0,
             bEnableWait:0
         });
-        ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SPEAK_PARAM,sp.ref());
+        ok=await dhlib.asyncFunctions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_SPEAK_PARAM,sp.ref());
         if(!ok){
             let error=this._error('设置音频模式错误');
             //this.emit(IPC.Events.Error,error);
@@ -304,7 +302,7 @@ class DHIPC extends IPC{
             dwSize:dhlib.structs.NET_TALK_TRANSFER_PARAM.size,
             bTransfer:0
         });
-        ok=dhlib.functions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_TRANSFER_MODE,ttp.ref());
+        ok=await dhlib.asyncFunctions.CLIENT_SetDeviceMode(this._loginID,dhlib.enums.EM_USEDEV_MODE.TALK_TRANSFER_MODE,ttp.ref());
         if(!ok){
             let error=this._error('设置音频传输方式错误');
             //this.emit(IPC.Events.Error,error);
@@ -316,7 +314,7 @@ class DHIPC extends IPC{
     async _stopTalk(){
         if(this._talkcb) delete this._talkcb;
         if(!this._talkID) return;
-        if(1===dhlib.functions.CLIENT_StopTalkEx(this._talkID)){
+        if(1===await dhlib.asyncFunctions.CLIENT_StopTalkEx(this._talkID)){
             this.emit(IPC.Events.AudioStopPlay,this.log('音频对讲端口关闭'));
         }
         else{
@@ -328,7 +326,7 @@ class DHIPC extends IPC{
 
     async setTalkData(data,size){
         if(!this._talkID) return await Promise.reject(this._error('需要先打开通道',false));
-        if(size===dhlib.functions.CLIENT_TalkSendData(this._talkID,data,size)){
+        if(size===await dhlib.asyncFunctions.CLIENT_TalkSendData(this._talkID,data,size)){
             return;
         }
         let error=this._error('向音频数据发送异常');
@@ -374,8 +372,8 @@ class DHIPC extends IPC{
     async _PTZ(cmdCode,p1,p2,p3=0,param4=null,stop=false){
         if(!this.supportPTZ) return await Promise.reject(this._error('_PTZ','设备不支持PTZ操作'));
         await this.connect();
-        let cmd=_.bind(dhlib.functions.CLIENT_DHPTZControlEx2,null,_,_,cmdCode.valueOf(),p1,p2,p3,_,(param4?param4.ref():ref.NULL));
-        if(cmd(this._loginID,this._channel,false)){
+        let cmd=_.bind(dhlib.asyncFunctions.CLIENT_DHPTZControlEx2,null,_,_,cmdCode.valueOf(),p1,p2,p3,_,(param4?param4.ref():ref.NULL));
+        if(await cmd(this._loginID,this._channel,false)){
             this.log(`成功执行PTZ操作,操作：${cmdCode.toString()}`);
             if(!stop) this._stopCmd = cmd;
             else {
@@ -581,7 +579,7 @@ class DHIPC extends IPC{
         await this.connect();
         let nLenRet=ref.alloc('int');
         let location=dhlib.structs.DH_PTZ_LOCATION_INFO();
-        let bok=dhlib.functions.CLIENT_QueryDevState(
+        let bok=await dhlib.asyncFunctions.CLIENT_QueryDevState(
             this._loginID,
             dhlib.consts.DH_DEVSTATE_PTZ_LOCATION,
             location.ref(),
@@ -617,7 +615,7 @@ class DHIPC extends IPC{
             nAction: (open ? 1:0)
         });
         //dhlib.enums.CTRL_TYPE.TRIGGER_ALARM_OUT
-        let ok=dhlib.functions.CLIENT_ControlDevice(this._loginID,101,ap.ref(), 1000);
+        let ok=await dhlib.asyncFunctions.CLIENT_ControlDevice(this._loginID,101,ap.ref(), 1000);
         await this.disConnect();
         if (ok!==0) {
             this.emit(open?IPC.Events.Alarm:IPC.Events.AlarmStop,this.log(`报警输出已${open?'打开':'关闭'}`));
@@ -642,14 +640,13 @@ class DHIPC extends IPC{
             //this.emit(IPC.Events.Error,error);
             return await Promise.reject(error);
         }
-        if(dhlib.functions.CLIENT_SetVolume(this._playID,pt)){
+        if(await dhlib.asyncFunctions.CLIENT_SetVolume(this._playID,pt)){
             return;
         }
         let error =this._error('设置音量异常');
         //this.emit(IPC.Events.Error,error);
         return await Promise.reject(error);
     }
-
 
 
     static async discovery(cb,timeout=10000){
@@ -662,11 +659,11 @@ class DHIPC extends IPC{
             if(ipcInfo.iIPVersion-0!==4)return;
             cb({ip:ipcInfo.szIP,port:ipcInfo.nPort});
         });
-        let handle=dhlib.functions.CLIENT_StartSearchDevices(callback,ref.NULL,ref.NULL);
+        let handle=await dhlib.asyncFunctions.CLIENT_StartSearchDevices(callback,ref.NULL,ref.NULL);
         return new Promise((resolve,reject)=>{
             if(0===handle) return reject(`启用搜索异常，内部错误码：${DHIPC.lastError}`);
             setTimeout(()=>{
-                dhlib.functions.CLIENT_StopSearchDevices(handle);
+                dhlib.asyncFunctions.CLIENT_StopSearchDevices(handle);
                 cb(null);
                 resolve();
             },timeout||10000);
