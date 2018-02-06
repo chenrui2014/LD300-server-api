@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','HostsController.js');
+Parser(logger,'HostsController.js');
 import HostService from '../services/hostService';
 //import PpService from "../services/ppService";
 import Serialport from '../serialport/serialport';

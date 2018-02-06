@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PresetController.js');
+Parser(logger,'PresetController.js');
 
 import PresetService from '../services/PresetService';
 import HostService from '../services/hostService';

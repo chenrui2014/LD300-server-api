@@ -7,7 +7,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PerimeterPointService.js');
+Parser(logger,'PerimeterPointService.js');
 const PerimeterPointModel=require('../models/perimeterPoint.model');
 const uuidv1=require('uuid/v1');
 

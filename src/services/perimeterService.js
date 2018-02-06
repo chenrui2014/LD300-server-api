@@ -4,7 +4,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PerimeterService.js');
+Parser(logger,'PerimeterService.js');
 const PerimeterModel=require('../models/perimeter.model');
 const uuidv1=require('uuid/v1');
 

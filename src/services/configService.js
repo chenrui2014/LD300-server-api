@@ -7,7 +7,7 @@
 //import uuidv1 from 'uuid/v1';
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','ConfigService.js');
+Parser(logger,'ConfigService.js');
 const ConfigModel=require('../models/config.model');
 const uuidv1=require('uuid/v1');
 

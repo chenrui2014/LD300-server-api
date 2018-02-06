@@ -8,7 +8,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','CamerasService.js');
+Parser(logger,'CamerasService.js');
 const CamerasModel=require('../models/cameras.model');
 //const uuidv1=require('uuid/v1');
 

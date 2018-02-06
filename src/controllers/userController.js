@@ -5,7 +5,7 @@
 import md5 from 'md5';
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','UserController.js');
+Parser(logger,'UserController.js');
 import UserModel from '../models/user.model';
 import TokenModel from '../models/accessToken';
 

@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','CamerasController.js');
+Parser(logger,'CamerasController.js');
 import CamerasService from '../services/camerasService';
 import CameraTypeService from "../services/cameraTypeService";
 

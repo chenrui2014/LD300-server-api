@@ -8,7 +8,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','EventVideoService.js');
+Parser(logger,'EventVideoService.js');
 const EventVideoModel=require('../models/eventVideo.model');
 const uuidv1=require('uuid/v1');
 

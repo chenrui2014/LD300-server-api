@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PerimeterPointController.js');
+Parser(logger,'PerimeterPointController.js');
 import PerimeterPointService from "../services/perimeterPointService";
 import PerimeterService from '../services/perimeterService';
 import HostService from '../services/hostService';

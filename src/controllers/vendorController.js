@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','VendorController.js');
+Parser(logger,'VendorController.js');
 import VendorService from '../services/vendorService';
 //mport HostService from "../services/hostService";
 

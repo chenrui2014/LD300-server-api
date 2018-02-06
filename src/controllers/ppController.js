@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PpController.js');
+Parser(logger,'PpController.js');
 import PpService from '../services/ppService';
 
 class PpController {

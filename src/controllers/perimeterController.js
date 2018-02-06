@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PerimeterController.js');
+Parser(logger,'PerimeterController.js');
 import PerimeterModel from '../models/perimeter.model';
 
 class PerimeterController {

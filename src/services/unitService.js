@@ -6,7 +6,7 @@
 //import UnitModel from '../models/unit.model';
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','UnitService.js')
+Parser(logger,'UnitService.js')
 const UnitModel=require('../models/unit.model');
 
 class UnitService {

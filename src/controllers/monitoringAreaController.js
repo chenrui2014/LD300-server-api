@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','MonitoringAreaController.js');
+Parser(logger,'MonitoringAreaController.js');
 import MonitoringService from '../services/monitoringService';
 import HostService from '../services/hostService';
 import CameraService from '../services/cameraService';

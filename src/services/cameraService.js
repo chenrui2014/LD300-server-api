@@ -7,7 +7,7 @@
 //import CameraTypeModel from "../models/cameraType.model";
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','CameraService.js');
+Parser(logger,'CameraService.js');
 const CameraModel=require('../models/camera.model');
 //const CameraTypeModel=require('../models/cameraType.model');
 
@@ -32,6 +32,7 @@ class CameraService {
                 logger.error(err.message);
             }
         });
+
         // await camera.save(function (err,camera) {
         //     if(!err) {
         //         success = true;

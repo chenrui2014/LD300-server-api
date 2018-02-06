@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','ConfigController.js');
+Parser(logger,'ConfigController.js');
 import ConfigService from '../services/configService';
 
 class ConfigController {

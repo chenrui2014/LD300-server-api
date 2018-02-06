@@ -6,7 +6,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','MonitoringAreaService.js');
+Parser(logger,'MonitoringAreaService.js');
 const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;
 
 class MonitoringAreaService {

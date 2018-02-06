@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','EventController.js');
+Parser(logger,'EventController.js');
 import EventService from '../services/eventService';
 import HostsService from '../services/hostService';
 //const uuidv1=require('uuid/v1');

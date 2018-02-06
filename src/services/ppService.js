@@ -5,7 +5,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PpService.js');
+Parser(logger,'PpService.js');
 const PpModel=require('../models/pp.model');
 const uuidv1=require('uuid/v1');
 //const MonitoringAreaModel=require('../models/monitoringArea.model').Monitoring;

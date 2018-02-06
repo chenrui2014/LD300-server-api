@@ -3,7 +3,7 @@
  */
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','UnitController.js');
+Parser(logger,'UnitController.js');
 
 import UnitService from '../services/unitService';
 

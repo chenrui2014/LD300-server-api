@@ -7,7 +7,7 @@
 //import uuidv1 from 'uuid/v1';
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','CameraTypeService.js');
+Parser(logger,'CameraTypeService.js');
 const CameraTypeModel=require('../models/cameraType.model');
 const uuidv1=require('uuid/v1');
 

@@ -7,7 +7,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','PresetService.js');
+Parser(logger,'PresetService.js');
 //const Preset=require('../models/monitoringArea.model').PresetModel;
 
 

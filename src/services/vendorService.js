@@ -8,7 +8,7 @@
 
 const {Parser}=require('../log/log');
 const logger={};
-Parser('logger','VendorService.js');
+Parser(logger,'VendorService.js');
 const VendorModel=require('../models/vendor.model');
 const uuidv1=require('uuid/v1');
 
