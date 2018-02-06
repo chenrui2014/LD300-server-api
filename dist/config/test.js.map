@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/config/test.js"],"names":["exports","module","mongo","uri"],"mappings":";;AAAAA,UAAQC,OAAOD,OAAP,GAAe;;AAEnB;AACAE,WAAO;AACHC,aAAK;AADF;AAHY,CAAvB","file":"test.js","sourcesContent":["exports=module.exports={\r\n\r\n    // MongoDB connection options\r\n    mongo: {\r\n        uri: 'mongodb://127.0.0.1:27017/LD300',\r\n    }\r\n};"]}

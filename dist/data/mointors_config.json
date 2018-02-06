@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "mointors": [
+      {
+        "id": 1,
+        "alarm": false,
+        "screenshot": false,
+        "audio": false,
+        "demo": false,
+        "presets": [],
+        "min": 80,
+        "max": 90
+      },
+      {
+        "id": 2,
+        "alarm": false,
+        "screenshot": false,
+        "audio": false,
+        "demo": false,
+        "presets": [],
+        "min": 80,
+        "max": 90
+      },
+      {
+        "id": 5,
+        "alarm": true,
+        "screenshot": true,
+        "audio": true,
+        "demo": true,
+        "presets": [
+          {
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "preset": "1",
+            "distance": 700
+          },
+          {
+            "x": 16,
+            "y": 1,
+            "z": 1,
+            "preset": "1",
+            "distance": 800
+          },
+          {
+            "x": 10,
+            "y": 1,
+            "z": 1,
+            "preset": "2",
+            "distance": 900
+          }
+        ],
+        "min": 700,
+        "max": 900
+      }
+    ]
+  }
+]

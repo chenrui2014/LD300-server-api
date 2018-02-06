@@ -1,0 +1,17 @@
+{
+  "zoomSpeed":100,
+  "focusSpeed":100,
+  "apertureSpeed":100,
+  "hSpeed":5,
+  "vSpeed":5,
+  "autoClose":60000,
+  "stopCmdDelay":1000,
+  "options":
+  {
+    "baudRate": 9600,
+    "stopBits": 1,
+    "dataBits": 8,
+    "parity":"none",
+    "cmdDelay":6000
+  }
+ }
