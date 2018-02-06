@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/upgrade.js"],"names":["require","upgrade"],"mappings":";;AAAAA,QAAQ,QAAR;;eACgBA,QAAQ,wBAAR,C;IAATC,O,YAAAA,O;;AACPA","file":"upgrade.js","sourcesContent":["require('./init');\r\nconst {upgrade}=require('./upgrade/data_upgrade');\r\nupgrade();"]}

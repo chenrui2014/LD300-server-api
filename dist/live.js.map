@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/live.js"],"names":["require"],"mappings":";;AAAAA,QAAQ,QAAR;AACAA,QAAQ,4BAAR","file":"live.js","sourcesContent":["require('./init');\r\nrequire('./servers/ipc_server_child');"]}

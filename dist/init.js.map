@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/init.js"],"names":["global","server_config","require"],"mappings":";;AAAAA,OAAOC,aAAP,GAAqBC,QAAQ,iBAAR,CAArB","file":"init.js","sourcesContent":["global.server_config=require('./config/config');\r\n"]}
