@@ -24,8 +24,8 @@ import Router from 'koa-router';
 const router = new Router();
 router.prefix('/api');
 
-// // 初始化用户数据
-// UserController.seed();
+// 初始化用户数据
+//UserController.seed;
 //
 // router.use(async (ctx, next) => {
 //     try {
@@ -155,7 +155,8 @@ router.get('/vendor', VendorController.find_vendor)
     .delete('/vendor/:id',VendorController.delete_vendor);
 
 //用户路由
-router.post('/user',UserController.create_user)
-    .post('/login', UserController.signIn);
+router.post('/user',UserController.add_user)
+    .post('/login', UserController.signIn)
+    .post('/logout', UserController.signOut);
 
 module.exports = router;
