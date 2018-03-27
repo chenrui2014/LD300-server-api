@@ -20,6 +20,7 @@ import EventVideoController from './controllers/eventVideoController';
 //import { isBearerAuthenticated, isLocalAuthenticated } from './lib/auth';
 
 import Router from 'koa-router';
+const passport=require('koa-passport');
 
 const router = new Router();
 router.prefix('/api');
@@ -50,6 +51,7 @@ router.prefix('/api');
 //         await ctx.render('index.pug');
 //     });
 // };
+
 //摄像头路由
 router.get('/camera',CaremaController.find_camera)
     .get('/camera_noPage',CaremaController.find_camera_noPage)
@@ -111,6 +113,29 @@ router.get('/preset', PresetController.find_preset)
     .post('/preset',PresetController.add_preset)
     .put('/preset/:id',PresetController.edit_preset)
     .delete('/preset/:id',PresetController.delete_preset);
+
+router.get('/event/*',(ctx, next) => {
+    if(ctx.isAuthenticated()) {
+        next()
+    } else {
+        ctx.status = 401
+        ctx.body = {
+            msg: 'auth fail'
+        }
+    }
+});
+
+router.get('/eventVideo/*',(ctx, next) => {
+
+    if(ctx.isAuthenticated()) {
+        next()
+    } else {
+        ctx.status = 401
+        ctx.body = {
+            msg: 'auth fail'
+        }
+    }
+});
 
 //事件路由
 router.get('/event', EventController.find_event)

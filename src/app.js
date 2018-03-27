@@ -41,7 +41,7 @@ async function start() {
 
 //session
     app.use(session({
-        key: "SESSIONID",   //default "koa:sess"
+        key: "adld",   //default "koa:sess"
     }));
 // authentication
     require('./controllers/auth/LDPassport');

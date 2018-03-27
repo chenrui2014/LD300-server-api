@@ -1,9 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
 node_modules/
-dist/
-logger-error.log
-logger-info.log
-src/logs/
 package-lock.json
 yarn.lock

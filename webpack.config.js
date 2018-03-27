@@ -20,14 +20,14 @@ module.exports = {
         extensions: ['.js']
     },
     module: {
-        loaders: [
+        rules:[
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                query: {
-                    presets: ['es2015','stage-0']
-                },
-                exclude: /node_modules/
+                exclude: /node_modules/,
+                options:{
+                    presets:['env']
+                }
             }
         ]
     },
