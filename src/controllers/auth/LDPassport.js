@@ -1,40 +1,31 @@
 import passport from 'koa-passport';
-import {Strategy} from 'passport-local';
+const md5 = require("md5");
 
-import UserModel from '../../models/user.model';
+const LocalStrategy = require('passport-local').Strategy
+const UserService = require('../../services/userService');
 
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-    UserModel.findById(id).then(function(user) {
-        if (user) {
-            done(null, user.get());
-        } else {
-            done(user.errors, null);
-        }
-    });
+passport.deserializeUser(async function(id, done) {
+    try {
+        const user = await UserService.find_one(id);
+        done(null, user)
+    } catch(err) {
+        done(err)
+    }
 });
 
-passport.use(new Strategy({
-    usernameField: 'username',
-    passwordField: 'password',
-    passReqToCallback: true
-}, function(req, username, password, done) {
-    UserModel.findOne({
-        attributes: [
-            'id', 'username'
-        ],
-        where: {
-            username: username
+passport.use(new LocalStrategy(async function(username, password, done) {
+    try {
+        let user = await UserService.find_user({username:username,password:md5(password)});
+        if(user && user.length > 0){
+            done(null, user);
+        }else{
+            done(null, false)
         }
-    }).then(function(user) {
-        if (!user) {
-            return done(null, false, {message: 'Email does not exist'});
-        }
-        return done(null, user.get());
-    }).catch(function() {
-        return done(null, false);
-    });
+    } catch (err){
+        done(err)
+    }
 }));

@@ -6,7 +6,13 @@
 * @ tip 密码需要md5加密，如需修改密码，请按照格式: md5(密码)
 */ 
 const md5 = require('md5');
-module.exports = {
+module.exports = [{
 	name: 'admin',
 	password: md5('admin')
-}
+},{
+    name: 'superAdmin',
+    password: md5('adld123456')
+},{
+    name: 'test',
+    password: md5('test')
+}];
