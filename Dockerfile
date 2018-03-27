@@ -13,10 +13,13 @@ ADD _3part/ /home/Serice/_3part
 ADD _3part/amf/ /home/Service/_3part/amf
 ADD _3part/yellowstone/ /home/Service/_3part/yellowstone
 
+COPY assets/monitors/ /home/Service/assets/monitors
 COPY src/ /home/Service/src
 COPY .babelrc /home/Service
 COPY package.json /home/Service
 COPY process.yml /home/Service
+
+EXPOSE 443
 
 RUN npm cache verify \
     && npm config set registry https://registry.npm.taobao.org \
@@ -27,6 +30,7 @@ RUN npm cache verify \
     && npm i
 
 EXPOSE 9000
-EXPOSE 3001
+EXPOSE 4001
+EXPOSE 3000
 
-CMD ["npm", "start","pm2"]
+CMD ["npm", "run","dev"]
