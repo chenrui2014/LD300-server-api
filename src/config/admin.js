@@ -8,11 +8,14 @@
 const md5 = require('md5');
 module.exports = [{
 	name: 'admin',
+    role: 'admin',
 	password: md5('admin')
 },{
     name: 'superAdmin',
+    role: 'superAdmin',
     password: md5('adld123456')
 },{
     name: 'test',
+    role: 'test',
     password: md5('test')
 }];

@@ -19,7 +19,9 @@ passport.deserializeUser(async function(id, done) {
 
 passport.use(new LocalStrategy(async function(username, password, done) {
     try {
+
         let user = await UserService.find_user({username:username,password:md5(password)});
+
         if(user && user.length > 0){
             done(null, user);
         }else{

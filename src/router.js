@@ -179,8 +179,15 @@ router.get('/vendor', VendorController.find_vendor)
     .put('/vendor/:id',VendorController.edit_vendor)
     .delete('/vendor/:id',VendorController.delete_vendor);
 
+
+router.get('/role',UserController.getRole);
+
 //用户路由
-router.post('/user',UserController.add_user)
+router.get('/user',UserController.find_user)
+    .get('/user/:id',UserController.find_one)
+    .post('/user',UserController.add_user)
+    .put('/user/:id',UserController.edit_user)
+    .delete('/user/:id',UserController.delete_user)
     .post('/login', UserController.signIn)
     .post('/logout', UserController.signOut);
 

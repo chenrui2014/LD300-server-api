@@ -12,18 +12,18 @@ const startUp=require('./servers/startup');
 const app=require('./app');
 const UserService = require("./services/userService");
 const admin = require("./config/admin");
-const uuidv1=require('uuid/v1');
 let logger={};
 Parser(logger,'index.js',{store,type});
 (async ()=>{
     try {
         if(store==='db') {
             const connection = await connect();
-            const total = await CamerasService.getTotal();
+            const total = await UserService.getTotal();
+            console.log("用户数量:"+ total);
             if(total ===0){
-                await UserService.add_user({id:uuidv1(),username:admin[0].name,password:admin[0].password});
-                await UserService.add_user({id:uuidv1(),username:admin[1].name,password:admin[1].password});
-                await UserService.add_user({id:uuidv1(),username:admin[2].name,password:admin[2].password});
+                await UserService.add_user({username:admin[0].name,role:admin[0].role,password:admin[0].password});
+                await UserService.add_user({username:admin[1].name,role:admin[1].role,password:admin[1].password});
+                await UserService.add_user({username:admin[2].name,role:admin[2].role,password:admin[2].password});
             }
 
             logger.log('MongoDB已连接', {host:connection.host, port:connection.port, name:connection.name});

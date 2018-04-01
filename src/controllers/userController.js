@@ -8,6 +8,7 @@ Parser(logger,'UserController.js');
 const md5 = require("md5");
 const UserModel = require("../models/user.model");
 const UserService = require("../services/userService");
+const admins = require('../config/admin');
 class UserController {
     static async add_user(ctx){
         const data = ctx.request.body;
@@ -49,9 +50,8 @@ class UserController {
     static async edit_user(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        let _id = data._id;
-        delete data._id;
-        const result = await UserService.edit_user({_id:_id},data);
+        data.password = md5(data.password);
+        const result = await UserService.edit_user({username:data.username},data);
         if(result) return ctx.body = {msg:'修改用户成功',data:result};
         return ctx.error={msg: '修改用户失败!'};
     }
@@ -172,14 +172,25 @@ class UserController {
         ctx.redirect('/');
     }
 
+    static async getRole(ctx){
+
+        let roleObj = admins.map((item,index)=>{
+            return {name:item.role,id:item.role};
+        });
+        return ctx.body = {msg:'获得角色列表',data:roleObj};
+    }
+
     // 用户登录
     static async signIn(ctx) {
         const { username, password } = ctx.request.body;
+        console.log(username);console.log(password);
         try {
             let user = await UserService.find_user({username:username,password:md5(password)});
+            console.log(md5(password));
+            console.log(user.toString());
             logger.info(user);
             if(user && user.length > 0){
-                return ctx.body={status:"success",data:user[0].username}
+                return ctx.body={status:"success",data:user[0]}
             }
         } catch (err){
             logger.error("登录失败");
