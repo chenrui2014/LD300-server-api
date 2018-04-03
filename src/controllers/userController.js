@@ -175,7 +175,7 @@ class UserController {
     static async getRole(ctx){
 
         let roleObj = admins.map((item,index)=>{
-            return {name:item.role,id:item.role};
+            return {name:item.zhName,id:item.role};
         });
         return ctx.body = {msg:'获得角色列表',data:roleObj};
     }
