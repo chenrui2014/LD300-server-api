@@ -114,29 +114,6 @@ router.get('/preset', PresetController.find_preset)
     .put('/preset/:id',PresetController.edit_preset)
     .delete('/preset/:id',PresetController.delete_preset);
 
-router.get('/event/*',(ctx, next) => {
-    if(ctx.isAuthenticated()) {
-        next()
-    } else {
-        ctx.status = 401
-        ctx.body = {
-            msg: 'auth fail'
-        }
-    }
-});
-
-router.get('/eventVideo/*',(ctx, next) => {
-
-    if(ctx.isAuthenticated()) {
-        next()
-    } else {
-        ctx.status = 401
-        ctx.body = {
-            msg: 'auth fail'
-        }
-    }
-});
-
 //事件路由
 router.get('/event', EventController.find_event)
     .get('/event/:id',EventController.find_one)
@@ -179,9 +156,6 @@ router.get('/vendor', VendorController.find_vendor)
     .put('/vendor/:id',VendorController.edit_vendor)
     .delete('/vendor/:id',VendorController.delete_vendor);
 
-
-router.get('/role',UserController.getRole);
-
 //用户路由
 router.get('/user',UserController.find_user)
     .get('/user/:id',UserController.find_one)
@@ -190,5 +164,8 @@ router.get('/user',UserController.find_user)
     .delete('/user/:id',UserController.delete_user)
     .post('/login', UserController.signIn)
     .post('/logout', UserController.signOut);
+
+
+router.get('/role',UserController.getRole);
 
 module.exports = router;

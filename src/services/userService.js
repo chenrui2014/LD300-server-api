@@ -11,6 +11,7 @@ const logger={};
 Parser(logger,'UserService.js');
 const UserModel=require('../models/user.model');
 const uuidv1=require('uuid/v1');
+const md5 = require("md5");
 
 class UserService {
 
@@ -24,6 +25,7 @@ class UserService {
         // data.id = Number(id) + 1;
         // let user = new UserModel(data);
         data.id = uuidv1();
+        data.password = md5(data.password);
         let success = false;
         await UserModel.create(data,function (err,user) {
             if(!err) {
@@ -48,7 +50,7 @@ class UserService {
         const result = await UserModel.remove(conditions,function (err,user) {
             if(!err) {
                 success = true;
-                logger.info('删除用户['+ user.ip +']成功');
+                logger.info('删除用户['+ user.username +']成功');
             }else{
                 logger.error(err.message);
             }

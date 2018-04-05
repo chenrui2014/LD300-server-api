@@ -1,3 +1,4 @@
+import HostService from "../services/hostService";
 
 /**
  * Created by chen on 17-8-23.
@@ -6,7 +7,6 @@ const {Parser}=require('../log/log');
 const logger={};
 Parser(logger,'UserController.js');
 const md5 = require("md5");
-const UserModel = require("../models/user.model");
 const UserService = require("../services/userService");
 const admins = require('../config/admin');
 class UserController {
@@ -15,16 +15,15 @@ class UserController {
         logger.info(data);
 
         if(!data) return ctx.error={ msg: '发送数据失败!' };
-        const isExist = await UserService.isExist({userCode:data.userCode});
-        //const isExist = await UserModel.findOne({ip:data.ip});
+        const isExist = await UserService.isExist({username:data.username});
 
-        if(isExist) return ctx.error={ msg: '用户编码为[' + data.userCode + ']的用户已存在!' };
+        if(isExist) return ctx.error={ msg: '用户[' + data.username + ']的用户已存在!' };
 
         const result = await UserService.add_user(data);
 
         let msg = '';
         if(result) {
-            msg = '添加用户'+ data.userCode +'成功';
+            msg = '添加用户'+ data.username +'成功';
             return ctx.body = {msg:msg,data:data};
         }else{
             msg = '添加失败';
@@ -50,8 +49,10 @@ class UserController {
     static async edit_user(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        data.password = md5(data.password);
-        const result = await UserService.edit_user({username:data.username},data);
+        //data.password = md5(data.password);
+        let _id = data._id;
+        delete data._id;
+        const result = await UserService.edit_user({_id:_id},data);
         if(result) return ctx.body = {msg:'修改用户成功',data:result};
         return ctx.error={msg: '修改用户失败!'};
     }
@@ -186,8 +187,6 @@ class UserController {
         console.log(username);console.log(password);
         try {
             let user = await UserService.find_user({username:username,password:md5(password)});
-            console.log(md5(password));
-            console.log(user.toString());
             logger.info(user);
             if(user && user.length > 0){
                 return ctx.body={status:"success",data:user[0]}
