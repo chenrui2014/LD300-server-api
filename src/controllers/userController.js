@@ -49,7 +49,7 @@ class UserController {
     static async edit_user(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        //data.password = md5(data.password);
+        data.password = md5(data.password);
         let _id = data._id;
         delete data._id;
         const result = await UserService.edit_user({_id:_id},data);
