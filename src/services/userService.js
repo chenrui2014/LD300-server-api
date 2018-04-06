@@ -50,7 +50,6 @@ class UserService {
         const result = await UserModel.remove(conditions,function (err,user) {
             if(!err) {
                 success = true;
-                logger.info('删除用户['+ user.username +']成功');
             }else{
                 logger.error(err.message);
             }
