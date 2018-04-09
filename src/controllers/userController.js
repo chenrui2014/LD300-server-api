@@ -49,7 +49,13 @@ class UserController {
     static async edit_user(ctx){
         const data = ctx.request.body;
         logger.info(data);
-        data.password = md5(data.password);
+        const user = await UserService.find_user({username:data.username,password:data.password});
+        console.log(data.password);
+        console.log(user);
+        console.log(user.toString());
+        if(user === null || user.length === 0){//如果密码被修改则需要加密，否则不需要
+            data.password = md5(data.password);
+        }
         let _id = data._id;
         delete data._id;
         const result = await UserService.edit_user({_id:_id},data);
